@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lib4D
 {
@@ -72,5 +68,15 @@ namespace Lib4D
       double imaginaryNumerator = (a.imaginary * b.real) - (a.real * b.imaginary);
       return new Complex(realNumerator / denominator, imaginaryNumerator / denominator);
 	  }
-  }
+
+    public static implicit operator Complex(double n)
+		{
+      return new Complex(n, 0);
+		}
+
+		public override string ToString()
+		{
+			return "(" + real + " + " + imaginary + "i)";
+		}
+	}
 }
