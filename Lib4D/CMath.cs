@@ -7,15 +7,15 @@ namespace Lib4D
 		public static Complex Sqrt(Complex number)
 		{
 			double abs = number.Abs();
-			double real = Math.Sqrt((number.real + abs) / 2);
-			double imaginary = _Sign(number.imaginary) * Math.Sqrt((abs - number.real) / 2);
+			double real = Math.Sqrt((number.r + abs) / 2);
+			double imaginary = _Sign(number.i) * Math.Sqrt((abs - number.r) / 2);
 			return new Complex(real, imaginary);
 		}
 
 		public static Complex Exp(Complex number)
 		{
-			double realExp = Math.Exp(number.real);
-			Complex c = new Complex(Math.Cos(number.imaginary), Math.Sin(number.imaginary));
+			double realExp = Math.Exp(number.r);
+			Complex c = new Complex(Math.Cos(number.i), Math.Sin(number.i));
 			return realExp * c; 
 		}
 

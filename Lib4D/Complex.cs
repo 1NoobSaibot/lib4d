@@ -7,65 +7,58 @@ namespace Lib4D
   /// </summary>
   public struct Complex
   {
-    public double real;
-    public double imaginary;
+    /// <summary>
+    /// Real number
+    /// </summary>
+    public double r;
+    /// <summary>
+    /// Imaginary number
+    /// </summary>
+    public double i;
 
     public Complex(double real, double imaginary)
     {
-      this.real = real;
-      this.imaginary = imaginary;
+      this.r = real;
+      this.i = imaginary;
     }
 
     public double Abs()
 	  {
-      return Math.Sqrt(real * real + imaginary * imaginary);
+      return Math.Sqrt(r * r + i * i);
 	  }
 
 		public static bool operator ==(Complex a, Complex b)
 	  {
-      return a.real == b.real && a.imaginary == b.imaginary;
+      return a.r == b.r && a.i == b.i;
 	  }
 
     public static bool operator !=(Complex a, Complex b)
 	  {
-      return a.real != b.real || a.imaginary != b.imaginary;
+      return a.r != b.r || a.i != b.i;
 	  }
 
     public static Complex operator +(Complex a, Complex b)
     {
-      return new Complex(a.real + b.real, a.imaginary + b.imaginary);
+      return new Complex(a.r + b.r, a.i + b.i);
     }
 
     public static Complex operator -(Complex a, Complex b)
     {
-      return new Complex(a.real - b.real, a.imaginary - b.imaginary);
+      return new Complex(a.r - b.r, a.i - b.i);
     }
 
 
     public static Complex operator *(Complex a, Complex b) {
-      /*
-       a * b = (a.r + a.i) * (b.r + b.i) = 
-        = a.r * b.r + a.r * b.i + a.i * b.r + a.i * b.i
-        = (a.r * b.r - a.i * b.i) + (a.r * b.i + a.i * b.r)
-       */
-      double real = a.real * b.real - a.imaginary * b.imaginary;
-      double imaginary = a.real * b.imaginary + a.imaginary * b.real;
+      double real = a.r * b.r - a.i * b.i;
+      double imaginary = a.r * b.i + a.i * b.r;
       return new Complex(real, imaginary);
     }
 
     public static Complex operator /(Complex a, Complex b)
 	  {
-      /*
-        a / b = (a.r + a.i) / (b.r + b.i) =
-        = ((a.r + a.i)*(b.r - b.i))/(b.r^2 - -(b.i^2))
-        = (a.r * b.r - a.r * b.i + a.i * b.r - a.i * b.i) / (b.r^2 + b.i^2)
-        = ((a.r * b.r - a.i * b.i) + (a.i * b.r - a.r * b.i)) / (b.r^2 + b.i^2)
-
-        a^2 - b^2 = (a + b)(a - b)
-       */
-      double denominator = b.real * b.real + b.imaginary * b.imaginary;
-      double realNumerator = (a.real * b.real) + (a.imaginary * b.imaginary);
-      double imaginaryNumerator = (a.imaginary * b.real) - (a.real * b.imaginary);
+      double denominator = b.r * b.r + b.i * b.i;
+      double realNumerator = (a.r * b.r) + (a.i * b.i);
+      double imaginaryNumerator = (a.i * b.r) - (a.r * b.i);
       return new Complex(realNumerator / denominator, imaginaryNumerator / denominator);
 	  }
 
@@ -76,7 +69,7 @@ namespace Lib4D
 
 		public override string ToString()
 		{
-			return "(" + real + " + " + imaginary + "i)";
+			return "(" + r + " + " + i + "i)";
 		}
 	}
 }

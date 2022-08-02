@@ -34,7 +34,7 @@ namespace Lib4D_Tests
 
 		private bool _AreApproximatelyEqual(Complex a, Complex b)
 		{
-			return _AreApproximatelyEqual(a.real, b.real) && _AreApproximatelyEqual(a.imaginary, b.imaginary);
+			return _AreApproximatelyEqual(a.r, b.r) && _AreApproximatelyEqual(a.i, b.i);
 		}
 
 		private bool _AreApproximatelyEqual(double a, double b)
