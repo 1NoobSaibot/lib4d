@@ -71,6 +71,16 @@
 		{
 			return new Quaternion(a.ri - b.ri, a.jk - b.jk);
 		}
+
+		public static Quaternion operator *(Quaternion a, Quaternion b)
+		{
+			double r = a.R * b.R - (a.I * b.I + a.J * b.J + a.K * b.K);
+			double i = a.R * b.I + a.I * b.R + (a.J * b.K - a.K * b.J);
+			double j = a.R * b.J + a.J * b.R + (a.K * b.I - a.I * b.K);
+			double k = a.R * b.K + a.K * b.R + (a.I * b.J - a.J * b.I);
+
+			return new Quaternion(r, i, j, k);
+		}
 		#endregion
 
 		#region Comparisons
@@ -84,5 +94,10 @@
 			return a.ri != b.ri || a.jk != b.jk;
 		}
 		#endregion
+
+		public override string ToString()
+		{
+			return "(" + R + " + i" + I + " + j" + J + " + k" + K + ")";
+		}
 	}
 }
