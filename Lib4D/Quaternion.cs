@@ -1,8 +1,11 @@
-﻿namespace Lib4D
+﻿using System;
+
+namespace Lib4D
 {
 	public struct Quaternion
 	{
 		public Complex ri, jk;
+
 		#region Getters
 		public double R
 		{
@@ -24,6 +27,11 @@
 			get => jk.i;
 			set => jk.i = value;
 		}
+
+		public double AbsQuad => R*R + I*I + J*J + K*K;
+		public double Abs => Math.Sqrt(AbsQuad);
+
+		public Quaternion ConjugateQuaternion => new Quaternion(R, -I, -J, -K);
 		#endregion
 
 		#region Constructors
@@ -72,6 +80,16 @@
 			return new Quaternion(a.ri - b.ri, a.jk - b.jk);
 		}
 
+		#region Multiplication
+		public static Quaternion operator *(double a, Quaternion b)
+		{
+			return new Quaternion(a * b.R, a * b.I, a * b.J, a * b.K);
+		}
+		public static Quaternion operator *(Quaternion b, double a)
+		{
+			return new Quaternion(a * b.R, a * b.I, a * b.J, a * b.K);
+		}
+
 		public static Quaternion operator *(Quaternion a, Quaternion b)
 		{
 			double r = a.R * b.R - (a.I * b.I + a.J * b.J + a.K * b.K);
@@ -80,6 +98,14 @@
 			double k = a.R * b.K + a.K * b.R + (a.I * b.J - a.J * b.I);
 
 			return new Quaternion(r, i, j, k);
+		}
+		#endregion
+
+		public static Quaternion operator /(Quaternion a, Quaternion b)
+		{
+			double d = 1.0 / b.AbsQuad;
+			Quaternion d_ = b.ConjugateQuaternion;
+			return d * a * d_;
 		}
 		#endregion
 

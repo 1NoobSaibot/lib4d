@@ -92,7 +92,7 @@ namespace Lib4D_Tests
 			Quaternion one = new Quaternion(1);
 			Quaternion negativeOne = new Quaternion(-1);
 			Quaternion random = getQuaternion();
-			Assert.IsTrue(_AreApproximatelyEqual(zero * random, zero));
+			_AreApproximatelyEqual(zero * random, zero);
 			Assert.AreEqual(one * random, random);
 			Assert.AreEqual(zero - random, negativeOne * random);
 
@@ -106,39 +106,98 @@ namespace Lib4D_Tests
 			Assert.AreEqual(i * j * k, negativeOne);
 
 			Assert.AreEqual(k, i * j);
-			Assert.IsTrue(_AreApproximatelyEqual(negativeOne * k, j * i));
+			_AreApproximatelyEqual(negativeOne * k, j * i);
 		}
 
+		[TestMethod]
+		public void Abs()
+		{
+			Assert.AreEqual(new Quaternion().Abs, 0);
+
+			Quaternion one = new Quaternion(1);
+			Assert.AreEqual(one.Abs, 1);
+
+			Quaternion negativeOne = new Quaternion(1, 0);
+			Assert.AreEqual(negativeOne.Abs, 1);
+
+			Quaternion imaginaryOne = new Quaternion(0, 1);
+			Assert.AreEqual(imaginaryOne.Abs, 1);
+
+			Quaternion negativeImaginaryOne = new Quaternion(0, 1);
+			Assert.AreEqual(negativeImaginaryOne.Abs, 1);
+
+			Quaternion c = new Quaternion(-3, 4);
+			Assert.AreEqual(c.Abs, 5);
+		}
+
+		[TestMethod]
+		public void Div()
+		{
+			Quaternion two = new Quaternion(2);
+			Quaternion four = new Quaternion(4);
+			Assert.AreEqual(four / two, two);
+
+			for (int i = 0; i < 1000000; i++)
+			{
+				Quaternion _a = getQuaternionWithNotNullAbs();
+				Quaternion _b = getQuaternionWithNotNullAbs();
+				Quaternion _c = _a * _b;
+				_AreApproximatelyEqual(_c / _b, _a);
+			}
+		}
+
+		private Quaternion getQuaternionWithNotNullAbs()
+		{
+			Quaternion a;
+			do
+			{
+				a = getQuaternion();
+			} while (a.Abs == 0);
+			return a;
+		}
 		private Quaternion getQuaternion()
 		{
+			const int amplitude = 200;
+			const double half = amplitude / -2.0;
+
 			return new Quaternion(
-				_rnd.Next(200) - 100,
-				_rnd.Next(200) - 100,
-				_rnd.Next(200) - 100,
-				_rnd.Next(200) - 100
+				_rnd.Next(amplitude) - half,
+				_rnd.Next(amplitude) - half,
+				_rnd.Next(amplitude) - half,
+				_rnd.Next(amplitude) - half
 			);
 		}
 
-		private bool _AreApproximatelyEqual (Quaternion a, Quaternion b)
+		
+
+		private void _AreApproximatelyEqual (Quaternion actual, Quaternion expected)
 		{
-			return _AreApproximatelyEqual(a.R, b.R)
-				&& _AreApproximatelyEqual(a.I, b.I)
-				&& _AreApproximatelyEqual(a.J, b.J)
-				&& _AreApproximatelyEqual(a.K, b.K);
+			try
+			{
+				_AreApproximatelyEqual(actual.R, expected.R);
+				_AreApproximatelyEqual(actual.I, expected.I);
+				_AreApproximatelyEqual(actual.J, expected.J);
+				_AreApproximatelyEqual(actual.K, expected.K);
+			}
+			catch
+			{
+				Assert.AreEqual(actual, expected);
+			}
 		}
 
-		private bool _AreApproximatelyEqual(double a, double b)
+		private void _AreApproximatelyEqual(double actual, double expected)
 		{
-			if (a == b)
+			if (actual == expected)
 			{
-				return true;
+				return;
 			}
 
-			const double p = 0.00000000000000002;
-			double min = Math.Min(a, b);
-			double max = Math.Max(a, b);
+			const double relatedError = 1E-15;
+			const double k = 1.0 + relatedError;
+			double min = Math.Min(actual, expected);
+			double max = Math.Max(actual, expected);
 
-			return (min <= max) && ((min + p) >= max);
+			Assert.IsTrue((min <= max) && ((min * k) >= max));
 		}
 	}
 }
