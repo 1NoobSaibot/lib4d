@@ -1,9 +1,5 @@
 ﻿using Lib4D;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Transform2DVisualization
 {
@@ -29,6 +25,16 @@ namespace Transform2DVisualization
 			{
 				Vector2D childCenter = GetVertex(i);
 				_children[i] = new FractalNode(childCenter, childRadius, angle * i, amountOfVerticies, depth);
+			}
+		}
+
+
+		public void Move(double deltaTime)
+		{
+			_transform.Rotate(Math.PI / 15 * deltaTime);
+			for (int i = 0; i < _children.Length; i++)
+			{
+				_children[i].Move(deltaTime);
 			}
 		}
 

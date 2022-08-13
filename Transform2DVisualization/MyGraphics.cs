@@ -1,10 +1,7 @@
 ﻿using Lib4D;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Transform2DVisualization
 {
@@ -14,6 +11,8 @@ namespace Transform2DVisualization
 		private Stack<Transform2D> _transforms = new Stack<Transform2D>();
 		private Image _bufferImage;
 		private Graphics _bufferGraphics;
+
+
 		public MyGraphics(Graphics g, int width, int height)
 		{
 			_generalGraphics = g;

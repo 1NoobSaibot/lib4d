@@ -1,10 +1,6 @@
 ﻿using Lib4D;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Transform2DVisualization
 {
@@ -23,7 +19,7 @@ namespace Transform2DVisualization
 
 		public void Move(double deltaTime)
 		{
-			_world.Rotate(deltaTime * _angleSpeed);
+			_polygon.Move(deltaTime);
 		}
 
 
