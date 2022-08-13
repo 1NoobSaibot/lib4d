@@ -54,6 +54,7 @@
     <Compile Include="QuaternionUnitTest.cs" />
     <Compile Include="ComplexUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transform2DUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
