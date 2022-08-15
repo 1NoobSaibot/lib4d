@@ -1,8 +1,19 @@
-﻿namespace Lib4D
+﻿using System;
+
+namespace Lib4D
 {
 	public struct Vector3D
 	{
 		public double X, Y, Z;
+
+
+		public double AbsQuad
+		{
+			get => X * X + Y * Y + Z * Z;
+		}
+
+
+		public double Abs => Math.Sqrt(AbsQuad);
 
 
 		public Vector3D (double x, double y, double z)
@@ -10,6 +21,13 @@
 			X = x;
 			Y = y;
 			Z = z;
+		}
+
+
+		public Vector3D Normalize()
+		{
+			double k = 1 / Abs;
+			return new Vector3D(k * X, k * Y, k * Z);
 		}
 
 

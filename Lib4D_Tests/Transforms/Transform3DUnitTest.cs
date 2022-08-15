@@ -47,6 +47,41 @@ namespace Lib4D_Tests
 		}
 
 
+		[TestMethod]
+		public void Rotate()
+		{
+			Transform3D transform = Transform3D.GetRotate(new Vector3D(0, 0, 1), Math.PI / 2);
+			_AreApproximatelyEqual(
+				new Vector3D(0, 1, 0),
+				transform * new Vector3D(1, 0, 0)
+			);
+			_AreApproximatelyEqual(
+				new Vector3D(-1, 1, 0),
+				transform * new Vector3D(1, 1, 0)
+			);
+
+			transform = Transform3D.GetRotate(new Vector3D(0, 1, 0), Math.PI / 2);
+			_AreApproximatelyEqual(
+				new Vector3D(1, 0, 0),
+				transform * new Vector3D(0, 0, 1)
+			);
+			_AreApproximatelyEqual(
+				new Vector3D(1, 0, -1),
+				transform * new Vector3D(1, 0, 1)
+			);
+
+			transform = Transform3D.GetRotate(new Vector3D(1, 1, 1).Normalize(), Math.PI * 2 / 3);
+			_AreApproximatelyEqual(
+				new Vector3D(3, 1, 2),
+				transform * new Vector3D(1, 2, 3)
+			);
+			_AreApproximatelyEqual(
+				new Vector3D(-3, -1, -2),
+				transform * new Vector3D(-1, -2, -3)
+			);
+		}
+
+
 		private void _AreApproximatelyEqual(Vector3D expected, Vector3D actual)
 		{
 			try

@@ -1,4 +1,6 @@
-﻿namespace Lib4D
+﻿using System;
+
+namespace Lib4D
 {
 	public class Transform3D
 	{
@@ -21,8 +23,32 @@
 		}
 
 
-		public void Rotate() {
-			throw new System.NotImplementedException();
+		public void Rotate(Vector3D axis, double angle) {
+			Rotate(axis.X, axis.Y, axis.Z, angle);
+		}
+
+
+		public void Rotate(double x, double y, double z, double angle)
+		{
+			double cos = Math.Cos(angle);
+			double sin = Math.Sin(angle);
+			double oneMinusCos = 1 - cos;
+			double oneMinusCosXY = oneMinusCos * x * y;
+			double oneMinusCosYZ = oneMinusCos * y * z;
+			double oneMinusCosXZ = oneMinusCos * x * z;
+			double sinX = sin * x;
+			double sinY = sin * y;
+			double sinZ = sin * z;
+
+			double[,] rotateMatrix = new double[4, 4]
+			{
+				{ cos + oneMinusCos * x * x			, oneMinusCosXY + sinZ					, oneMinusCosXZ - sinY					, 0 },
+				{ oneMinusCosXY - sinZ					, cos + oneMinusCos * y * y			, oneMinusCosYZ + sinX					, 0 },
+				{ oneMinusCosXZ + sinY					, oneMinusCosYZ - sinX					, cos + oneMinusCos * z * z			, 0 },
+				{ 0															, 0															, 0															, 1 }
+			};
+
+			_matrix = MatrixMath.Mul(_matrix, rotateMatrix);
 		}
 
 
@@ -69,6 +95,20 @@
 		{
 			Transform3D t = new Transform3D();
 			t.Scale(kx, ky, kz);
+			return t;
+		}
+
+
+		public static Transform3D GetRotate(Vector3D axis, double angle)
+		{
+			return GetRotate(axis.X, axis.Y, axis.Z, angle);
+		}
+
+
+		public static Transform3D GetRotate(double x, double y, double z, double angle)
+		{
+			Transform3D t = new Transform3D();
+			t.Rotate(x, y, z, angle);
 			return t;
 		}
 		#endregion
