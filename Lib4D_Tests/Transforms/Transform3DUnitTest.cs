@@ -48,18 +48,20 @@ namespace Lib4D_Tests
 
 
 		[TestMethod]
-		public void Rotate()
+		public void RotateAroundAxis()
 		{
-			Transform3D transform = Transform3D.GetRotate(new Vector3D(0, 0, 1), Math.PI / 2);
+			// Around OX
+			Transform3D transform = Transform3D.GetRotate(new Vector3D(1, 0, 0), Math.PI / 2);
 			_AreApproximatelyEqual(
-				new Vector3D(0, 1, 0),
-				transform * new Vector3D(1, 0, 0)
+				new Vector3D(0, 0, 1),
+				transform * new Vector3D(0, 1, 0)
 			);
 			_AreApproximatelyEqual(
-				new Vector3D(-1, 1, 0),
-				transform * new Vector3D(1, 1, 0)
+				new Vector3D(0, -1, 1),
+				transform * new Vector3D(0, 1, 1)
 			);
 
+			// Around OY
 			transform = Transform3D.GetRotate(new Vector3D(0, 1, 0), Math.PI / 2);
 			_AreApproximatelyEqual(
 				new Vector3D(1, 0, 0),
@@ -68,6 +70,17 @@ namespace Lib4D_Tests
 			_AreApproximatelyEqual(
 				new Vector3D(1, 0, -1),
 				transform * new Vector3D(1, 0, 1)
+			);
+
+			// Around OZ
+			transform = Transform3D.GetRotate(new Vector3D(0, 0, 1), Math.PI / 2);
+			_AreApproximatelyEqual(
+				new Vector3D(0, 1, 0),
+				transform * new Vector3D(1, 0, 0)
+			);
+			_AreApproximatelyEqual(
+				new Vector3D(-1, 1, 0),
+				transform * new Vector3D(1, 1, 0)
 			);
 
 			transform = Transform3D.GetRotate(new Vector3D(1, 1, 1).Normalize(), Math.PI * 2 / 3);
@@ -79,6 +92,27 @@ namespace Lib4D_Tests
 				new Vector3D(-3, -1, -2),
 				transform * new Vector3D(-1, -2, -3)
 			);
+		}
+
+
+		[TestMethod]
+		public void RotateWithQuaternion()
+		{
+			for (int i = 0; i < 10; i++)
+			{
+				Vector3D axis = GetRandomVector().Normalize();
+				double angle = _rnd.NextDouble() * Math.PI * 2;
+				Quaternion q = Quaternion.ByAxisAndAngle(axis, angle);
+
+				Transform3D transformAxisAngle = Transform3D.GetRotate(axis, angle);
+				Transform3D transformQuaternion = Transform3D.GetRotate(q);
+
+				Vector3D point = GetRandomVector();
+				_AreApproximatelyEqual(
+					transformAxisAngle * point,
+					transformQuaternion * point
+				);
+			}
 		}
 
 
@@ -104,18 +138,14 @@ namespace Lib4D_Tests
 				return;
 			}
 
-			if (Math.Abs(expected - actual) < 1E-16)
-			{
-				return;
-			}
-
-			Assert.IsTrue(Math.Abs(expected - actual) < 1E-15);
+			const double allowableError = 1E-15;
+			Assert.IsTrue(Math.Abs(expected - actual) < allowableError);
 		}
 
 
 		private Vector3D GetRandomVector()
 		{
-			const double amplitude = 100;
+			const double amplitude = 1;
 
 			return new Vector3D(
 				_rnd.NextDouble() * 2 * amplitude - amplitude,	

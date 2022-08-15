@@ -52,6 +52,32 @@ namespace Lib4D
 		}
 
 
+		public void Rotate(Quaternion q) {
+			double w = q.R;
+			double x = q.I;
+			double y = q.J;
+			double z = q.K;
+			double twoXY = 2 * x * y;
+			double twoXZ = 2 * x * z;
+			double twoYZ = 2 * y * z;
+			double twoWX = 2 * w * x;
+			double twoWY = 2 * w * y;
+			double twoWZ = 2 * w * z;
+			double twoXX = 2 * x * x;
+			double twoYY = 2 * y * y;
+			double twoZZ = 2 * z * z;
+
+			double[,] rotateMatrix = new double[4, 4] {
+				{ 1 - twoYY - twoZZ	,		twoXY + twoWZ			,		twoXZ - twoWY			, 0 },
+				{ twoXY - twoWZ			,		1 - twoXX - twoZZ	,		twoYZ + twoWX			, 0 },
+				{ twoXZ + twoWY			, 	twoYZ - twoWX			,		1 - twoXX - twoYY , 0 },
+				{ 0									,		0									,		0									,	1	}
+			};
+
+			_matrix = MatrixMath.Mul(_matrix, rotateMatrix);
+		}
+
+
 		public void Scale(Vector3D k)
 		{
 			Scale(k.X, k.Y, k.Z);
@@ -109,6 +135,14 @@ namespace Lib4D
 		{
 			Transform3D t = new Transform3D();
 			t.Rotate(x, y, z, angle);
+			return t;
+		}
+
+
+		public static Transform3D GetRotate(Quaternion q)
+		{
+			Transform3D t = new Transform3D();
+			t.Rotate(q);
 			return t;
 		}
 		#endregion

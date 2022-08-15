@@ -67,6 +67,18 @@ namespace Lib4D
 			this.ri = ri;
 			this.jk = jk;
 		}
+
+
+		public static Quaternion ByAxisAndAngle(Vector3D u, double alpha) {
+			double sinHalfA = Math.Sin(alpha * 0.5);
+
+			return new Quaternion(
+				Math.Cos(alpha * 0.5),
+				u.X * sinHalfA,
+				u.Y * sinHalfA,
+				u.Z * sinHalfA
+			);
+		}
 		#endregion
 
 		#region Math Operators
