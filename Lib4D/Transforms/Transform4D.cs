@@ -1,4 +1,6 @@
-﻿namespace Lib4D
+﻿using System;
+
+namespace Lib4D
 {
 	public class Transform4D
 	{
@@ -41,6 +43,23 @@
 			_matrix = MatrixMath.Mul(_matrix, scaleMatrix);
 		}
 
+
+		public void Rotate(Bivector4D b, double angle)
+		{
+			double c = Math.Cos(angle);
+			double s = Math.Sin(angle);
+
+			double[,] rotateMatrix = new double[5, 5]
+			{
+				{		c*(b.ZQ + b.YQ + b.YZ) + b.XQ + b.XZ + b.XY	,	s*b.ZQ																			, -s*b.YQ															, -s*b.YZ												, 0 },
+				{  -s*b.ZQ																			,	c*(b.ZQ + b.XQ + b.XZ) + b.YQ + b.YZ + b.XY	, s*b.XQ															, -s*b.XZ												, 0 },
+				{	  s*b.YQ																			,	-s*b.XQ																			, c*(b.YQ + b.XQ + b.XY) + b.YZ + b.XZ,	 s*b.XY												, 0 },
+				{		s*b.YZ																			,	s*b.XZ																			,	-s*b.XY															,  c*(b.YZ + b.XZ + b.XY) + b.XQ, 0 },
+				{		0																						,	0																						, 0																		,  0														, 1 }
+			};
+
+			_matrix = _matrix.Mul(rotateMatrix);
+		}
 		#region Static Constructors
 		public static Transform4D GetTranslate(Vector4D t)
 		{
