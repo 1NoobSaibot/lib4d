@@ -9,6 +9,40 @@ namespace Lib4D_Tests
 	{
 		private Random _rnd = new Random();
 
+
+		[TestMethod]
+		public void Determinant()
+		{
+			// Determinant of Matrixes 1*1 are equal its number
+			double[,] m1_1 = new double[1, 1] { { 0 } };
+			Assert.AreEqual(0, m1_1.GetDeterminant());
+			m1_1[0, 0] = 7;
+			Assert.AreEqual(7, m1_1.GetDeterminant());
+
+			// Determinant of identity quad matrixes always equals to 1
+			for (int i = 2; i <= 10; i++)
+			{
+				double[,] identity = MatrixMath.CreateIdentity(i);
+				Assert.AreEqual(1, identity.GetDeterminant());
+			}
+
+			double[,] matrix = new double[2, 2]
+			{
+				{ 7, -13 },
+				{ 3,  -5 },
+			};
+			Assert.AreEqual(4, matrix.GetDeterminant());
+
+			matrix = new double[3, 3]
+			{
+				{ 7, -13, 2 },
+				{ 3, -5, 0 },
+				{ 1, 4, 12 }
+			};
+			Assert.AreEqual(82, matrix.GetDeterminant());
+		}
+
+
 		[TestMethod]
 		public void Transpose()
 		{
@@ -28,6 +62,7 @@ namespace Lib4D_Tests
 
 			AssertEqual(m2, m.Transpose());
 		}
+
 
 		[TestMethod]
 		public void Mul()
@@ -57,6 +92,7 @@ namespace Lib4D_Tests
 				MatrixMath.Mul(b, a)
 			);
 		}
+
 
 		private void AssertEqual(double[,] a, double[,] b)
 		{

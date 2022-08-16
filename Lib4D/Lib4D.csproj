@@ -45,7 +45,8 @@
   <ItemGroup>
     <Compile Include="Complex.cs" />
     <Compile Include="CMath.cs" />
-    <Compile Include="MatrixMath.cs" />
+    <Compile Include="MatrixMath\QuadMatrixDeterminantCalculator.cs" />
+    <Compile Include="MatrixMath\MatrixMath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quaternion.cs" />
     <Compile Include="Transforms\Transform2D.cs" />

@@ -3,6 +3,12 @@
 namespace Lib4D
 {
 	public static class MatrixMath {
+		public static double GetDeterminant(this double[,] matrix) {
+			QuadMatrixDeterminantCalculator calc = new QuadMatrixDeterminantCalculator(matrix);
+			return calc.Determinant;
+		}
+
+
 		public static double[,] Transpose (this double[,] matrixA)
 		{
 			int width = matrixA.GetLength(0);
@@ -43,6 +49,23 @@ namespace Lib4D
 
 			return true;
 		}
+
+
+		/// <summary>
+		/// Returns identity matrix width*width
+		/// </summary>
+		/// <param name="width"></param>
+		/// <returns>Quad Identity Matrix</returns>
+		public static double[,] CreateIdentity(int width)
+		{
+			double[,] m = new double[width, width];
+			for (int i = 0; i < width; i++)
+			{
+				m[i, i] = 1;
+			}
+			return m;
+		}
+
 
 		public static double[,] Mul (this double[,] a, double[,] b)
 		{
