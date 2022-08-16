@@ -11,6 +11,32 @@ namespace Lib4D_Tests
 
 
 		[TestMethod]
+		public void Add()
+		{
+			double[,] a = new double[2, 2]
+			{
+				{ 1, 2 },
+				{ 3, 4 }
+			};
+
+			double[,] b = new double[2, 2]
+			{
+				{ 5, 6 },
+				{ 7, 8 }
+			};
+
+			AssertEqual(
+				new double[2, 2]
+				{
+					{ 6, 8 },
+					{ 10, 12 }
+				},
+				MatrixMath.Add(a, b)
+			);
+		}
+
+
+		[TestMethod]
 		public void Determinant()
 		{
 			// Determinant of Matrixes 1*1 are equal its number

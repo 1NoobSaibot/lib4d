@@ -3,6 +3,28 @@
 namespace Lib4D
 {
 	public static class MatrixMath {
+		public static double[,] Add(double[,] a, double[,] b)
+		{
+			int width = a.GetWidth();
+			int height = a.GetHeight();
+			if (width != b.GetWidth() || height != b.GetHeight())
+			{
+				throw new ArgumentException("Matrixes have different size");
+			}
+
+			double[,] result = new double[width, height];
+			for (int i = 0; i < width; i++)
+			{
+				for (int j = 0; j < height; j++)
+				{
+					result[i, j] = a[i, j] + b[i, j];
+				}
+			}
+
+			return result;
+		}
+
+
 		public static double GetDeterminant(this double[,] matrix) {
 			QuadMatrixDeterminantCalculator calc = new QuadMatrixDeterminantCalculator(matrix);
 			return calc.Determinant;

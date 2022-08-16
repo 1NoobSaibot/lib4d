@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bivector.cs" />
     <Compile Include="Complex.cs" />
     <Compile Include="CMath.cs" />
     <Compile Include="MatrixMath\QuadMatrixDeterminantCalculator.cs" />
