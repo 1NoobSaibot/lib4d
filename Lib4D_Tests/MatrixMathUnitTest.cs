@@ -65,7 +65,7 @@ namespace Lib4D_Tests
 
 
 		[TestMethod]
-		public void Mul()
+		public void MulWithMatrix()
 		{
 			double[,] identity = new double[1, 1] { { 1 } };
 			double[,] three = new double[1, 1] { { 3 } };
@@ -90,6 +90,40 @@ namespace Lib4D_Tests
 					{ 1, 1 }
 				},
 				MatrixMath.Mul(b, a)
+			);
+		}
+
+
+		[TestMethod]
+		public void MulWithNumber()
+		{
+			double[,] identity = new double[1, 1] { { 1 } };
+			double[,] three = new double[1, 1] { { 3 } };
+			AssertEqual(three, identity.Mul(3));
+
+			identity = MatrixMath.CreateIdentity(3);
+			AssertEqual(
+				new double[3, 3]
+				{
+					{ -3,  0,  0 },
+					{  0, -3,  0 },
+					{  0,  0, -3 }
+				},
+				identity.Mul(-3)
+			);
+
+			double[,] m = new double[2, 2]
+			{
+				{ 1, 1 },
+				{ 1, 1 }
+			};
+			AssertEqual(
+				new double[2, 2]
+				{
+					{ 0, 0 },
+					{ 0, 0 }
+				},
+				m.Mul(0)
 			);
 		}
 

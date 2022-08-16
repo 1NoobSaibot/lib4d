@@ -67,6 +67,24 @@ namespace Lib4D
 		}
 
 
+		public static double[,] Mul(this double[,] a, double b)
+		{
+			int width = a.GetWidth();
+			int height = a.GetHeight();
+			double[,] c = new double[width, height];
+
+			for (int x = 0; x < width; x++)
+			{
+				for (int y = 0; y < height; y++)
+				{
+					c[x, y] = a[x, y] * b;
+				}
+			}
+
+			return c;
+		}
+
+
 		public static double[,] Mul (this double[,] a, double[,] b)
 		{
 			// Ширина матрицы A равна высоте B
