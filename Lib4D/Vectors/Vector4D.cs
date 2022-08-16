@@ -76,6 +76,32 @@ namespace Lib4D
 		}
 
 
+		public unsafe double this[int i] {
+			get
+			{
+				if (i < 0 || i >= 4)
+				{
+					throw new Exception("Index is out of range 4D Vector: " + i);
+				}
+				fixed (Vector4D* thisPtr = &this)
+				{
+					return ((double*)thisPtr)[i];
+				}
+			}
+			set
+			{
+				if (i < 0 || i >= 4)
+				{
+					throw new Exception("Index is out of range 4D Vector: " + i);
+				}
+				fixed (Vector4D* thisPtr = &this)
+				{
+					((double*)thisPtr)[i] = value;
+				}
+			}
+		}
+
+
 		public override string ToString()
 		{
 			return "(" + X + "; " + Y + "; " + Z + "; " + Q + ")";

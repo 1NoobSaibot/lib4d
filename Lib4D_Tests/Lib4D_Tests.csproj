@@ -57,6 +57,7 @@
     <Compile Include="Transforms\Transform4D.spec.cs" />
     <Compile Include="Transforms\Transform3D.spec.cs" />
     <Compile Include="Transforms\Transform2D.spec.cs" />
+    <Compile Include="Vectors\Vector4D.spec.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
