@@ -76,6 +76,18 @@ namespace Lib4D
 		}
 
 
+		public static bool operator ==(Vector4D a, Vector4D b)
+		{
+			return a.X == b.X && a.Y == b.Y && a.Z == b.Z && a.Q == b.Q;
+		}
+
+
+		public static bool operator !=(Vector4D a, Vector4D b)
+		{
+			return !(a == b);
+		}
+
+
 		public unsafe double this[int i] {
 			get
 			{

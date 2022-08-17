@@ -25,23 +25,40 @@ namespace Rotate4DSearcher
 		}
 
 
-		public static void AddNewSample(Bivector4D rotationSurface)
+		public static void AddNewSample(Vector4D a, Vector4D b, int angleInGrad)
 		{
-			_ThrowIfExists(rotationSurface);
+			if (_samples == null)
+			{
+				_Load();
+			}
 
-			_samples.Add(new Sample() { rotationSurface = rotationSurface });
+			_ThrowIfExists(a, b, angleInGrad);
+
+			Sample sample = new Sample() {
+				A = a,
+				B = b,
+				AngleInGrad = angleInGrad
+			};
+
+			_samples.Add(sample);
 			_Save();
 
-			SamplesChanged(_samples, null);
+			if (SamplesChanged != null)
+			{
+				SamplesChanged(_samples, null);
+			}
 		}
 
 
-		private static void _ThrowIfExists(Bivector4D surface)
+		private static void _ThrowIfExists(Vector4D a, Vector4D b, int angleInGrad)
 		{
 			for (int i = 0; i < _samples.Count; i++)
 			{
-				if (surface == _samples[i].rotationSurface)
-				{
+				if (
+					a == _samples[i].A
+					&& b == _samples[i].B
+					&& angleInGrad == _samples[i].AngleInGrad
+				) {
 					throw new Exception("This surface already exists");
 				}
 			}
@@ -79,7 +96,8 @@ namespace Rotate4DSearcher
 	[Serializable]
 	internal class Sample
 	{
-		public Bivector4D rotationSurface;
+		public Vector4D A, B;
+		public int AngleInGrad;
 		public List<QuestionAnswerPair> pairs = new List<QuestionAnswerPair>();
 	}
 
@@ -87,7 +105,24 @@ namespace Rotate4DSearcher
 	[Serializable]
 	internal class QuestionAnswerPair
 	{
-		public Vector4D question;
-		public Vector4D answer;
+		public Vector4DSerializable argument;
+		public Vector4DSerializable expectedResult;
+	}
+
+
+	[Serializable]
+	internal class Vector4DSerializable
+	{
+		public double X, Y, Z, Q;
+
+		public Vector4DSerializable() { }
+
+		public Vector4DSerializable(Vector4D v)
+		{
+			X = v.X;
+			Y = v.Y;
+			Z = v.Z;
+			Q = v.Q;
+		}
 	}
 }
