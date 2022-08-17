@@ -48,14 +48,21 @@ namespace Lib4D
 		{
 			double c = Math.Cos(angle);
 			double s = Math.Sin(angle);
+			
+			double xy = b.XY;
+			double xz = b.XZ;
+			double xq = b.XQ;
+			double yz = b.YZ;
+			double yq = b.YQ;
+			double zq = b.ZQ;
 
 			double[,] rotateMatrix = new double[5, 5]
 			{
-				{		c*(b.ZQ + b.YQ + b.YZ) + b.XQ + b.XZ + b.XY	,	s*b.ZQ																			, -s*b.YQ															, -s*b.YZ												, 0 },
-				{  -s*b.ZQ																			,	c*(b.ZQ + b.XQ + b.XZ) + b.YQ + b.YZ + b.XY	, s*b.XQ															, -s*b.XZ												, 0 },
-				{	  s*b.YQ																			,	-s*b.XQ																			, c*(b.YQ + b.XQ + b.XY) + b.YZ + b.XZ,	 s*b.XY												, 0 },
-				{		s*b.YZ																			,	s*b.XZ																			,	-s*b.XY															,  c*(b.YZ + b.XZ + b.XY) + b.XQ, 0 },
-				{		0																						,	0																						, 0																		,  0														, 1 }
+				{		c*(zq + yq + yz) + xq + xz + xy ,	s*zq														, -s*yq											, -s*yz									, 0 },
+				{  -s*zq														,	c*(zq + xq + xz) + yq + yz + xy	, s*xq											, -s*xz									, 0 },
+				{	  s*yq														,	-s*xq														, c*(yq + xq + xy) + yz + xz,	 s*xy									, 0 },
+				{		s*yz														,	s*xz														,	-s*xy											,  c*(yz + xz + xy) + xq, 0 },
+				{		0																,	0																, 0													,  0										, 1 }
 			};
 
 			_matrix = _matrix.Mul(rotateMatrix);
