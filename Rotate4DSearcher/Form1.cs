@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.ListBox;
 
 namespace Rotate4DSearcher
 {
@@ -16,6 +17,8 @@ namespace Rotate4DSearcher
 		public Form1()
 		{
 			InitializeComponent();
+			SamplesStore.SamplesChanged += _OnSamplesChanged;
+			_OnSamplesChanged(null, null);
 		}
 
 
@@ -48,6 +51,17 @@ namespace Rotate4DSearcher
 			{
 				logLabel.Text = error.Message;
 			} 
+		}
+
+
+		private void _OnSamplesChanged(object sender, List<Sample> list)
+		{
+			List<Sample> samples = SamplesStore.GetSamples();
+			rotationSurfacesListBox.Items.Clear();
+			for (int i = 0; i < samples.Count; i++)
+			{
+				rotationSurfacesListBox.Items.Add(samples[i]);
+			}
 		}
 	}
 }

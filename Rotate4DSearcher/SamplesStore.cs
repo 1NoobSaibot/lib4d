@@ -32,11 +32,13 @@ namespace Rotate4DSearcher
 				_Load();
 			}
 
-			_ThrowIfExists(a, b, angleInGrad);
+			Vector4DSerializable aS = new Vector4DSerializable(a);
+			Vector4DSerializable bS = new Vector4DSerializable(b);
+			_ThrowIfExists(aS, bS, angleInGrad);
 
 			Sample sample = new Sample() {
-				A = a,
-				B = b,
+				A = aS,
+				B = bS,
 				AngleInGrad = angleInGrad
 			};
 
@@ -50,8 +52,11 @@ namespace Rotate4DSearcher
 		}
 
 
-		private static void _ThrowIfExists(Vector4D a, Vector4D b, int angleInGrad)
-		{
+		private static void _ThrowIfExists(
+			Vector4DSerializable a,
+			Vector4DSerializable b,
+			int angleInGrad
+		) {
 			for (int i = 0; i < _samples.Count; i++)
 			{
 				if (
@@ -96,9 +101,14 @@ namespace Rotate4DSearcher
 	[Serializable]
 	internal class Sample
 	{
-		public Vector4D A, B;
+		public Vector4DSerializable A, B;
 		public int AngleInGrad;
 		public List<QuestionAnswerPair> pairs = new List<QuestionAnswerPair>();
+
+		public override string ToString()
+		{
+			return A.ToString() + " " + B.ToString() + " " + AngleInGrad;
+		}
 	}
 
 
@@ -115,7 +125,9 @@ namespace Rotate4DSearcher
 	{
 		public double X, Y, Z, Q;
 
+
 		public Vector4DSerializable() { }
+
 
 		public Vector4DSerializable(Vector4D v)
 		{
@@ -123,6 +135,24 @@ namespace Rotate4DSearcher
 			Y = v.Y;
 			Z = v.Z;
 			Q = v.Q;
+		}
+
+
+		public override string ToString()
+		{
+			return "(" + X + "; " + Y + "; " + Z + "; " + Q + ")";
+		}
+
+
+		public static bool operator ==(Vector4DSerializable a, Vector4DSerializable b)
+		{
+			return a.X == b.X && a.Y == b.Y && a.Z == b.Z && a.Q == b.Q;
+		}
+
+
+		public static bool operator !=(Vector4DSerializable a, Vector4DSerializable b)
+		{
+			return !(a == b);
 		}
 	}
 }

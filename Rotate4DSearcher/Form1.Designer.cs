@@ -68,7 +68,7 @@
 			this.fromXInput = new System.Windows.Forms.TextBox();
 			this.label16 = new System.Windows.Forms.Label();
 			this.textBox18 = new System.Windows.Forms.TextBox();
-			this.listBox1 = new System.Windows.Forms.ListBox();
+			this.rotationSurfacesListBox = new System.Windows.Forms.ListBox();
 			this.label17 = new System.Windows.Forms.Label();
 			this.listBox2 = new System.Windows.Forms.ListBox();
 			this.removeSelectedSurface = new System.Windows.Forms.Button();
@@ -409,13 +409,13 @@
 			this.textBox18.Size = new System.Drawing.Size(239, 310);
 			this.textBox18.TabIndex = 41;
 			// 
-			// listBox1
+			// rotationSurfacesListBox
 			// 
-			this.listBox1.FormattingEnabled = true;
-			this.listBox1.Location = new System.Drawing.Point(12, 25);
-			this.listBox1.Name = "listBox1";
-			this.listBox1.Size = new System.Drawing.Size(239, 264);
-			this.listBox1.TabIndex = 42;
+			this.rotationSurfacesListBox.FormattingEnabled = true;
+			this.rotationSurfacesListBox.Location = new System.Drawing.Point(12, 25);
+			this.rotationSurfacesListBox.Name = "rotationSurfacesListBox";
+			this.rotationSurfacesListBox.Size = new System.Drawing.Size(239, 264);
+			this.rotationSurfacesListBox.TabIndex = 42;
 			// 
 			// label17
 			// 
@@ -509,7 +509,7 @@
 			this.Controls.Add(this.removeSelectedSurface);
 			this.Controls.Add(this.listBox2);
 			this.Controls.Add(this.label17);
-			this.Controls.Add(this.listBox1);
+			this.Controls.Add(this.rotationSurfacesListBox);
 			this.Controls.Add(this.textBox18);
 			this.Controls.Add(this.addPairButton);
 			this.Controls.Add(this.normalizeToButton);
@@ -598,7 +598,7 @@
 		private System.Windows.Forms.TextBox fromXInput;
 		private System.Windows.Forms.Label label16;
 		private System.Windows.Forms.TextBox textBox18;
-		private System.Windows.Forms.ListBox listBox1;
+		private System.Windows.Forms.ListBox rotationSurfacesListBox;
 		private System.Windows.Forms.Label label17;
 		private System.Windows.Forms.ListBox listBox2;
 		private System.Windows.Forms.Button removeSelectedSurface;
