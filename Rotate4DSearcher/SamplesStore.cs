@@ -45,10 +45,17 @@ namespace Rotate4DSearcher
 			_samples.Add(sample);
 			_Save();
 
-			if (SamplesChanged != null)
-			{
-				SamplesChanged(_samples, null);
-			}
+			_FireOnChanged();
+		}
+
+
+
+		public static void AddPair(int sampleIndex, Vector4D from, Vector4D to)
+		{
+			Sample sample = _samples[sampleIndex];
+			sample.AddPair(from, to);
+			_Save();
+			_FireOnChanged();
 		}
 
 
@@ -95,6 +102,15 @@ namespace Rotate4DSearcher
 				writer.Write(json);
 			}
 		}
+
+
+		private static void _FireOnChanged()
+		{
+			if (SamplesChanged != null)
+			{
+				SamplesChanged(_samples, null);
+			}
+		}
 	}
 
 
@@ -109,6 +125,30 @@ namespace Rotate4DSearcher
 		{
 			return A.ToString() + " " + B.ToString() + " " + AngleInGrad;
 		}
+
+		public void AddPair(Vector4D from, Vector4D to)
+		{
+			Vector4DSerializable fromS = new Vector4DSerializable(from);
+			Vector4DSerializable toS = new Vector4DSerializable(to);
+			_ThrowIfPairExists(fromS, toS);
+			pairs.Add(new QuestionAnswerPair()
+			{
+				argument = fromS,
+				expectedResult = toS
+			});
+		}
+
+
+		private void _ThrowIfPairExists(Vector4DSerializable from, Vector4DSerializable to)
+		{
+			for (int i = 0; i < pairs.Count; i++)
+			{
+				if (from == pairs[i].argument || to == pairs[i].expectedResult)
+				{
+					throw new Exception("This pair has one already existing vector");
+				}
+			}
+		}
 	}
 
 
@@ -117,6 +157,11 @@ namespace Rotate4DSearcher
 	{
 		public Vector4DSerializable argument;
 		public Vector4DSerializable expectedResult;
+
+		public override string ToString()
+		{
+			return argument.ToString() + " => " + expectedResult.ToString();
+		}
 	}
 
 

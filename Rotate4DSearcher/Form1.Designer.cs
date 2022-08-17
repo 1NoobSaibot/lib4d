@@ -51,13 +51,13 @@
 			this.addPairButton = new System.Windows.Forms.Button();
 			this.normalizeToButton = new System.Windows.Forms.Button();
 			this.normalizeFromButton = new System.Windows.Forms.Button();
-			this.textBox10 = new System.Windows.Forms.TextBox();
+			this.toQInput = new System.Windows.Forms.TextBox();
 			this.label9 = new System.Windows.Forms.Label();
-			this.textBox11 = new System.Windows.Forms.TextBox();
+			this.toZInput = new System.Windows.Forms.TextBox();
 			this.label10 = new System.Windows.Forms.Label();
-			this.textBox12 = new System.Windows.Forms.TextBox();
+			this.toYInput = new System.Windows.Forms.TextBox();
 			this.label11 = new System.Windows.Forms.Label();
-			this.textBox13 = new System.Windows.Forms.TextBox();
+			this.toXInput = new System.Windows.Forms.TextBox();
 			this.label12 = new System.Windows.Forms.Label();
 			this.fromQInput = new System.Windows.Forms.TextBox();
 			this.label13 = new System.Windows.Forms.Label();
@@ -70,7 +70,7 @@
 			this.textBox18 = new System.Windows.Forms.TextBox();
 			this.rotationSurfacesListBox = new System.Windows.Forms.ListBox();
 			this.label17 = new System.Windows.Forms.Label();
-			this.listBox2 = new System.Windows.Forms.ListBox();
+			this.fromToPairsListBox = new System.Windows.Forms.ListBox();
 			this.removeSelectedSurface = new System.Windows.Forms.Button();
 			this.label18 = new System.Windows.Forms.Label();
 			this.rotationAngleInput = new System.Windows.Forms.TextBox();
@@ -254,6 +254,7 @@
 			this.addPairButton.TabIndex = 40;
 			this.addPairButton.Text = "Add Pair";
 			this.addPairButton.UseVisualStyleBackColor = true;
+			this.addPairButton.Click += new System.EventHandler(this.addPairButton_Click);
 			// 
 			// normalizeToButton
 			// 
@@ -273,12 +274,12 @@
 			this.normalizeFromButton.Text = "Normalize From";
 			this.normalizeFromButton.UseVisualStyleBackColor = true;
 			// 
-			// textBox10
+			// toQInput
 			// 
-			this.textBox10.Location = new System.Drawing.Point(331, 545);
-			this.textBox10.Name = "textBox10";
-			this.textBox10.Size = new System.Drawing.Size(121, 20);
-			this.textBox10.TabIndex = 37;
+			this.toQInput.Location = new System.Drawing.Point(331, 545);
+			this.toQInput.Name = "toQInput";
+			this.toQInput.Size = new System.Drawing.Size(121, 20);
+			this.toQInput.TabIndex = 37;
 			// 
 			// label9
 			// 
@@ -289,12 +290,12 @@
 			this.label9.TabIndex = 36;
 			this.label9.Text = "Q";
 			// 
-			// textBox11
+			// toZInput
 			// 
-			this.textBox11.Location = new System.Drawing.Point(331, 519);
-			this.textBox11.Name = "textBox11";
-			this.textBox11.Size = new System.Drawing.Size(121, 20);
-			this.textBox11.TabIndex = 35;
+			this.toZInput.Location = new System.Drawing.Point(331, 519);
+			this.toZInput.Name = "toZInput";
+			this.toZInput.Size = new System.Drawing.Size(121, 20);
+			this.toZInput.TabIndex = 35;
 			// 
 			// label10
 			// 
@@ -305,12 +306,12 @@
 			this.label10.TabIndex = 34;
 			this.label10.Text = "Z";
 			// 
-			// textBox12
+			// toYInput
 			// 
-			this.textBox12.Location = new System.Drawing.Point(331, 493);
-			this.textBox12.Name = "textBox12";
-			this.textBox12.Size = new System.Drawing.Size(121, 20);
-			this.textBox12.TabIndex = 33;
+			this.toYInput.Location = new System.Drawing.Point(331, 493);
+			this.toYInput.Name = "toYInput";
+			this.toYInput.Size = new System.Drawing.Size(121, 20);
+			this.toYInput.TabIndex = 33;
 			// 
 			// label11
 			// 
@@ -321,12 +322,12 @@
 			this.label11.TabIndex = 32;
 			this.label11.Text = "Y";
 			// 
-			// textBox13
+			// toXInput
 			// 
-			this.textBox13.Location = new System.Drawing.Point(331, 467);
-			this.textBox13.Name = "textBox13";
-			this.textBox13.Size = new System.Drawing.Size(121, 20);
-			this.textBox13.TabIndex = 31;
+			this.toXInput.Location = new System.Drawing.Point(331, 467);
+			this.toXInput.Name = "toXInput";
+			this.toXInput.Size = new System.Drawing.Size(121, 20);
+			this.toXInput.TabIndex = 31;
 			// 
 			// label12
 			// 
@@ -416,6 +417,7 @@
 			this.rotationSurfacesListBox.Name = "rotationSurfacesListBox";
 			this.rotationSurfacesListBox.Size = new System.Drawing.Size(239, 264);
 			this.rotationSurfacesListBox.TabIndex = 42;
+			this.rotationSurfacesListBox.SelectedIndexChanged += new System.EventHandler(this.rotationSurfacesListBox_SelectedIndexChanged);
 			// 
 			// label17
 			// 
@@ -426,13 +428,13 @@
 			this.label17.TabIndex = 43;
 			this.label17.Text = "Rotation Surfaces";
 			// 
-			// listBox2
+			// fromToPairsListBox
 			// 
-			this.listBox2.FormattingEnabled = true;
-			this.listBox2.Location = new System.Drawing.Point(304, 25);
-			this.listBox2.Name = "listBox2";
-			this.listBox2.Size = new System.Drawing.Size(239, 277);
-			this.listBox2.TabIndex = 44;
+			this.fromToPairsListBox.FormattingEnabled = true;
+			this.fromToPairsListBox.Location = new System.Drawing.Point(304, 25);
+			this.fromToPairsListBox.Name = "fromToPairsListBox";
+			this.fromToPairsListBox.Size = new System.Drawing.Size(239, 277);
+			this.fromToPairsListBox.TabIndex = 44;
 			// 
 			// removeSelectedSurface
 			// 
@@ -507,20 +509,20 @@
 			this.Controls.Add(this.rotationAngleInput);
 			this.Controls.Add(this.label18);
 			this.Controls.Add(this.removeSelectedSurface);
-			this.Controls.Add(this.listBox2);
+			this.Controls.Add(this.fromToPairsListBox);
 			this.Controls.Add(this.label17);
 			this.Controls.Add(this.rotationSurfacesListBox);
 			this.Controls.Add(this.textBox18);
 			this.Controls.Add(this.addPairButton);
 			this.Controls.Add(this.normalizeToButton);
 			this.Controls.Add(this.normalizeFromButton);
-			this.Controls.Add(this.textBox10);
+			this.Controls.Add(this.toQInput);
 			this.Controls.Add(this.label9);
-			this.Controls.Add(this.textBox11);
+			this.Controls.Add(this.toZInput);
 			this.Controls.Add(this.label10);
-			this.Controls.Add(this.textBox12);
+			this.Controls.Add(this.toYInput);
 			this.Controls.Add(this.label11);
-			this.Controls.Add(this.textBox13);
+			this.Controls.Add(this.toXInput);
 			this.Controls.Add(this.label12);
 			this.Controls.Add(this.fromQInput);
 			this.Controls.Add(this.label13);
@@ -581,13 +583,13 @@
 		private System.Windows.Forms.Button addPairButton;
 		private System.Windows.Forms.Button normalizeToButton;
 		private System.Windows.Forms.Button normalizeFromButton;
-		private System.Windows.Forms.TextBox textBox10;
+		private System.Windows.Forms.TextBox toQInput;
 		private System.Windows.Forms.Label label9;
-		private System.Windows.Forms.TextBox textBox11;
+		private System.Windows.Forms.TextBox toZInput;
 		private System.Windows.Forms.Label label10;
-		private System.Windows.Forms.TextBox textBox12;
+		private System.Windows.Forms.TextBox toYInput;
 		private System.Windows.Forms.Label label11;
-		private System.Windows.Forms.TextBox textBox13;
+		private System.Windows.Forms.TextBox toXInput;
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.TextBox fromQInput;
 		private System.Windows.Forms.Label label13;
@@ -600,7 +602,7 @@
 		private System.Windows.Forms.TextBox textBox18;
 		private System.Windows.Forms.ListBox rotationSurfacesListBox;
 		private System.Windows.Forms.Label label17;
-		private System.Windows.Forms.ListBox listBox2;
+		private System.Windows.Forms.ListBox fromToPairsListBox;
 		private System.Windows.Forms.Button removeSelectedSurface;
 		private System.Windows.Forms.Label label18;
 		private System.Windows.Forms.TextBox rotationAngleInput;
