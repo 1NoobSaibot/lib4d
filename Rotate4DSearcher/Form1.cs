@@ -7,28 +7,11 @@ namespace Rotate4DSearcher
 {
 	public partial class Form1 : Form
 	{
-		private Vector4DInput _aInput;
-		private Vector4DInput _bInput;
-
 		public Form1()
 		{
 			InitializeComponent();
 			SamplesStore.SamplesChanged += _OnSamplesChanged;
 			_OnSamplesChanged(null, null);
-
-			_aInput = new Vector4DInput(
-				aXInput,
-				aYInput,
-				aZInput,
-				aQInput
-			);
-
-			_bInput = new Vector4DInput(
-				bXInput,
-				bYInput,
-				bZInput,
-				bQInput
-			);
 		}
 
 
@@ -41,11 +24,8 @@ namespace Rotate4DSearcher
 		{
 			try
 			{
-				Vector4D a = _aInput.GetVector();
-				Vector4D b = _bInput.GetVector();
-
-				int angleInGrad = Int32.Parse(rotationAngleInput.Text);
-				SamplesStore.AddNewSample(a, b, angleInGrad);
+				CustomBivector4D b = rotationSurfaceInput4D.GetBivector();
+				SamplesStore.AddNewSample(b);
 			}
 			catch (Exception error)
 			{
@@ -101,38 +81,14 @@ namespace Rotate4DSearcher
 			try
 			{
 				int sampleIndex = rotationSurfacesListBox.SelectedIndex;
-
-				Vector4D from = new Vector4D();
-				Vector4D to = new Vector4D();
-
-				from.X = Double.Parse(fromXInput.Text);
-				from.Y = Double.Parse(fromYInput.Text);
-				from.Z = Double.Parse(fromZInput.Text);
-				from.Q = Double.Parse(fromQInput.Text);
-
-				to.X = Double.Parse(toXInput.Text);
-				to.Y = Double.Parse(toYInput.Text);
-				to.Z = Double.Parse(toZInput.Text);
-				to.Q = Double.Parse(toQInput.Text);
-
+				Vector4D from = vectorInput4DFrom.GetVector();
+				Vector4D to = vectorInput4DTo.GetVector();
 				SamplesStore.AddPair(sampleIndex, from, to);
 			} catch (Exception error)
 			{
 				logLabel.Text = error.Message;
 			}
 			
-		}
-
-		private void normalizeAButton_Click(object sender, EventArgs e)
-		{
-			Vector4D v = _aInput.GetVector();
-			_aInput.SetVector(v.Normalize());
-		}
-
-		private void normalizeBButton_Click(object sender, EventArgs e)
-		{
-			Vector4D v = _bInput.GetVector();
-			_bInput.SetVector(v.Normalize());
 		}
 	}
 }

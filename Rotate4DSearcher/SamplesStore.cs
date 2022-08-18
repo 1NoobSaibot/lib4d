@@ -14,32 +14,24 @@ namespace Rotate4DSearcher
 		public static event EventHandler<List<Sample>> SamplesChanged;
 
 
+		static SamplesStore()
+		{
+			_Load();
+		}
+
+
 		public static List<Sample> GetSamples()
 		{
-			if (_samples == null)
-			{
-				_Load();
-			}
-
 			return _samples;
 		}
 
 
-		public static void AddNewSample(Vector4D a, Vector4D b, int angleInGrad)
+		public static void AddNewSample(CustomBivector4D b)
 		{
-			if (_samples == null)
-			{
-				_Load();
-			}
-
-			Vector4DSerializable aS = new Vector4DSerializable(a);
-			Vector4DSerializable bS = new Vector4DSerializable(b);
-			_ThrowIfExists(aS, bS, angleInGrad);
+			_ThrowIfExists(b);
 
 			Sample sample = new Sample() {
-				A = aS,
-				B = bS,
-				AngleInGrad = angleInGrad
+				A = b.A, B = b.B, AngleInGrad = b.AngleInGrad
 			};
 
 			_samples.Add(sample);
@@ -59,17 +51,13 @@ namespace Rotate4DSearcher
 		}
 
 
-		private static void _ThrowIfExists(
-			Vector4DSerializable a,
-			Vector4DSerializable b,
-			int angleInGrad
-		) {
+		private static void _ThrowIfExists(CustomBivector4D b) {
 			for (int i = 0; i < _samples.Count; i++)
 			{
 				if (
-					a == _samples[i].A
-					&& b == _samples[i].B
-					&& angleInGrad == _samples[i].AngleInGrad
+					b.A == _samples[i].A
+					&& b.B == _samples[i].B
+					&& b.AngleInGrad == _samples[i].AngleInGrad
 				) {
 					throw new Exception("This surface already exists");
 				}
@@ -166,7 +154,7 @@ namespace Rotate4DSearcher
 
 
 	[Serializable]
-	internal class Vector4DSerializable
+	public class Vector4DSerializable
 	{
 		public double X, Y, Z, Q;
 
@@ -188,6 +176,10 @@ namespace Rotate4DSearcher
 			return "(" + X + "; " + Y + "; " + Z + "; " + Q + ")";
 		}
 
+		internal Vector4D ToVector4D()
+		{
+			return new Vector4D(X, Y, Z, Q);
+		}
 
 		public static bool operator ==(Vector4DSerializable a, Vector4DSerializable b)
 		{
