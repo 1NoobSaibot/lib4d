@@ -226,6 +226,7 @@
 			this.normalizeAButton.TabIndex = 19;
 			this.normalizeAButton.Text = "Normalize A";
 			this.normalizeAButton.UseVisualStyleBackColor = true;
+			this.normalizeAButton.Click += new System.EventHandler(this.normalizeAButton_Click);
 			// 
 			// normalizeBButton
 			// 
@@ -235,6 +236,7 @@
 			this.normalizeBButton.TabIndex = 20;
 			this.normalizeBButton.Text = "Normalize B";
 			this.normalizeBButton.UseVisualStyleBackColor = true;
+			this.normalizeBButton.Click += new System.EventHandler(this.normalizeBButton_Click);
 			// 
 			// addRotationSurfaceButton
 			// 

@@ -7,11 +7,28 @@ namespace Rotate4DSearcher
 {
 	public partial class Form1 : Form
 	{
+		private Vector4DInput _aInput;
+		private Vector4DInput _bInput;
+
 		public Form1()
 		{
 			InitializeComponent();
 			SamplesStore.SamplesChanged += _OnSamplesChanged;
 			_OnSamplesChanged(null, null);
+
+			_aInput = new Vector4DInput(
+				aXInput,
+				aYInput,
+				aZInput,
+				aQInput
+			);
+
+			_bInput = new Vector4DInput(
+				bXInput,
+				bYInput,
+				bZInput,
+				bQInput
+			);
 		}
 
 
@@ -24,18 +41,8 @@ namespace Rotate4DSearcher
 		{
 			try
 			{
-				Vector4D a = new Vector4D();
-				Vector4D b = new Vector4D();
-
-				a.X = Double.Parse(aXInput.Text);
-				a.Y = Double.Parse(aYInput.Text);
-				a.Z = Double.Parse(aZInput.Text);
-				a.Q = Double.Parse(aQInput.Text);
-
-				b.X = Double.Parse(bXInput.Text);
-				b.Y = Double.Parse(bYInput.Text);
-				b.Z = Double.Parse(bZInput.Text);
-				b.Q = Double.Parse(bQInput.Text);
+				Vector4D a = _aInput.GetVector();
+				Vector4D b = _bInput.GetVector();
 
 				int angleInGrad = Int32.Parse(rotationAngleInput.Text);
 				SamplesStore.AddNewSample(a, b, angleInGrad);
@@ -114,6 +121,18 @@ namespace Rotate4DSearcher
 				logLabel.Text = error.Message;
 			}
 			
+		}
+
+		private void normalizeAButton_Click(object sender, EventArgs e)
+		{
+			Vector4D v = _aInput.GetVector();
+			_aInput.SetVector(v.Normalize());
+		}
+
+		private void normalizeBButton_Click(object sender, EventArgs e)
+		{
+			Vector4D v = _bInput.GetVector();
+			_bInput.SetVector(v.Normalize());
 		}
 	}
 }
