@@ -157,6 +157,12 @@ namespace Rotate4DSearcher.Genetic
 		}
 
 
+		public override int GetAmountOfNodes()
+		{
+			return 1 + A.GetAmountOfNodes() + B.GetAmountOfNodes();
+		}
+
+
 		public enum Action
 		{
 			Add = '+',

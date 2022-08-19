@@ -10,6 +10,8 @@ namespace Rotate4DSearcher.Genetic
 		private const int GENERATION_COUNT = 1000;
 		private const int AMOUNT_OF_CHOOSEN = 10;
 
+		public static Candidate[] TheBest = new Candidate[AMOUNT_OF_CHOOSEN];
+
 		private static bool _samplesWereUpdated = true;
 		private static bool _shouldStop = false;
 		private static readonly Random _rnd = new Random();
@@ -124,29 +126,39 @@ namespace Rotate4DSearcher.Genetic
 			}
 		}
 
-		internal static Candidate[] GetCandidates()
-		{
-			return _instance?._candidates ?? new Candidate[0];
-		}
 
 		private void MakeGenocide()
 		{
-			for (int i = 1; i < _candidates.Length; i++)
+			int comparer(Candidate a, Candidate b) 
 			{
-				for (int j = 0; j < _samples.Length - i; j++)
-				{
-					if (_candidates[j].Error < _candidates[j + 1].Error)
-					{
-						Candidate temp = _candidates[j];
-						_candidates[j] = _candidates[j + 1];
-						_candidates[j + 1] = temp;
-					}
+				if (a.Error > b.Error) {
+					return 1;
 				}
-			}
+
+				if (a.Error < b.Error) {
+					return -1;
+				}
+
+				if (a.AmountOfNodes > b.AmountOfNodes) {
+					return 1;
+				}
+
+				if (a.AmountOfNodes < b.AmountOfNodes) {
+					return -1;
+				}
+
+				return 0;
+			};
+			Array.Sort(_candidates, comparer);
 
 			for (int i = AMOUNT_OF_CHOOSEN; i < _candidates.Length; i++)
 			{
 				_candidates[i] = null;
+			}
+
+			for (int i = 0; i < AMOUNT_OF_CHOOSEN; i++)
+			{
+				TheBest[i] = _candidates[i];
 			}
 		}
 

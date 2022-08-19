@@ -99,6 +99,43 @@ namespace Rotate4DSearcher
 				SamplesChanged(_samples, null);
 			}
 		}
+
+
+		internal static void RemoveSample(Sample b)
+		{
+			for (int i = 0; i < _samples.Count; i++)
+			{
+				if (
+					b.A == _samples[i].A
+					&& b.B == _samples[i].B
+					&& b.AngleInGrad == _samples[i].AngleInGrad
+				)
+				{
+					_samples.RemoveAt(i);
+					_Save();
+					_FireOnChanged();
+					return;
+				}
+			}
+		}
+
+		internal static void RemovePair(Sample b, QuestionAnswerPair pair)
+		{
+			for (int i = 0; i < _samples.Count; i++)
+			{
+				if (
+					b.A == _samples[i].A
+					&& b.B == _samples[i].B
+					&& b.AngleInGrad == _samples[i].AngleInGrad
+				)
+				{
+					_samples[i].RemovePair(pair);
+					_Save();
+					_FireOnChanged();
+					return;
+				}
+			}
+		}
 	}
 
 
@@ -134,6 +171,18 @@ namespace Rotate4DSearcher
 				if (from == pairs[i].argument || to == pairs[i].expectedResult)
 				{
 					throw new Exception("This pair has one already existing vector");
+				}
+			}
+		}
+
+		internal void RemovePair(QuestionAnswerPair p)
+		{
+			for (int i = 0; i < pairs.Count; i++)
+			{
+				if (p.argument == pairs[i].argument && p.expectedResult == pairs[i].expectedResult)
+				{
+					pairs.RemoveAt(i);
+					return;
 				}
 			}
 		}

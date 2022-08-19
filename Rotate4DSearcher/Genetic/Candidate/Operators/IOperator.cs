@@ -24,5 +24,7 @@ namespace Rotate4DSearcher.Genetic
 		public abstract IOperator GetMutatedClone(Random rnd);
 
 		public abstract bool Contains(IOperator children);
+
+		public abstract int GetAmountOfNodes();
 	}
 }

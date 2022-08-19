@@ -45,6 +45,7 @@
 			this.vectorInput4DTo = new Rotate4DSearcher.Components.VectorInput4D();
 			this.rotationSurfaceInput4D = new Rotate4DSearcher.Components.RotationSurfaceInput4D();
 			this.vectorInput4DFrom = new Rotate4DSearcher.Components.VectorInput4D();
+			this.removeSelectedPair = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// addRotationSurfaceButton
@@ -101,6 +102,7 @@
 			this.removeSelectedSurface.TabIndex = 45;
 			this.removeSelectedSurface.Text = "Remove";
 			this.removeSelectedSurface.UseVisualStyleBackColor = true;
+			this.removeSelectedSurface.Click += new System.EventHandler(this.removeSelectedSurface_Click);
 			// 
 			// label18
 			// 
@@ -181,11 +183,22 @@
 			this.vectorInput4DFrom.Size = new System.Drawing.Size(150, 139);
 			this.vectorInput4DFrom.TabIndex = 53;
 			// 
+			// removeSelectedPair
+			// 
+			this.removeSelectedPair.Location = new System.Drawing.Point(576, 346);
+			this.removeSelectedPair.Name = "removeSelectedPair";
+			this.removeSelectedPair.Size = new System.Drawing.Size(83, 23);
+			this.removeSelectedPair.TabIndex = 58;
+			this.removeSelectedPair.Text = "Remove";
+			this.removeSelectedPair.UseVisualStyleBackColor = true;
+			this.removeSelectedPair.Click += new System.EventHandler(this.removeSelectedPair_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1204, 630);
+			this.Controls.Add(this.removeSelectedPair);
 			this.Controls.Add(this.SelectedFormulas);
 			this.Controls.Add(this.candidates);
 			this.Controls.Add(this.vectorInput4DTo);
@@ -225,6 +238,7 @@
 		private System.Windows.Forms.ListBox candidates;
 		private System.Windows.Forms.TextBox SelectedFormulas;
 		private System.Windows.Forms.Timer candidatesUpdater;
+		private System.Windows.Forms.Button removeSelectedPair;
 	}
 }
 

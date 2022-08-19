@@ -59,9 +59,16 @@ namespace Rotate4DSearcher.Genetic
 			return this;
 		}
 
+
 		public override bool Contains(IOperator children)
 		{
 			return false;
+		}
+
+
+		public override int GetAmountOfNodes()
+		{
+			return 1;
 		}
 	}
 }

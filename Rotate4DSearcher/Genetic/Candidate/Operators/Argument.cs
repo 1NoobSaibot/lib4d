@@ -73,5 +73,10 @@ namespace Rotate4DSearcher.Genetic
 		{
 			return false;
 		}
+
+		public override int GetAmountOfNodes()
+		{
+			return 1;
+		}
 	}
 }

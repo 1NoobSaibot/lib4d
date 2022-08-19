@@ -8,6 +8,7 @@ namespace Rotate4DSearcher.Genetic
 		private AlgebraicExpression[,] _formulas;
 		public double Error = 0;
 
+		public readonly int AmountOfNodes;
 
 		public Candidate(string[][] formulas)
 		{
@@ -19,6 +20,8 @@ namespace Rotate4DSearcher.Genetic
 					_formulas[i, j] = new AlgebraicExpression(formulas[i][j], ArgsBox.Empty);
 				}
 			}
+
+			AmountOfNodes = CalculateAmountOfNodes();
 		}
 
 		public Candidate(Random rnd, Candidate candidateA)
@@ -35,6 +38,8 @@ namespace Rotate4DSearcher.Genetic
 			int x = rnd.Next(4);
 			int y = rnd.Next(4);
 			_formulas[x, y] = _formulas[x, y].GetMutatedClone();
+
+			AmountOfNodes = CalculateAmountOfNodes();
 		}
 
 		public Candidate(Random rnd, Candidate candidateA, Candidate candidateB)
@@ -50,6 +55,8 @@ namespace Rotate4DSearcher.Genetic
 						: candidateB._formulas[i, j].Clone();
 				}
 			}
+
+			AmountOfNodes = CalculateAmountOfNodes();
 		}
 
 		public Transform4D CreateTransform(Bivector4D surface, double angle)
@@ -87,6 +94,20 @@ namespace Rotate4DSearcher.Genetic
 		{
 			string[][] array = ToStringArray();
 			return Error + "| " + array[0][0] + array[0][1];
+		}
+
+
+		private int CalculateAmountOfNodes()
+		{
+			int amount = 0;
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					amount += _formulas[i, j].RootOperator.GetAmountOfNodes();
+				}
+			}
+			return amount;
 		}
 	}
 	

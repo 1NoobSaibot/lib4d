@@ -48,7 +48,7 @@ namespace Rotate4DSearcher
 				rotationSurfacesListBox.Items.Add(samples[i]);
 			}
 
-			rotationSurfacesListBox.SelectedIndex = selectedSample;
+			/*rotationSurfacesListBox.SelectedIndex = selectedSample;
 
 			Sample activeSample = rotationSurfacesListBox.SelectedItem as Sample;
 			if (activeSample == null)
@@ -62,7 +62,7 @@ namespace Rotate4DSearcher
 			for (int i = 0; i < pairs.Count; i++)
 			{
 				fromToPairsListBox.Items.Add(pairs[i]);
-			}
+			}*/
 		}
 
 
@@ -99,7 +99,7 @@ namespace Rotate4DSearcher
 
 		private void candidatesUpdater_Tick(object sender, EventArgs e)
 		{
-			Candidate[] array = GeneticAlgorithm.GetCandidates();
+			Candidate[] array = GeneticAlgorithm.TheBest;
 			candidates.Items.Clear();
 			for (int i = 0; i < array.Length; i++)
 			{
@@ -108,6 +108,34 @@ namespace Rotate4DSearcher
 					candidates.Items.Add(array[i]);
 				}
 			}
+		}
+
+		private void removeSelectedSurface_Click(object sender, EventArgs e)
+		{
+			Sample selected = rotationSurfacesListBox.SelectedItem as Sample;
+			if (selected == null)
+			{
+				return;
+			}
+
+			SamplesStore.RemoveSample(selected);
+		}
+
+		private void removeSelectedPair_Click(object sender, EventArgs e)
+		{
+			Sample selected = rotationSurfacesListBox.SelectedItem as Sample;
+			if (selected == null)
+			{
+				return;
+			}
+
+			QuestionAnswerPair pair = fromToPairsListBox.SelectedItem as QuestionAnswerPair;
+			if (pair == null)
+			{
+				return;
+			}
+
+			SamplesStore.RemovePair(selected, pair);
 		}
 	}
 }
