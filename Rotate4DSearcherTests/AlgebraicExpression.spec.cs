@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Rotate4DSearcher.Genetic.Candidate;
+using Rotate4DSearcher.Genetic;
 using System;
 
 namespace Rotate4DSearcherTests

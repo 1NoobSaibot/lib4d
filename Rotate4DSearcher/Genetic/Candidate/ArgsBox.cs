@@ -2,7 +2,7 @@
 using System;
 
 
-namespace Rotate4DSearcher.Genetic.Candidate
+namespace Rotate4DSearcher.Genetic
 {
 	public class ArgsBox
 	{

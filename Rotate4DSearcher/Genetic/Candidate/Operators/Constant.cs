@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Rotate4DSearcher.Genetic.Candidate.Operators
+namespace Rotate4DSearcher.Genetic
 {
 	public class Constant : IOperator
 	{

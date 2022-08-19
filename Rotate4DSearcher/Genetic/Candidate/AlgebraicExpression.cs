@@ -1,9 +1,7 @@
-﻿
-using Rotate4DSearcher.Genetic.Candidate.Operators;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Rotate4DSearcher.Genetic.Candidate
+namespace Rotate4DSearcher.Genetic
 {
 	public class AlgebraicExpression
 	{
@@ -23,6 +21,12 @@ namespace Rotate4DSearcher.Genetic.Candidate
 		{
 			ExpressionReader reader = new ExpressionReader(expression);
 			RootOperator = Parse(reader, args);
+		}
+
+
+		public AlgebraicExpression Clone()
+		{
+			return new AlgebraicExpression(this.RootOperator.Clone());
 		}
 
 

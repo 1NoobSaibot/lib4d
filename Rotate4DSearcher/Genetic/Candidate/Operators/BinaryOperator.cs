@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Rotate4DSearcher.Genetic.Candidate.Operators
+namespace Rotate4DSearcher.Genetic
 {
 	public class BinaryOperator : IOperator
 	{
@@ -107,7 +107,7 @@ namespace Rotate4DSearcher.Genetic.Candidate.Operators
 				? " + "
 				: (action == Action.Subtract ? " - " : " * ");
 
-			return "( " + A.ToString() + op + B.ToString() + " )";
+			return "( " + A.ToString(args) + op + B.ToString(args) + " )";
 		}
 
 

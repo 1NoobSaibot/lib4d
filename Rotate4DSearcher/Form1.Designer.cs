@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+			this.components = new System.ComponentModel.Container();
 			this.addRotationSurfaceButton = new System.Windows.Forms.Button();
 			this.addPairButton = new System.Windows.Forms.Button();
-			this.textBox18 = new System.Windows.Forms.TextBox();
 			this.rotationSurfacesListBox = new System.Windows.Forms.ListBox();
 			this.label17 = new System.Windows.Forms.Label();
 			this.fromToPairsListBox = new System.Windows.Forms.ListBox();
@@ -39,9 +39,12 @@
 			this.label20 = new System.Windows.Forms.Label();
 			this.label21 = new System.Windows.Forms.Label();
 			this.logLabel = new System.Windows.Forms.Label();
-			this.vectorInput4DFrom = new Rotate4DSearcher.Components.VectorInput4D();
-			this.rotationSurfaceInput4D = new Rotate4DSearcher.Components.RotationSurfaceInput4D();
+			this.candidates = new System.Windows.Forms.ListBox();
+			this.SelectedFormulas = new System.Windows.Forms.TextBox();
+			this.candidatesUpdater = new System.Windows.Forms.Timer(this.components);
 			this.vectorInput4DTo = new Rotate4DSearcher.Components.VectorInput4D();
+			this.rotationSurfaceInput4D = new Rotate4DSearcher.Components.RotationSurfaceInput4D();
+			this.vectorInput4DFrom = new Rotate4DSearcher.Components.VectorInput4D();
 			this.SuspendLayout();
 			// 
 			// addRotationSurfaceButton
@@ -63,14 +66,6 @@
 			this.addPairButton.Text = "Add Pair";
 			this.addPairButton.UseVisualStyleBackColor = true;
 			this.addPairButton.Click += new System.EventHandler(this.addPairButton_Click);
-			// 
-			// textBox18
-			// 
-			this.textBox18.Location = new System.Drawing.Point(953, 12);
-			this.textBox18.Multiline = true;
-			this.textBox18.Name = "textBox18";
-			this.textBox18.Size = new System.Drawing.Size(239, 310);
-			this.textBox18.TabIndex = 41;
 			// 
 			// rotationSurfacesListBox
 			// 
@@ -143,12 +138,33 @@
 			this.logLabel.TabIndex = 51;
 			this.logLabel.Text = "label22";
 			// 
-			// vectorInput4DFrom
+			// candidates
 			// 
-			this.vectorInput4DFrom.Location = new System.Drawing.Point(353, 396);
-			this.vectorInput4DFrom.Name = "vectorInput4DFrom";
-			this.vectorInput4DFrom.Size = new System.Drawing.Size(150, 139);
-			this.vectorInput4DFrom.TabIndex = 53;
+			this.candidates.FormattingEnabled = true;
+			this.candidates.Location = new System.Drawing.Point(681, 25);
+			this.candidates.Name = "candidates";
+			this.candidates.Size = new System.Drawing.Size(511, 316);
+			this.candidates.TabIndex = 56;
+			// 
+			// SelectedFormulas
+			// 
+			this.SelectedFormulas.Location = new System.Drawing.Point(681, 359);
+			this.SelectedFormulas.Multiline = true;
+			this.SelectedFormulas.Name = "SelectedFormulas";
+			this.SelectedFormulas.Size = new System.Drawing.Size(511, 259);
+			this.SelectedFormulas.TabIndex = 57;
+			// 
+			// candidatesUpdater
+			// 
+			this.candidatesUpdater.Interval = 3000;
+			this.candidatesUpdater.Tick += new System.EventHandler(this.candidatesUpdater_Tick);
+			// 
+			// vectorInput4DTo
+			// 
+			this.vectorInput4DTo.Location = new System.Drawing.Point(509, 396);
+			this.vectorInput4DTo.Name = "vectorInput4DTo";
+			this.vectorInput4DTo.Size = new System.Drawing.Size(150, 139);
+			this.vectorInput4DTo.TabIndex = 55;
 			// 
 			// rotationSurfaceInput4D
 			// 
@@ -158,18 +174,20 @@
 			this.rotationSurfaceInput4D.Size = new System.Drawing.Size(310, 188);
 			this.rotationSurfaceInput4D.TabIndex = 54;
 			// 
-			// vectorInput4DTo
+			// vectorInput4DFrom
 			// 
-			this.vectorInput4DTo.Location = new System.Drawing.Point(509, 396);
-			this.vectorInput4DTo.Name = "vectorInput4DTo";
-			this.vectorInput4DTo.Size = new System.Drawing.Size(150, 139);
-			this.vectorInput4DTo.TabIndex = 55;
+			this.vectorInput4DFrom.Location = new System.Drawing.Point(353, 396);
+			this.vectorInput4DFrom.Name = "vectorInput4DFrom";
+			this.vectorInput4DFrom.Size = new System.Drawing.Size(150, 139);
+			this.vectorInput4DFrom.TabIndex = 53;
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1204, 630);
+			this.Controls.Add(this.SelectedFormulas);
+			this.Controls.Add(this.candidates);
 			this.Controls.Add(this.vectorInput4DTo);
 			this.Controls.Add(this.rotationSurfaceInput4D);
 			this.Controls.Add(this.vectorInput4DFrom);
@@ -181,7 +199,6 @@
 			this.Controls.Add(this.fromToPairsListBox);
 			this.Controls.Add(this.label17);
 			this.Controls.Add(this.rotationSurfacesListBox);
-			this.Controls.Add(this.textBox18);
 			this.Controls.Add(this.addPairButton);
 			this.Controls.Add(this.addRotationSurfaceButton);
 			this.Name = "Form1";
@@ -194,7 +211,6 @@
 		#endregion
 		private System.Windows.Forms.Button addRotationSurfaceButton;
 		private System.Windows.Forms.Button addPairButton;
-		private System.Windows.Forms.TextBox textBox18;
 		private System.Windows.Forms.ListBox rotationSurfacesListBox;
 		private System.Windows.Forms.Label label17;
 		private System.Windows.Forms.ListBox fromToPairsListBox;
@@ -206,6 +222,9 @@
 		private Components.VectorInput4D vectorInput4DFrom;
 		private Components.RotationSurfaceInput4D rotationSurfaceInput4D;
 		private Components.VectorInput4D vectorInput4DTo;
+		private System.Windows.Forms.ListBox candidates;
+		private System.Windows.Forms.TextBox SelectedFormulas;
+		private System.Windows.Forms.Timer candidatesUpdater;
 	}
 }
 

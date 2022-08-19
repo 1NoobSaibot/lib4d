@@ -1,4 +1,5 @@
 ﻿using Lib4D;
+using Rotate4DSearcher.Genetic;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -12,6 +13,8 @@ namespace Rotate4DSearcher
 			InitializeComponent();
 			SamplesStore.SamplesChanged += _OnSamplesChanged;
 			_OnSamplesChanged(null, null);
+			GeneticAlgorithm.Start();
+			candidatesUpdater.Start();
 		}
 
 
@@ -66,6 +69,10 @@ namespace Rotate4DSearcher
 		private void rotationSurfacesListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			Sample sample = rotationSurfacesListBox.SelectedItem as Sample;
+			if (sample == null)
+			{
+				return;
+			}
 			List<QuestionAnswerPair> pairs = sample.pairs;
 
 			fromToPairsListBox.Items.Clear();
@@ -88,7 +95,19 @@ namespace Rotate4DSearcher
 			{
 				logLabel.Text = error.Message;
 			}
-			
+		}
+
+		private void candidatesUpdater_Tick(object sender, EventArgs e)
+		{
+			Candidate[] array = GeneticAlgorithm.GetCandidates();
+			candidates.Items.Clear();
+			for (int i = 0; i < array.Length; i++)
+			{
+				if (array[i] != null)
+				{
+					candidates.Items.Add(array[i]);
+				}
+			}
 		}
 	}
 }

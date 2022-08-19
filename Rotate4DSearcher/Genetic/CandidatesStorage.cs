@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -7,50 +8,42 @@ namespace Rotate4DSearcher.Genetic
 	public static class CandidatesStorage
 	{
 		private const string fileName = "Candidates.json";
-		private static List<string[,]> _candidates;
 
 
-		static CandidatesStorage()
-		{
-			_Load();
-		}
-
-
-		public static List<string[,]> GetCandidates()
-		{
-			return _candidates;
-		}
-
-
-		private static void _Load()
+		public static List<string[][]> GetCandidates()
 		{
 			if (!File.Exists(fileName))
 			{
-				_candidates = new List<string[,]>();
-				_candidates.Add(FirstCandidate());
-				_Save();
-				return;
+				List<string[][]> candidates = new List<string[][]>();
+				candidates.Add(FirstCandidate());
+				return candidates;
 			}
 
 			using (StreamReader reader = new StreamReader(fileName))
 			{
 				string json = reader.ReadToEnd();
-				_candidates = JsonConvert.DeserializeObject<List<string[,]>>(json);
+				if (string.IsNullOrEmpty(json))
+				{
+					List<string[][]> candidates = new List<string[][]>();
+					candidates.Add(FirstCandidate());
+					return candidates;
+				}
+				return JsonConvert.DeserializeObject<List<string[][]>>(json);
 			}
 		}
 
 
-		private static void _Save()
+		public static void Save(List<string[][]> candidates)
 		{
 			using (StreamWriter writer = new StreamWriter(fileName, false))
 			{
-				string json = JsonConvert.SerializeObject(_candidates);
+				string json = JsonConvert.SerializeObject(candidates);
 				writer.Write(json);
 			}
 		}
 
 
-		public static string[,] FirstCandidate()
+		public static string[][] FirstCandidate()
 		{
 			string s00 = "( c * ( ( yz + yq ) + zq ) ) + ( n * ( ( xq + xz ) + xy ) * 0.5 )";
 			string s01 = "( n * xy ) - ( s * zq )";
@@ -72,12 +65,12 @@ namespace Rotate4DSearcher.Genetic
 			string s32 = "( n * zq ) + ( s * xy )";
 			string s33 = "( c * ( ( xy + xz ) + yz ) ) + ( n * ( ( xq + yq ) + zq ) * 0.5 )";
 
-			return new string[4, 4]
+			return new string[4][]
 			{
-				{ s00, s10, s20, s30 },
-				{ s01, s11, s21, s31 },
-				{ s02, s12, s22, s32 },
-				{ s03, s13, s23, s33 },
+				new string[4] { s00, s10, s20, s30 },
+				new string[4] { s01, s11, s21, s31 },
+				new string[4] { s02, s12, s22, s32 },
+				new string[4] { s03, s13, s23, s33 },
 			};
 		}
 	}

@@ -1,30 +1,56 @@
 ﻿using Lib4D;
-using Rotate4DSearcher.Genetic.Candidate.Operators;
-using System.Linq;
+using System;
 
-namespace Rotate4DSearcher.Genetic.Candidate
+namespace Rotate4DSearcher.Genetic
 {
 	public class Candidate
 	{
-		private IOperator[] _operator;
 		private AlgebraicExpression[,] _formulas;
+		public double Error = 0;
 
 
-		public Candidate(string[,] formulas)
+		public Candidate(string[][] formulas)
 		{
 			_formulas = new AlgebraicExpression[4, 4];
 			for (int i = 0; i < 4; i++)
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					_formulas[i, j] = new AlgebraicExpression(formulas[i, j], ArgsBox.Empty);
+					_formulas[i, j] = new AlgebraicExpression(formulas[i][j], ArgsBox.Empty);
 				}
 			}
 		}
 
+		public Candidate(Random rnd, Candidate candidateA)
+		{
+			_formulas = new AlgebraicExpression[4, 4];
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					_formulas[i, j] = candidateA._formulas[i, j].Clone();
+				}
+			}
 
-		private IOperator RootOperator => _operator.Last();
+			int x = rnd.Next(4);
+			int y = rnd.Next(4);
+			_formulas[x, y] = _formulas[x, y].GetMutatedClone();
+		}
 
+		public Candidate(Random rnd, Candidate candidateA, Candidate candidateB)
+		{
+			_formulas = new AlgebraicExpression[4, 4];
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					bool fromA = rnd.NextDouble() < 0.5;
+					_formulas[i, j] = fromA
+						? candidateA._formulas[i, j].Clone()
+						: candidateB._formulas[i, j].Clone();
+				}
+			}
+		}
 
 		public Transform4D CreateTransform(Bivector4D surface, double angle)
 		{
@@ -41,10 +67,26 @@ namespace Rotate4DSearcher.Genetic.Candidate
 			return new Transform4D(matrix);
 		}
 
-		public void CreateRotationMatrix(Bivector4D b, double angle)
+		internal string[][] ToStringArray()
 		{
-			ArgsBox _args = new ArgsBox(b, angle);
-			RootOperator.Calculate(_args);
+			string[][] res = new string[4][];
+			for (int i = 0; i < 4; i++)
+			{
+				res[i] = new string[4];
+
+				for (int j = 0; j < 4; j++)
+				{
+					res[i][j] = _formulas[i, j].RootOperator.ToString(ArgsBox.Empty);
+				}
+			}
+			return res;
+		}
+
+
+		public override string ToString()
+		{
+			string[][] array = ToStringArray();
+			return Error + "| " + array[0][0] + array[0][1];
 		}
 	}
 	
