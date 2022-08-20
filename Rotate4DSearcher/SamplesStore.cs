@@ -222,7 +222,11 @@ namespace Rotate4DSearcher
 
 		public override string ToString()
 		{
-			return "(" + X + "; " + Y + "; " + Z + "; " + Q + ")";
+			string sX = string.Format("{0:0.##}", X);
+			string sY = string.Format("{0:0.##}", Y);
+			string sZ = string.Format("{0:0.##}", Z);
+			string sQ = string.Format("{0:0.##}", Q);
+			return "(" + sX + "; " + sY + "; " + sZ + "; " + sQ + ")";
 		}
 
 		internal Vector4D ToVector4D()

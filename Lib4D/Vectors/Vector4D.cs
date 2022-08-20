@@ -116,7 +116,11 @@ namespace Lib4D
 
 		public override string ToString()
 		{
-			return "(" + X + "; " + Y + "; " + Z + "; " + Q + ")";
+			string sX = string.Format("{0:f2}", X);
+			string sY = string.Format("{0:f2}", Y);
+			string sZ = string.Format("{0:f2}", Z);
+			string sQ = string.Format("{0:f2}", Q);
+			return "(" + sX + "; " + sY + "; " + sZ + "; " + sQ + ")";
 		}
 	}
 }
