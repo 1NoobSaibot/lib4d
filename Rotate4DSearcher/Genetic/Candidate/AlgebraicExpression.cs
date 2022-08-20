@@ -14,7 +14,7 @@ namespace Rotate4DSearcher.Genetic
 
 		AlgebraicExpression(IOperator expressionTree)
 		{
-			RootOperator = expressionTree;
+			RootOperator = expressionTree.Optimize();
 		}
 
 
@@ -22,6 +22,7 @@ namespace Rotate4DSearcher.Genetic
 		{
 			ExpressionReader reader = new ExpressionReader(expression);
 			RootOperator = Parse(reader, args);
+			RootOperator = RootOperator.Optimize();
 		}
 
 
@@ -41,14 +42,12 @@ namespace Rotate4DSearcher.Genetic
 			IOperator choosen = operators[randomOpIndex];
 			IOperator clone = choosen.GetMutatedClone(rnd);
 			
-			
 			if (choosen == clonedRoot)
 			{
 				return new AlgebraicExpression(clone);
 			}
 			IOperator parent = FindParent(operators, choosen);
 			(parent as BinaryOperator).ReplaceChildren(choosen, clone);
-
 			return new AlgebraicExpression(clonedRoot);
 		}
 

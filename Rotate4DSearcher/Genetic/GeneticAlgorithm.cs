@@ -112,15 +112,20 @@ namespace Rotate4DSearcher.Genetic
 				for (int j = 0; j < _samples.Length; j++)
 				{
 					GeneticSample sample = _samples[j];
-					Transform4D t = candidate.CreateTransform(sample.bivector, sample.angle);
-					Vector4D[,] pairs = sample.pairs;
 
-					for (int k = 0; k < pairs.GetLength(0); k++)
+					for (int rotationIndex = 0; rotationIndex < 2; rotationIndex++)
 					{
-						Vector4D actual = t * pairs[k, 0];
-						Vector4D difference = actual - pairs[k, 1];
-						double error = difference.Abs;
-						candidate.Error += error;
+						Rotation rotation = sample.rotations[rotationIndex];
+						Transform4D t = candidate.CreateTransform(rotation.bivector, rotation.angle);
+						Vector4D[,] pairs = sample.pairs;
+
+						for (int k = 0; k < pairs.GetLength(0); k++)
+						{
+							Vector4D actual = t * pairs[k, 0];
+							Vector4D difference = actual - pairs[k, 1];
+							double error = difference.Abs;
+							candidate.Error += error;
+						}
 					}
 				}
 			}
@@ -220,15 +225,17 @@ namespace Rotate4DSearcher.Genetic
 
 	class GeneticSample
 	{
-		public readonly Bivector4D bivector;
-		public readonly double angle;
+		public readonly Rotation[] rotations = new Rotation[2];
 		public readonly Vector4D[,] pairs;
 
 
 		public GeneticSample(Sample sample)
 		{
-			bivector = new Bivector4D(sample.A.ToVector4D(), sample.B.ToVector4D());
-			angle = sample.AngleInGrad * Math.PI / 180.0;
+			Bivector4D bivector = new Bivector4D(sample.A.ToVector4D(), sample.B.ToVector4D());
+			double angle = sample.AngleInGrad * Math.PI / 180.0;
+
+			rotations[0] = new Rotation(bivector, angle);
+			rotations[1] = new Rotation(-bivector, -angle);
 
 			int count = sample.pairs.Count;
 			pairs = new Vector4D[count, 2];
@@ -239,6 +246,19 @@ namespace Rotate4DSearcher.Genetic
 				pairs[i, 0] = pair.argument.ToVector4D();
 				pairs[i, 1] = pair.expectedResult.ToVector4D();
 			}
+		}
+	}
+
+
+	public struct Rotation
+	{
+		public readonly Bivector4D bivector;
+		public readonly double angle;
+
+		public Rotation(Bivector4D b, double angle)
+		{
+			this.bivector = b;
+			this.angle = angle;
 		}
 	}
 }

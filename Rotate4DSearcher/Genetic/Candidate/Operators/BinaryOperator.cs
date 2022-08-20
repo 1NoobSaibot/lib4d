@@ -169,5 +169,123 @@ namespace Rotate4DSearcher.Genetic
 			Subtract = '-',
 			Multiply = '*'
 		}
+
+
+		public override bool IsZero()
+		{
+			switch (action)
+			{
+				case Action.Add:
+					return A.IsZero() && B.IsZero();
+				case Action.Subtract:
+					return A.Equals(B);
+				case Action.Multiply:
+					return A.IsZero() || B.IsZero();
+				default:
+					throw new Exception("BinaryOperator.IsZero(): This action is not defined " + action);
+			}
+		}
+
+
+		public override bool Equals(object obj)
+		{
+			if (!(obj is BinaryOperator))
+			{
+				return false;
+			}
+			BinaryOperator other = (BinaryOperator)obj;
+
+			if (other.action != action)
+			{
+				return false;
+			}
+			
+			switch (action)
+			{
+				case Action.Add:
+				case Action.Multiply:
+					return (A.Equals(other.A) && B.Equals(other.B)) || (A.Equals(other.B) && B.Equals(other.A));
+				case Action.Subtract:
+					return A.Equals(other.A) && B.Equals(other.B);
+				default:
+					throw new Exception("BinaryOperator.Equals: Unknown action: " + action);
+			}
+		}
+
+
+		public override IOperator Optimize()
+		{
+			A = A.Optimize();
+			B = B.Optimize();
+
+			switch (action)
+			{
+				case Action.Add:
+					return OptimizePlus();
+				case Action.Multiply:
+					return OptimizeMultiply();
+				case Action.Subtract:
+					return OptimizeSubstract();
+				default:
+					throw new Exception("BinaryOperator.Optimize: Unknown action: " + action);
+			}
+		}
+
+
+		private IOperator OptimizeSubstract()
+		{
+			if (A.Equals(B))
+			{
+				return new Constant(0);
+			}
+			if (A is Constant a && B is Constant b)
+			{
+				return new Constant(a.Value - b.Value);
+			}
+			return this;
+		}
+
+
+		private IOperator OptimizeMultiply()
+		{
+			if (A.IsZero() || B.IsZero())
+			{
+				return new Constant(0);
+			}
+			if (A is Constant constantA && constantA.Value == 1)
+			{
+				return B;
+			}
+			if (B is Constant constantB && constantB.Value == 1)
+			{
+				return A;
+			}
+			if (A is Constant a && B is Constant b)
+			{
+				return new Constant(a.Value * b.Value);
+			}
+
+			return this;
+		}
+
+		private IOperator OptimizePlus()
+		{
+			if (A.IsZero() && B.IsZero())
+			{
+				return new Constant(0);
+			}
+
+			if (A is Constant a && B is Constant b)
+			{
+				return new Constant(a.Value + b.Value);
+			}
+
+			if (A.Equals(B))
+			{
+				return new BinaryOperator(A, Action.Multiply, new Constant(2));
+			}
+
+			return this;
+		}
 	}
 }

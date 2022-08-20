@@ -5,30 +5,31 @@ namespace Rotate4DSearcher.Genetic
 {
 	public class Constant : IOperator
 	{
-		private double Value;
+		private double _Value;
+		public double Value => _Value;
 
 
 		public Constant(double value)
 		{
-			Value = value;
+			_Value = value;
 		}
 
 
 		public override double Calculate(ArgsBox args)
 		{
-			return Value;
+			return _Value;
 		}
 
 
 		public override IOperator Clone()
 		{
-			return new Constant(Value);
+			return new Constant(_Value);
 		}
 
 
 		public override string ToString(ArgsBox args)
 		{
-			return Value.ToString();
+			return _Value.ToString();
 		}
 
 
@@ -55,7 +56,7 @@ namespace Rotate4DSearcher.Genetic
 
 		private IOperator ChangeValue(Random rnd)
 		{
-			Value += rnd.NextDouble() * 0.2 - 0.1;
+			_Value += rnd.NextDouble() * 0.2 - 0.1;
 			return this;
 		}
 
@@ -69,6 +70,31 @@ namespace Rotate4DSearcher.Genetic
 		public override int GetAmountOfNodes()
 		{
 			return 1;
+		}
+
+
+		public override bool IsZero()
+		{
+			return _Value == 0;
+		}
+
+
+		public override bool Equals(object obj)
+		{
+			if (obj is Constant constant)
+			{
+				if (constant._Value == _Value)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+
+		public override IOperator Optimize()
+		{
+			return this;
 		}
 	}
 }

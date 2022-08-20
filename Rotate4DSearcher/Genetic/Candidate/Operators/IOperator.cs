@@ -26,5 +26,9 @@ namespace Rotate4DSearcher.Genetic
 		public abstract bool Contains(IOperator children);
 
 		public abstract int GetAmountOfNodes();
+
+		public abstract bool IsZero();
+
+		public abstract IOperator Optimize();
 	}
 }

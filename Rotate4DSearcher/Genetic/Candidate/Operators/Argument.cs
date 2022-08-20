@@ -78,5 +78,30 @@ namespace Rotate4DSearcher.Genetic
 		{
 			return 1;
 		}
+
+
+		public override bool IsZero()
+		{
+			return false;
+		}
+
+
+		public override bool Equals(object b)
+		{
+			if (b is Argument agrument)
+			{
+				if (agrument.index == index)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+
+		public override IOperator Optimize()
+		{
+			return this;
+		}
 	}
 }
