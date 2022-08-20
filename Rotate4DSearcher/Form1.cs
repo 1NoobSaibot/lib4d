@@ -2,6 +2,7 @@
 using Rotate4DSearcher.Genetic;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Rotate4DSearcher
@@ -107,6 +108,33 @@ namespace Rotate4DSearcher
 				{
 					candidates.Items.Add(array[i]);
 				}
+			}
+
+			double[][] errors = GeneticAlgorithm.GetErrors();
+			string[] errorStrings = new string[errors.Length];
+			for (int i = 0; i < errors.Length; i++)
+			{
+				StringBuilder errorBuilder = new StringBuilder();
+				double error = 0;
+
+				if (errors[i].Length == 0)
+				{
+					errorStrings[i] = "No Data";
+					continue;
+				}
+				for (int j = 0; j < errors[i].Length; j++)
+				{
+					error += errors[i][j];
+					errorBuilder.Append(String.Format("{0:0.##}", errors[i][j]) + "  ");
+				}
+				errorBuilder.Insert(0, String.Format("{0:0.##}", error / errors[i].Length) + " | ");
+				errorStrings[i] = errorBuilder.ToString();
+			}
+
+			samplesErrors.Items.Clear();
+			for (int i = 0; i < errorStrings.Length; i++)
+			{
+				samplesErrors.Items.Add(errorStrings[i]);
 			}
 		}
 

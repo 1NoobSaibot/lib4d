@@ -40,12 +40,12 @@
 			this.label21 = new System.Windows.Forms.Label();
 			this.logLabel = new System.Windows.Forms.Label();
 			this.candidates = new System.Windows.Forms.ListBox();
-			this.SelectedFormulas = new System.Windows.Forms.TextBox();
 			this.candidatesUpdater = new System.Windows.Forms.Timer(this.components);
 			this.vectorInput4DTo = new Rotate4DSearcher.Components.VectorInput4D();
 			this.rotationSurfaceInput4D = new Rotate4DSearcher.Components.RotationSurfaceInput4D();
 			this.vectorInput4DFrom = new Rotate4DSearcher.Components.VectorInput4D();
 			this.removeSelectedPair = new System.Windows.Forms.Button();
+			this.samplesErrors = new System.Windows.Forms.ListBox();
 			this.SuspendLayout();
 			// 
 			// addRotationSurfaceButton
@@ -148,14 +148,6 @@
 			this.candidates.Size = new System.Drawing.Size(511, 316);
 			this.candidates.TabIndex = 56;
 			// 
-			// SelectedFormulas
-			// 
-			this.SelectedFormulas.Location = new System.Drawing.Point(681, 359);
-			this.SelectedFormulas.Multiline = true;
-			this.SelectedFormulas.Name = "SelectedFormulas";
-			this.SelectedFormulas.Size = new System.Drawing.Size(511, 259);
-			this.SelectedFormulas.TabIndex = 57;
-			// 
 			// candidatesUpdater
 			// 
 			this.candidatesUpdater.Interval = 3000;
@@ -193,13 +185,21 @@
 			this.removeSelectedPair.UseVisualStyleBackColor = true;
 			this.removeSelectedPair.Click += new System.EventHandler(this.removeSelectedPair_Click);
 			// 
+			// samplesErrors
+			// 
+			this.samplesErrors.FormattingEnabled = true;
+			this.samplesErrors.Location = new System.Drawing.Point(681, 344);
+			this.samplesErrors.Name = "samplesErrors";
+			this.samplesErrors.Size = new System.Drawing.Size(511, 277);
+			this.samplesErrors.TabIndex = 59;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1204, 630);
+			this.Controls.Add(this.samplesErrors);
 			this.Controls.Add(this.removeSelectedPair);
-			this.Controls.Add(this.SelectedFormulas);
 			this.Controls.Add(this.candidates);
 			this.Controls.Add(this.vectorInput4DTo);
 			this.Controls.Add(this.rotationSurfaceInput4D);
@@ -236,9 +236,9 @@
 		private Components.RotationSurfaceInput4D rotationSurfaceInput4D;
 		private Components.VectorInput4D vectorInput4DTo;
 		private System.Windows.Forms.ListBox candidates;
-		private System.Windows.Forms.TextBox SelectedFormulas;
 		private System.Windows.Forms.Timer candidatesUpdater;
 		private System.Windows.Forms.Button removeSelectedPair;
+		private System.Windows.Forms.ListBox samplesErrors;
 	}
 }
 
