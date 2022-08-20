@@ -56,7 +56,7 @@ namespace Rotate4DSearcher.Genetic
 		{
 			if (_AsString == null)
 			{
-				_AsString = RootOperator.ToString(ArgsBox.Empty);
+				_AsString = RootOperator.ToStringFullBracketsString(ArgsBox.Empty);
 			}
 			return _AsString;
 		}

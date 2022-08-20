@@ -1,7 +1,6 @@
 ﻿using Lib4D;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rotate4DSearcher.Genetic;
-using Rotate4DSearcher.Genetic.Candidate;
 using System;
 
 namespace Rotate4DSearcherTests

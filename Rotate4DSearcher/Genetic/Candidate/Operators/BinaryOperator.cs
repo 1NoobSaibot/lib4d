@@ -101,13 +101,13 @@ namespace Rotate4DSearcher.Genetic
 		}
 
 
-		public override string ToString(ArgsBox args)
+		public override string ToStringFullBracketsString(ArgsBox args)
 		{
 			string op = action == Action.Add
 				? " + "
 				: (action == Action.Subtract ? " - " : " * ");
 
-			return "( " + A.ToString(args) + op + B.ToString(args) + " )";
+			return "( " + A.ToStringFullBracketsString(args) + op + B.ToStringFullBracketsString(args) + " )";
 		}
 
 
