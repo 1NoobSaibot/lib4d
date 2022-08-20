@@ -4,8 +4,22 @@ namespace Lib4D
 {
 	public class Transform4D
 	{
-		private double[,] _matrix = _CreateIdentityMatrix();
+		private double[,] _matrix;
 
+		public Transform4D(double[,] matrix)
+		{
+			if (matrix.GetWidth() != 5 || matrix.GetHeight() != 5)
+			{
+				throw new ArgumentException("Matrix should be size 5*5");
+			}
+
+			_matrix = matrix;
+		}
+
+		public Transform4D()
+		{
+			_matrix = _CreateIdentityMatrix();
+		}
 
 		public void Translate (Vector4D t)
 		{

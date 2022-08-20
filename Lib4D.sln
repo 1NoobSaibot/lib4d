@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rotate4DSearcher", "Rotate4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rotate4DSearcherTests", "Rotate4DSearcherTests\Rotate4DSearcherTests.csproj", "{D2AC95EC-804D-48D9-928B-303AD6ED2329}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatementSystem4D", "StatementSystem4D\StatementSystem4D.csproj", "{B18F5056-A08A-4722-9BA8-64A125C0364F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatementSystem4DTests", "StatementSystem4DTests\StatementSystem4DTests.csproj", "{F9014BBB-04C1-4DFC-9DE0-DC12D848DCCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{D2AC95EC-804D-48D9-928B-303AD6ED2329}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2AC95EC-804D-48D9-928B-303AD6ED2329}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2AC95EC-804D-48D9-928B-303AD6ED2329}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B18F5056-A08A-4722-9BA8-64A125C0364F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B18F5056-A08A-4722-9BA8-64A125C0364F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B18F5056-A08A-4722-9BA8-64A125C0364F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B18F5056-A08A-4722-9BA8-64A125C0364F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9014BBB-04C1-4DFC-9DE0-DC12D848DCCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9014BBB-04C1-4DFC-9DE0-DC12D848DCCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9014BBB-04C1-4DFC-9DE0-DC12D848DCCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9014BBB-04C1-4DFC-9DE0-DC12D848DCCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
