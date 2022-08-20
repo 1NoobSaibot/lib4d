@@ -83,7 +83,7 @@ namespace Rotate4DSearcher.Genetic
 
 				for (int j = 0; j < 4; j++)
 				{
-					res[i][j] = _formulas[i, j].RootOperator.ToString(ArgsBox.Empty);
+					res[i][j] = _formulas[i, j].ToString();
 				}
 			}
 			return res;
@@ -93,7 +93,7 @@ namespace Rotate4DSearcher.Genetic
 		public override string ToString()
 		{
 			string[][] array = ToStringArray();
-			return Error + "| " + array[0][0] + array[0][1];
+			return Error + "  |  " + array[0][0] + "  |  " + array[0][1];
 		}
 
 

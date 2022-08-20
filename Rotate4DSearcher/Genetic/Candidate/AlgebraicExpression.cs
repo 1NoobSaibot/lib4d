@@ -9,6 +9,7 @@ namespace Rotate4DSearcher.Genetic
 
 
 		public readonly IOperator RootOperator;
+		private string _AsString = null;
 
 
 		AlgebraicExpression(IOperator expressionTree)
@@ -49,6 +50,16 @@ namespace Rotate4DSearcher.Genetic
 			(parent as BinaryOperator).ReplaceChildren(choosen, clone);
 
 			return new AlgebraicExpression(clonedRoot);
+		}
+
+
+		public override string ToString()
+		{
+			if (_AsString == null)
+			{
+				_AsString = RootOperator.ToString(ArgsBox.Empty);
+			}
+			return _AsString;
 		}
 
 
