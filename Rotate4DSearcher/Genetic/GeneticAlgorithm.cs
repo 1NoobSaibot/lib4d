@@ -21,6 +21,7 @@ namespace Rotate4DSearcher.Genetic
 		private GeneticSample[] _samples;
 
 		private static GeneticAlgorithm _instance;
+		private static DateTime lastSaveTime;
 
 		private GeneticAlgorithm()
 		{
@@ -32,6 +33,7 @@ namespace Rotate4DSearcher.Genetic
 
 		public static void Start()
 		{
+			lastSaveTime = DateTime.Now;
 			_instance = new GeneticAlgorithm();
 			SamplesStore.SamplesChanged += OnSamplesUpdated;
 		}
@@ -170,6 +172,12 @@ namespace Rotate4DSearcher.Genetic
 
 		private void Save()
 		{
+			DateTime now = DateTime.Now;
+			if (now - lastSaveTime < new TimeSpan(0, 2, 0))
+			{
+				return;
+			}
+
 			List<string[][]> serializedCandidates = new List<string[][]>(10);
 			for (int i = 0; i < AMOUNT_OF_CHOOSEN; i++)
 			{
@@ -177,6 +185,7 @@ namespace Rotate4DSearcher.Genetic
 			}
 
 			CandidatesStorage.Save(serializedCandidates);
+			lastSaveTime = now;
 		}
 
 
