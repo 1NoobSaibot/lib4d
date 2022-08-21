@@ -4,6 +4,18 @@
 	{
 		private static Rule[] _rules = new Rule[]
 		{
+			// Constant $ Constant => Constant
+			new Rule()
+				.Where(op =>
+				{
+					return op is BinaryOperator binOp
+						&& binOp.A is Constant
+						&& binOp.B is Constant;
+				})
+				.Replace(op => new Constant(op.Calculate(ArgsBox.Empty)))
+			,
+
+
 			// 0 * Any => 0
 			new Rule()
 				.Where(op =>
@@ -48,6 +60,26 @@
 						&& binOp.A.Equals(binOp.B);
 				})
 				.Replace(_ => new Constant(0))
+			,
+
+
+			// 1 * A => A
+			new Rule()
+				.Where(op =>
+				{
+					return op is BinaryOperator binOp
+						&& binOp.action == Action.Multiply
+						&& ((binOp.A is Constant ca && ca.Value == 1) || (binOp.B is Constant cb && cb.Value == 1));
+				})
+				.Replace(op =>
+				{
+					BinaryOperator binOp = op as BinaryOperator;
+					if (binOp.A is Constant ca && ca.Value == 1)
+					{
+						return binOp.B;
+					}
+					return binOp.A;
+				})
 			,
 
 
