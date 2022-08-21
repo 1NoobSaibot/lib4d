@@ -48,22 +48,11 @@ namespace StatementSystem4D
 			new Rule()
 				.Where((s, query) =>
 				{
-					if (s.Alpha != Angle.A90) {
-						return false;
-					}
-					bool allVectorsAreBasic = s.A.IsBasic && s.B.IsBasic && s.C.IsBasic && s.D.IsBasic;
-					if (!allVectorsAreBasic)
-					{
-						return false;
-					}
-
-					bool allVectorsAreDifferent = s.A != s.B
-						&& s.A != s.C
-						&& s.A != s.D
-						&& s.B != s.C
-						&& s.B != s.D
-						&& s.C != s.D;
-					if (!allVectorsAreDifferent)
+					if (
+						s.Alpha != Angle.A90
+						|| !s.AreAllVectorsBasic()
+						|| !s.AreAllVectorsDifferent()
+					)
 					{
 						return false;
 					}
@@ -74,7 +63,7 @@ namespace StatementSystem4D
 							return false;
 						}
 
-						return	(sq.A == s.C && sq.C == s.D && sq.D == s.A)
+						return  (sq.A == s.C && sq.C == s.D && sq.D == s.A)
 									||(sq.A == s.D && sq.C == s.A && sq.D == s.C);
 					});
 
@@ -96,22 +85,11 @@ namespace StatementSystem4D
 			new Rule()
 				.Where((s, query) =>
 				{
-					if (s.Alpha != Angle.A90) {
-						return false;
-					}
-					bool allVectorsAreBasic = s.A.IsBasic && s.B.IsBasic && s.C.IsBasic && s.D.IsBasic;
-					if (!allVectorsAreBasic)
-					{
-						return false;
-					}
-
-					bool allVectorsAreDifferent = s.A != s.B
-						&& s.A != s.C
-						&& s.A != s.D
-						&& s.B != s.C
-						&& s.B != s.D
-						&& s.C != s.D;
-					if (!allVectorsAreDifferent)
+					if (
+						s.Alpha != Angle.A90
+						|| !s.AreAllVectorsBasic()
+						|| !s.AreAllVectorsDifferent()
+					)
 					{
 						return false;
 					}
@@ -146,27 +124,16 @@ namespace StatementSystem4D
 			new Rule()
 				.Where((s, query) =>
 				{
-					if (s.Alpha != Angle.A90) {
-						return false;
-					}
-					bool allVectorsAreBasic = s.A.IsBasic && s.B.IsBasic && s.C.IsBasic && s.D.IsBasic;
-					if (!allVectorsAreBasic)
+					if (
+						s.Alpha != Angle.A90
+						|| !s.AreAllVectorsBasic()
+						|| !s.AreAllVectorsDifferent()
+					)
 					{
 						return false;
 					}
 
-					bool allVectorsAreDifferent = s.A != s.B
-						&& s.A != s.C
-						&& s.A != s.D
-						&& s.B != s.C
-						&& s.B != s.D
-						&& s.C != s.D;
-					if (!allVectorsAreDifferent)
-					{
-						return false;
-					}
-
-					List<Statement> statements = query((sq) => {
+					int Count = query((sq) => {
 						if (sq.Alpha != Angle.A90 || sq.B != s.B)
 						{
 							return false;
@@ -174,9 +141,9 @@ namespace StatementSystem4D
 
 						return  (sq.A == s.C && sq.C == s.D && sq.D == s.A)
 									||(sq.A == s.D && sq.C == s.A && sq.D == s.C);
-					});
+					}).Count;
 
-					if (statements.Count < 2)
+					if (Count < 2)
 					{
 						return false;
 					}
@@ -187,12 +154,42 @@ namespace StatementSystem4D
 				.PickAlpha(_ => Angle.A120)
 				.PickC(s => s.A)
 				.PickD(s => s.C)
+			,
+
+
+			// [A|B] Angle => C->D		===>
+			// [A|B] 0		 => C->C
+			new Rule()
+				.Where((s, _) => s.Alpha != Angle.A0)
+				.PickAlpha(_ => Angle.A0)
+				.PickD(s => s.C)
+			,
+
+
+			// [A|B] 90  => C ->  D    =>>>>
+			// [A|B] 180 => C -> -C
+			new Rule()
+				.Where((s, _) => s.Alpha == Angle.A90)
+				.PickAlpha(_ => Angle.A180)
+				.PickD(s => -s.C)
+			,
+
+
+			// [A|B] 90  => C -> D    =>>>>
+			// [A|B] -90 => D -> C
+			new Rule()
+				.Where((s, _) => s.Alpha == Angle.A90)
+				.PickAlpha(_ => Angle.AMinus90)
+				.PickC(s => s.D)
+				.PickD(s => s.C)
+			,
 		};
 
 		static void Main(string[] args)
 		{
 			StatementContainer container = new StatementContainer(_rules);
 			LoadStatements(container);
+			SaveStatements(container);
 
 			do
 			{

@@ -69,6 +69,22 @@ namespace StatementSystem4D
 		{
 			return Argument.ToString() + " => " + Transition.ToString();
 		}
+
+
+		public bool AreAllVectorsDifferent()
+		{
+			return A != B
+					&& A != C
+					&& A != D
+					&& B != C
+					&& B != D
+					&& C != D;
+		}
+
+		public bool AreAllVectorsBasic()
+		{
+			return A.IsBasic && B.IsBasic && C.IsBasic && D.IsBasic;
+		}
 	}
 
 	public class StatementContradictionException : Exception {

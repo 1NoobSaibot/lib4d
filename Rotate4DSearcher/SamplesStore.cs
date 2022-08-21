@@ -86,12 +86,18 @@ namespace Rotate4DSearcher
 		{
 			switch (angle)
 			{
+				case Angle.A0:
+					return 0;
 				case Angle.A90:
 					return Math.PI / 2;
+				case Angle.AMinus90:
+					return -Math.PI / 2;
 				case Angle.A180:
 					return Math.PI;
 				case Angle.A120:
 					return Math.PI * 2 / 3;
+				case Angle.AMinus120:
+					return -Math.PI * 2 / 3;
 			}
 
 			throw new Exception("Unknow angle type: " + angle);

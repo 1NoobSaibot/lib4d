@@ -64,8 +64,11 @@ namespace StatementSystem4D
 
 	public enum Angle
 	{
+		AMinus90 = -90,
+		A0 = 0,
 		A90 = 90,
 		A120 = 120,
-		A180 = 180
+		AMinus120 = -120,
+		A180 = 180,
 	}
 }
