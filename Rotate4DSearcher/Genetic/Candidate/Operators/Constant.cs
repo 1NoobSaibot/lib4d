@@ -90,11 +90,5 @@ namespace Rotate4DSearcher.Genetic
 			}
 			return false;
 		}
-
-
-		public override IOperator Optimize()
-		{
-			return this;
-		}
 	}
 }

@@ -63,6 +63,9 @@
     <Compile Include="Genetic\Candidate\Operators\Constant.cs" />
     <Compile Include="Genetic\Candidate\Operators\Argument.cs" />
     <Compile Include="Genetic\Candidate\Operators\IOperator.cs" />
+    <Compile Include="Genetic\Candidate\Optimizer\Delegates.cs" />
+    <Compile Include="Genetic\Candidate\Optimizer\Rule.cs" />
+    <Compile Include="Genetic\Candidate\Optimizer\Optimizer.cs" />
     <Compile Include="Genetic\GeneticAlgorithm.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

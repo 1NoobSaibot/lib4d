@@ -14,7 +14,7 @@ namespace Rotate4DSearcher.Genetic
 
 		AlgebraicExpression(IOperator expressionTree)
 		{
-			RootOperator = expressionTree.Optimize();
+			RootOperator = Optimizer.Optimize(expressionTree);
 		}
 
 
@@ -22,7 +22,7 @@ namespace Rotate4DSearcher.Genetic
 		{
 			ExpressionReader reader = new ExpressionReader(expression);
 			RootOperator = Parse(reader, args);
-			RootOperator = RootOperator.Optimize();
+			RootOperator = Optimizer.Optimize(RootOperator);
 		}
 
 
@@ -81,7 +81,7 @@ namespace Rotate4DSearcher.Genetic
 			string symbol;
 			IOperator a;
 			IOperator b;
-			BinaryOperator.Action action;
+			Action action;
 
 			symbol = reader.GetNextSymbol();
 			if (symbol == "(")
@@ -100,8 +100,8 @@ namespace Rotate4DSearcher.Genetic
 
 			symbol = reader.GetNextSymbol();
 			action = symbol == "+"
-				? BinaryOperator.Action.Add
-				: (symbol == "-") ? BinaryOperator.Action.Subtract : BinaryOperator.Action.Multiply;
+				? Action.Add
+				: (symbol == "-") ? Action.Subtract : Action.Multiply;
 
 			symbol = reader.GetNextSymbol();
 			if (symbol == "(")
