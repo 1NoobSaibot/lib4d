@@ -73,6 +73,14 @@ namespace StatementSystem4D
 				}
 			}
 
+			for (int i = 0; i < _temporaryAcceptedStatements.Count; i++)
+			{
+				Statement s = _temporaryAcceptedStatements[i];
+				if (test(s)) {
+					result.Add(s);
+				}
+			}
+
 			return result;
 		}
 

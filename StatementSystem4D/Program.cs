@@ -78,7 +78,7 @@ namespace StatementSystem4D
 									||(sq.A == s.D && sq.C == s.A && sq.D == s.C);
 					});
 
-					if (statements.Count != 2)
+					if (statements.Count < 2)
 					{
 						return false;
 					}
@@ -126,7 +126,7 @@ namespace StatementSystem4D
 									||(sq.A == s.D && sq.C == s.A && sq.D == s.C);
 					});
 
-					if (statements.Count != 2)
+					if (statements.Count < 2)
 					{
 						return false;
 					}
@@ -141,8 +141,8 @@ namespace StatementSystem4D
 
 
 			// [X|Q] 90 => Y->Z		|			|		[XYZ|Q] 120 => Y->Z
-			// [Y|Q] 90 => Z->X		| ==>	|		[XYZ|Q] 120 => Z->X  <= We generate only this one.
-			// [Z|Q] 90 => X->Y		|			|		[XYZ|Q] 120 => X->Y
+			// [Y|Q] 90 => Z->X		| ==>	|		[XYZ|Q] 120 => Z->X
+			// [Z|Q] 90 => X->Y		|			|		[XYZ|Q] 120 => X->Y  <= We generate only this one.
 			new Rule()
 				.Where((s, query) =>
 				{
@@ -176,7 +176,7 @@ namespace StatementSystem4D
 									||(sq.A == s.D && sq.C == s.A && sq.D == s.C);
 					});
 
-					if (statements.Count != 2)
+					if (statements.Count < 2)
 					{
 						return false;
 					}
