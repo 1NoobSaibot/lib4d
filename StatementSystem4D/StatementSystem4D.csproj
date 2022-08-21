@@ -57,5 +57,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lib4D\Lib4D.csproj">
+      <Project>{7F4F5888-8D4E-4EED-BBF2-7886259563DF}</Project>
+      <Name>Lib4D</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

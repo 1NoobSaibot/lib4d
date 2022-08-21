@@ -35,17 +35,16 @@ namespace Rotate4DSearcher.Genetic
 		{
 			lastSaveTime = DateTime.Now;
 			_instance = new GeneticAlgorithm();
-			SamplesStore.SamplesChanged += OnSamplesUpdated;
 		}
 
 
 		private void Loop()
 		{
 			LoadCandidates();
+			LoadSamples();
 
 			do
 			{
-				LoadSamples();
 				ReproduceAndMutate();
 				TestCandidates();
 				MakeGenocide();
@@ -66,18 +65,7 @@ namespace Rotate4DSearcher.Genetic
 
 		private void LoadSamples()
 		{
-			if (_samplesWereUpdated == false)
-			{
-				return;
-			}
-
-			List<Sample> samples = SamplesStore.GetSamples();
-			_samples = new GeneticSample[samples.Count];
-			for (int i = 0; i < _samples.Length;i++)
-			{
-				_samples[i] = new GeneticSample(samples[i]);
-			}
-			_samplesWereUpdated = false;
+			_samples = SamplesStore.GetSamples();
 		}
 
 
@@ -106,7 +94,6 @@ namespace Rotate4DSearcher.Genetic
 
 		private void TestCandidates()
 		{
-			_ClearErrorsInData();
 
 			for (int i = 0; i < _candidates.Length; i++)
 			{
@@ -117,44 +104,19 @@ namespace Rotate4DSearcher.Genetic
 				{
 					GeneticSample sample = _samples[j];
 
-					for (int rotationIndex = 0; rotationIndex < 2; rotationIndex++)
-					{
-						Rotation rotation = sample.rotations[rotationIndex];
-						Transform4D t = candidate.CreateTransform(rotation.bivector, rotation.angle);
-						GeneticPair[] pairs = sample.pairs;
+					Rotation rotation = sample.rotation;
+					Transform4D t = candidate.CreateTransform(rotation.bivector, rotation.angle);
+					GeneticPair[] pairs = sample.pairs;
 
-						for (int k = 0; k < pairs.GetLength(0); k++)
-						{
-							Vector4D actual = t * pairs[k].from;
-							Vector4D difference = actual - pairs[k].to;
-							double error = difference.Abs;
-							candidate.Error += error;
-							pairs[k].AddUpToError(error);
-						}
+					for (int k = 0; k < pairs.GetLength(0); k++)
+					{
+						Vector4D actual = t * pairs[k].from;
+						Vector4D difference = actual - pairs[k].to;
+						double error = difference.Abs;
+						candidate.Error += error;
 					}
 				}
 			}
-
-			_UpdateErrorsInData();
-		}
-
-		
-		internal static double[][] GetErrors()
-		{
-			GeneticSample[] samples = _instance?._samples ?? new GeneticSample[0];
-			double[][] errors = new double[samples.Length][];
-
-			for (int i = 0; i < samples.Length; i++)
-			{
-				errors[i] = new double[samples[i].pairs.Length];
-
-				for (int j = 0; j < samples[i].pairs.Length; j++)
-				{
-					errors[i][j] = samples[i].pairs[j].Error;
-				}
-			}
-
-			return errors;
 		}
 
 
@@ -247,74 +209,50 @@ namespace Rotate4DSearcher.Genetic
 			_shouldStop = true;
 		}
 
-
-		private static void OnSamplesUpdated(object sender, List<Sample> args)
-		{
-			_samplesWereUpdated = true;
-		}
-
-
-		private void _ClearErrorsInData()
-		{
-			for (int i = 0; i < _samples.Length; i++)
-			{
-				_samples[i].ResetError();
-			}
-		}
-
-
-		private void _UpdateErrorsInData()
-		{
-			for (int i = 0; i < _samples.Length; i++)
-			{
-				_samples[i].UpdateError();
-			}
-		}
-
 	}
 
 
 	class GeneticSample
 	{
-		public readonly Rotation[] rotations = new Rotation[2];
-		public readonly GeneticPair[] pairs;
+		public readonly Rotation rotation;
+		public GeneticPair[] pairs { get; private set; }
 
 
-		public GeneticSample(Sample sample)
+		public GeneticSample(Rotation rotation)
 		{
-			Bivector4D bivector = new Bivector4D(sample.A.ToVector4D(), sample.B.ToVector4D());
-			double angle = sample.AngleInGrad * Math.PI / 180.0;
-
-			rotations[0] = new Rotation(bivector, angle);
-			rotations[1] = new Rotation(-bivector, -angle);
-
-			int count = sample.pairs.Count;
-			pairs = new GeneticPair[count];
-
-			for (int i = 0; i < count; i++)
-			{
-				QuestionAnswerPair pair = sample.pairs[i];
-				Vector4D from = pair.argument.ToVector4D();
-				Vector4D to = pair.expectedResult.ToVector4D();
-				pairs[i] = new GeneticPair(from, to);
-			}
+			this.rotation = rotation;
+			pairs = new GeneticPair[0];
 		}
 
 
-		internal void ResetError()
+		public void PushPair(GeneticPair pair)
 		{
+			if (_AlreadyExists(pair))
+			{
+				return;
+			}
+
+			GeneticPair[] newArray = new GeneticPair[pairs.Length + 1];
 			for (int i = 0; i < pairs.Length; i++)
 			{
-				pairs[i].ResetErrorBuffer();
+				newArray[i] = pairs[i];
 			}
+			newArray[pairs.Length] = pair;
+			pairs = newArray;
 		}
 
-		internal void UpdateError()
+
+		private bool _AlreadyExists(GeneticPair pair)
 		{
 			for (int i = 0; i < pairs.Length; i++)
 			{
-				pairs[i].UpdateError();
+				if (pairs[i] == pair)
+				{
+					return true;
+				}
 			}
+
+			return false;
 		}
 	}
 
@@ -322,34 +260,24 @@ namespace Rotate4DSearcher.Genetic
 	struct GeneticPair
 	{
 		public readonly Vector4D from, to;
-		private double _errorBuffer;
-		public double Error { get; private set; }
 
 
 		public GeneticPair(Vector4D from, Vector4D to)
 		{
 			this.from = from;
 			this.to = to;
-			_errorBuffer = 0;
-			Error = 0;
 		}
 
 
-		public void ResetErrorBuffer()
+		public static bool operator ==(GeneticPair a, GeneticPair b)
 		{
-			_errorBuffer = 0;
+			return a.from == b.from && a.to == b.to;
 		}
 
 
-		public void AddUpToError(double error)
+		public static bool operator !=(GeneticPair a, GeneticPair b)
 		{
-			_errorBuffer += error;
-		}
-
-
-		public void UpdateError()
-		{
-			Error = _errorBuffer;
+			return a.from != b.from || a.to != b.to;
 		}
 	}
 
@@ -359,11 +287,23 @@ namespace Rotate4DSearcher.Genetic
 		public readonly Bivector4D bivector;
 		public readonly double angle;
 
+
 		public Rotation(Bivector4D b, double angle)
 		{
 			this.bivector = b;
 			this.angle = angle;
 		}
+
+
+		public static bool operator == (Rotation a, Rotation b)
+		{
+			return a.bivector == b.bivector && a.angle == b.angle;
+		}
+
+
+		public static bool operator !=(Rotation a, Rotation b)
+		{
+			return a.bivector != b.bivector || a.angle != b.angle;
+		}
 	}
 }
-

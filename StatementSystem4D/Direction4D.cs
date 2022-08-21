@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lib4D;
+using System;
 
 namespace StatementSystem4D
 {
@@ -112,6 +113,13 @@ namespace StatementSystem4D
 					throw new Exception($"Parse Error: '{arg}'");
 				}
 			}
+		}
+
+
+		public Vector4D ToVector4D()
+		{
+			Vector4D v = new Vector4D(X, Y, Z, Q);
+			return v.Normalize();
 		}
 
 
