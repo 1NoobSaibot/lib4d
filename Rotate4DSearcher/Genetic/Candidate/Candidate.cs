@@ -56,6 +56,10 @@ namespace Rotate4DSearcher.Genetic
 				}
 			}
 
+			int x = rnd.Next(4);
+			int y = rnd.Next(4);
+			_formulas[x, y] = _formulas[x, y].GetMutatedClone();
+
 			AmountOfNodes = CalculateAmountOfNodes();
 		}
 

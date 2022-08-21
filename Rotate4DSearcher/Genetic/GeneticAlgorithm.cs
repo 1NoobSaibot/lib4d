@@ -10,6 +10,7 @@ namespace Rotate4DSearcher.Genetic
 		private const int GENERATION_COUNT = 1000;
 		private const int AMOUNT_OF_CHOOSEN = 10;
 
+		public static int GenerationCounter { get; private set; }
 		public static Candidate[] TheBest = new Candidate[AMOUNT_OF_CHOOSEN];
 
 		private static bool _samplesWereUpdated = true;
@@ -49,6 +50,7 @@ namespace Rotate4DSearcher.Genetic
 				TestCandidates();
 				MakeGenocide();
 				Save();
+				GenerationCounter++;
 			} while (!_shouldStop);
 		}
 
@@ -78,14 +80,14 @@ namespace Rotate4DSearcher.Genetic
 					continue;
 				}
 
-				Candidate candidateA = ChooseRandomCandidate();
+				Candidate candidateA = ChooseRandomCandidate(i);
 				if (_rnd.NextDouble() < 0.5)
 				{
 					_candidates[i] = new Candidate(_rnd, candidateA);
 				}
 				else
 				{
-					Candidate candidateB = ChooseRandomCandidate();
+					Candidate candidateB = ChooseRandomCandidate(i);
 					_candidates[i] = new Candidate(_rnd, candidateA, candidateB);
 				}
 			}
@@ -175,13 +177,13 @@ namespace Rotate4DSearcher.Genetic
 		}
 
 
-		private Candidate ChooseRandomCandidate()
+		private Candidate ChooseRandomCandidate(int maxIndex)
 		{
 			Candidate c;
 			int loopCounter = 0;
 			do
 			{
-				int index = _rnd.Next(AMOUNT_OF_CHOOSEN);
+				int index = _rnd.Next(maxIndex);
 				c = _candidates[index];
 
 				if (c != null)

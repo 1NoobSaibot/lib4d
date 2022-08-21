@@ -75,7 +75,7 @@ namespace Rotate4DSearcher.Genetic
 
 		public override bool IsZero()
 		{
-			return _Value == 0;
+			return Math.Abs(_Value) < 0.01;
 		}
 
 

@@ -31,6 +31,8 @@ namespace Rotate4DSearcher
 					candidates.Items.Add(array[i]);
 				}
 			}
+
+			logLabel.Text = "Generation: " + GeneticAlgorithm.GenerationCounter;
 		}
 	}
 }
