@@ -48,7 +48,7 @@ namespace Rotate4DSearcher.Genetic
 			}
 		}
 
-		public void ReplaceChild(IOperator which, IOperator to)
+		public void ReplaceChildren(IOperator which, IOperator to)
 		{
 			if (which == A)
 			{
@@ -57,20 +57,6 @@ namespace Rotate4DSearcher.Genetic
 			else if (which == B)
 			{
 				B = to;
-			}
-		}
-
-
-		internal void ReplaceChildren(IOperator which, IOperator newChild)
-		{
-			if (A == which)
-			{
-				A = newChild;
-				return;
-			}
-			if (B == which)
-			{
-				B = newChild;
 			}
 		}
 
@@ -121,9 +107,13 @@ namespace Rotate4DSearcher.Genetic
 		{
 			if (rnd.NextDouble() < 0.7)
 			{
-				return ChangeAction(rnd);
+				if (rnd.NextDouble() < 0.5)
+				{
+					return A;
+				}
+				return B;
 			}
-
+			
 			if (action == Action.Subtract && rnd.NextDouble() < 0.7)
 			{
 				IOperator temp = A;
@@ -131,11 +121,7 @@ namespace Rotate4DSearcher.Genetic
 				B = temp;
 			}
 
-			if (rnd.NextDouble() < 0.5)
-			{
-				return A;
-			}
-			return B;
+			return ChangeAction(rnd);
 		}
 
 
