@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace StatementSystem4D
 {
@@ -11,6 +9,13 @@ namespace StatementSystem4D
 		// [XY|Q-Z]90 => ZQ->QZ    It's bad example
 		public readonly Argument Argument;
 		public readonly Transition Transition;
+
+
+		public Direction4D A => Argument.A;
+		public Direction4D B => Argument.B;
+		public Direction4D C => Transition.From;
+		public Direction4D D => Transition.To;
+		public Angle Alpha => Argument.Alpha;
 
 
 		public Statement(Argument argument, Transition transition)

@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StatementSystem4D
 {
 	public struct Direction4D
 	{
 		public readonly int X, Y, Z, Q;
+
+		public bool IsOneSetComponent => (Math.Abs(X) + Math.Abs(Y) + Math.Abs(Z) + Math.Abs(Q)) == 1;
 
 		public Direction4D(int x, int y, int z, int q)
 		{
@@ -34,6 +32,17 @@ namespace StatementSystem4D
 		public static Direction4D operator -(Direction4D a)
 		{
 			return new Direction4D(-a.X, -a.Y, -a.Z, -a.Q);
+		}
+
+
+		public static Direction4D operator +(Direction4D a, Direction4D b)
+		{
+			return new Direction4D(
+				_Sign(a.X + b.X),
+				_Sign(a.Y + b.Y),
+				_Sign(a.Z + b.Z),
+				_Sign(a.Q + b.Q)
+			);
 		}
 
 
@@ -102,6 +111,20 @@ namespace StatementSystem4D
 					throw new Exception($"Parse Error: '{arg}'");
 				}
 			}
+		}
+
+
+		private static int _Sign(int value)
+		{
+			if (value > 0)
+			{
+				return 1;
+			}
+			if (value < 0)
+			{
+				return -1;
+			}
+			return 0;
 		}
 	}
 }

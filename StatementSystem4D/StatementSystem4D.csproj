@@ -52,6 +52,7 @@
     <Compile Include="StatementContainer.cs" />
     <Compile Include="StatementStorage.cs" />
     <Compile Include="Transition.cs" />
+    <Compile Include="WhereDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

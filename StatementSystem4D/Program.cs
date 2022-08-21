@@ -1,19 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace StatementSystem4D
 {
 	internal class Program
 	{
 		static Rule[] _rules = new Rule[]
 		{
-			new Rule(ArgumentVector.A, ArgumentVector.B, TransitionVector.MinusC, TransitionVector.MinusD),
-			new Rule(ArgumentVector.B, ArgumentVector.A, TransitionVector.D, TransitionVector.C),
-			new Rule(ArgumentVector.A, ArgumentVector.B, TransitionVector.D, TransitionVector.MinusC, new Angle[]{Angle.A90}),
-			new Rule(ArgumentVector.MinusA, ArgumentVector.B, TransitionVector.D, TransitionVector.C),
+			// [A|B]Alpha =>  C ->  D  ===>
+			// [A|B]Alpha => -C -> -D
+			new Rule()
+				.PickC(s => -s.C)
+				.PickD(s => -s.D)
+			,
+
+
+			// [A|B] Alpha => C->D  ===>
+			// [B|A] Alpha => D->C
+			new Rule()
+				.PickA(s => s.B)
+				.PickB(s => s.A)
+				.PickC(s => s.D)
+				.PickD(s => s.C)
+			,
+
+
+			// [A|B] Alpha=90 => C ->  D  ===>
+			// [A|B] Alpha=90 => D -> -C
+			new Rule()
+				.Where(s => s.Alpha == Angle.A90)
+				.PickC(s => s.D)
+				.PickD(s => -s.C)
+			,
+
+
+			// [ A|B] Alpha => C -> D  ===>
+			// [-A|B] Alpha => D -> C
+			new Rule()
+				.PickA(s => -s.A)
+				.PickC(s => s.D)
+				.PickD(s => s.C)
+			,
 		};
 
 		static void Main(string[] args)

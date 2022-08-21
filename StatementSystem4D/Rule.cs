@@ -1,120 +1,93 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace StatementSystem4D
 {
 	public class Rule
 	{
-		public readonly ArgumentVector A, B;
-		public readonly TransitionVector C, D;
-		private readonly Angle[] AllowedAngles;
+		private VectorPickDelegate A = (Statement s) => { return s.Argument.A; };
+		private VectorPickDelegate B = (Statement s) => { return s.Argument.B; };
 
-		public Rule(ArgumentVector a, ArgumentVector b, TransitionVector c, TransitionVector d)
-		{
-			A = a;
-			B = b;
-			C = c;
-			D = d;
-		}
+		private AnglePickDelegate Alpha = (Statement s) => { return s.Argument.Alpha; };
 
-		public Rule(
-			ArgumentVector a,
-			ArgumentVector b,
-			TransitionVector c,
-			TransitionVector d,
-			Angle[] whereAngleIsOneOf
-		) : this(a, b, c, d)
-		{
-			AllowedAngles = whereAngleIsOneOf;
-		}
+		private VectorPickDelegate C = (Statement s) => { return s.Transition.To; };
+		private VectorPickDelegate D = (Statement s) => { return s.Transition.To; };
+
+		private readonly List<WhereDelegate> _tests = new List<WhereDelegate>();
+
 
 		public Statement CreateNewStatement(Statement baseStatement)
 		{
-			if (_AngleIsSupported(baseStatement.Argument.Alpha) == false)
+			if (_StatementIsValid(baseStatement) == false)
 			{
 				return baseStatement;
 			}
 
-			Argument argument = new Argument(
-				_Take(A, baseStatement),
-				_Take(B, baseStatement),
-				baseStatement.Argument.Alpha
-			);
+			Direction4D a = this.A(baseStatement);
+			Direction4D b = this.B(baseStatement);
+			Angle alpha = this.Alpha(baseStatement);
 
-			Transition transition = new Transition(
-				_Take(C, baseStatement),
-				_Take(D, baseStatement)
-			);
+			Direction4D from = this.C(baseStatement);
+			Direction4D to = this.D(baseStatement);
+
+			Argument argument = new Argument(a, b, alpha);
+			Transition transition = new Transition(from, to);
 
 			return new Statement(argument, transition);
 		}
 
-
-		private bool _AngleIsSupported(Angle alpha)
+		private bool _StatementIsValid(Statement statement)
 		{
-			if (AllowedAngles == null)
+			for (int i = 0; i < _tests.Count; i++)
 			{
-				return true;
+				if (_tests[i](statement) == false)
+				{
+					return false;
+				}
 			}
 
-			return AllowedAngles.Contains(alpha);
+			return true;
 		}
 
 
-		private Direction4D _Take(ArgumentVector what, Statement from)
+		public Rule Where(WhereDelegate tester)
 		{
-			switch (what)
-			{
-				case ArgumentVector.A:
-					return from.Argument.A;
-				case ArgumentVector.B:
-					return from.Argument.B;
-				case ArgumentVector.MinusA:
-					return -from.Argument.A;
-				case ArgumentVector.MinusB:
-					return -from.Argument.B;
-			}
-
-			throw new Exception("Unknow ArgumentVector type: " + what);
+			_tests.Add(tester);
+			return this;
 		}
 
 
-		private Direction4D _Take(TransitionVector what, Statement from)
+		public Rule PickA(VectorPickDelegate picker)
 		{
-			switch (what)
-			{
-				case TransitionVector.C:
-					return from.Transition.From;
-				case TransitionVector.D:
-					return from.Transition.To;
-				case TransitionVector.MinusC:
-					return -from.Transition.From;
-				case TransitionVector.MinusD:
-					return -from.Transition.To;
-			}
-
-			throw new Exception("Unknown TransitionVector type: " + what);
+			this.A = picker;
+			return this;
 		}
-	}
 
 
-	public enum ArgumentVector
-	{
-		A = 1,
-		B = 2,
-		MinusA = 3,
-		MinusB = 4
-	}
+		public Rule PickB(VectorPickDelegate picker)
+		{
+			this.B = picker;
+			return this;
+		}
 
 
-	public enum TransitionVector
-	{
-		C = 1,
-		D = 2,
-		MinusC = 3,
-		MinusD = 4
+		public Rule PickC(VectorPickDelegate picker)
+		{
+			this.C = picker;
+			return this;
+		}
+
+
+		public Rule PickD(VectorPickDelegate picker)
+		{
+			this.D = picker;
+			return this;
+		}
+
+
+		public Rule PickAlpha(AnglePickDelegate picker)
+		{
+			this.Alpha = picker;
+			return this;
+		}
 	}
 }
