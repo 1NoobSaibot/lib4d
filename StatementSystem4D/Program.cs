@@ -27,7 +27,7 @@ namespace StatementSystem4D
 			// [A|B] Alpha=90 => C ->  D  ===>
 			// [A|B] Alpha=90 => D -> -C
 			new Rule()
-				.Where(s => s.Alpha == Angle.A90)
+				.Where((s, _) => s.Alpha == Angle.A90)
 				.PickC(s => s.D)
 				.PickD(s => -s.C)
 			,
@@ -40,6 +40,153 @@ namespace StatementSystem4D
 				.PickC(s => s.D)
 				.PickD(s => s.C)
 			,
+
+			
+			// [X|Q] 90 => Y->Z		|			|		[XYZ|Q] 120 => Y->Z  <= We generate only this one.
+			// [Y|Q] 90 => Z->X		| ==>	|		[XYZ|Q] 120 => Z->X
+			// [Z|Q] 90 => X->Y		|			|		[XYZ|Q] 120 => X->Y
+			new Rule()
+				.Where((s, query) =>
+				{
+					if (s.Alpha != Angle.A90) {
+						return false;
+					}
+					bool allVectorsAreBasic = s.A.IsBasic && s.B.IsBasic && s.C.IsBasic && s.D.IsBasic;
+					if (!allVectorsAreBasic)
+					{
+						return false;
+					}
+
+					bool allVectorsAreDifferent = s.A != s.B
+						&& s.A != s.C
+						&& s.A != s.D
+						&& s.B != s.C
+						&& s.B != s.D
+						&& s.C != s.D;
+					if (!allVectorsAreDifferent)
+					{
+						return false;
+					}
+
+					List<Statement> statements = query((sq) => {
+						if (sq.Alpha != Angle.A90 || sq.B != s.B)
+						{
+							return false;
+						}
+
+						return	(sq.A == s.C && sq.C == s.D && sq.D == s.A)
+									||(sq.A == s.D && sq.C == s.A && sq.D == s.C);
+					});
+
+					if (statements.Count != 2)
+					{
+						return false;
+					}
+
+					return true;
+				})
+				.PickA(s => s.A + s.C + s.D)
+				.PickAlpha(_ => Angle.A120)
+			,
+
+
+			// [X|Q] 90 => Y->Z		|			|		[XYZ|Q] 120 => Y->Z
+			// [Y|Q] 90 => Z->X		| ==>	|		[XYZ|Q] 120 => Z->X  <= We generate only this one.
+			// [Z|Q] 90 => X->Y		|			|		[XYZ|Q] 120 => X->Y
+			new Rule()
+				.Where((s, query) =>
+				{
+					if (s.Alpha != Angle.A90) {
+						return false;
+					}
+					bool allVectorsAreBasic = s.A.IsBasic && s.B.IsBasic && s.C.IsBasic && s.D.IsBasic;
+					if (!allVectorsAreBasic)
+					{
+						return false;
+					}
+
+					bool allVectorsAreDifferent = s.A != s.B
+						&& s.A != s.C
+						&& s.A != s.D
+						&& s.B != s.C
+						&& s.B != s.D
+						&& s.C != s.D;
+					if (!allVectorsAreDifferent)
+					{
+						return false;
+					}
+
+					List<Statement> statements = query((sq) => {
+						if (sq.Alpha != Angle.A90 || sq.B != s.B)
+						{
+							return false;
+						}
+
+						return  (sq.A == s.C && sq.C == s.D && sq.D == s.A)
+									||(sq.A == s.D && sq.C == s.A && sq.D == s.C);
+					});
+
+					if (statements.Count != 2)
+					{
+						return false;
+					}
+
+					return true;
+				})
+				.PickA(s => s.A + s.C + s.D)
+				.PickAlpha(_ => Angle.A120)
+				.PickC(s => s.D)
+				.PickD(s => s.A)
+			,
+
+
+			// [X|Q] 90 => Y->Z		|			|		[XYZ|Q] 120 => Y->Z
+			// [Y|Q] 90 => Z->X		| ==>	|		[XYZ|Q] 120 => Z->X  <= We generate only this one.
+			// [Z|Q] 90 => X->Y		|			|		[XYZ|Q] 120 => X->Y
+			new Rule()
+				.Where((s, query) =>
+				{
+					if (s.Alpha != Angle.A90) {
+						return false;
+					}
+					bool allVectorsAreBasic = s.A.IsBasic && s.B.IsBasic && s.C.IsBasic && s.D.IsBasic;
+					if (!allVectorsAreBasic)
+					{
+						return false;
+					}
+
+					bool allVectorsAreDifferent = s.A != s.B
+						&& s.A != s.C
+						&& s.A != s.D
+						&& s.B != s.C
+						&& s.B != s.D
+						&& s.C != s.D;
+					if (!allVectorsAreDifferent)
+					{
+						return false;
+					}
+
+					List<Statement> statements = query((sq) => {
+						if (sq.Alpha != Angle.A90 || sq.B != s.B)
+						{
+							return false;
+						}
+
+						return  (sq.A == s.C && sq.C == s.D && sq.D == s.A)
+									||(sq.A == s.D && sq.C == s.A && sq.D == s.C);
+					});
+
+					if (statements.Count != 2)
+					{
+						return false;
+					}
+
+					return true;
+				})
+				.PickA(s => s.A + s.C + s.D)
+				.PickAlpha(_ => Angle.A120)
+				.PickC(s => s.A)
+				.PickD(s => s.C)
 		};
 
 		static void Main(string[] args)

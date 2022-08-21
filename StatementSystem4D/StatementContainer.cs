@@ -27,7 +27,7 @@ namespace StatementSystem4D
 
 			for (int i = 0; i < _rules.Length; i++)
 			{
-				Statement consequence = _rules[i].CreateNewStatement(statement);
+				Statement consequence = _rules[i].CreateNewStatement(statement, this);
 				_AddConsequence(consequence);
 			}
 
@@ -48,7 +48,7 @@ namespace StatementSystem4D
 
 				for (int i = 0; i < _rules.Length; i++)
 				{
-					Statement consequence = _rules[i].CreateNewStatement(statement);
+					Statement consequence = _rules[i].CreateNewStatement(statement, this);
 					_AddConsequence(consequence);
 				}
 			}
@@ -57,6 +57,23 @@ namespace StatementSystem4D
 				statementExeption.PushStatement(statement);
 				throw statementExeption;
 			}
+		}
+
+
+		public List<Statement> Query(QueryDelegate test)
+		{
+			List<Statement> result = new List<Statement>();
+
+			for (int i = 0; i < _acceptedStatements.Count; i++)
+			{
+				Statement s = _acceptedStatements[i];
+				if (test(s))
+				{
+					result.Add(s);
+				}
+			}
+
+			return result;
 		}
 
 

@@ -6,7 +6,8 @@ namespace StatementSystem4D
 	{
 		public readonly int X, Y, Z, Q;
 
-		public bool IsOneSetComponent => (Math.Abs(X) + Math.Abs(Y) + Math.Abs(Z) + Math.Abs(Q)) == 1;
+		// It means that this vector is positive or negative X, Y, Z or Q only
+		public bool IsBasic => (Math.Abs(X) + Math.Abs(Y) + Math.Abs(Z) + Math.Abs(Q)) == 1;
 
 		public Direction4D(int x, int y, int z, int q)
 		{

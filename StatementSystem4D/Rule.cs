@@ -9,15 +9,15 @@ namespace StatementSystem4D
 
 		private AnglePickDelegate Alpha = (Statement s) => { return s.Argument.Alpha; };
 
-		private VectorPickDelegate C = (Statement s) => { return s.Transition.To; };
+		private VectorPickDelegate C = (Statement s) => { return s.Transition.From; };
 		private VectorPickDelegate D = (Statement s) => { return s.Transition.To; };
 
 		private readonly List<WhereDelegate> _tests = new List<WhereDelegate>();
 
 
-		public Statement CreateNewStatement(Statement baseStatement)
+		public Statement CreateNewStatement(Statement baseStatement, StatementContainer container)
 		{
-			if (_StatementIsValid(baseStatement) == false)
+			if (_StatementIsValid(baseStatement, container) == false)
 			{
 				return baseStatement;
 			}
@@ -35,11 +35,11 @@ namespace StatementSystem4D
 			return new Statement(argument, transition);
 		}
 
-		private bool _StatementIsValid(Statement statement)
+		private bool _StatementIsValid(Statement statement, StatementContainer container)
 		{
 			for (int i = 0; i < _tests.Count; i++)
 			{
-				if (_tests[i](statement) == false)
+				if (_tests[i](statement, container.Query) == false)
 				{
 					return false;
 				}
