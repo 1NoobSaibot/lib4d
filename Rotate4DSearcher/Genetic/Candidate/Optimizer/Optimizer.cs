@@ -630,6 +630,184 @@
 				})
 			,
 			#endregion
+			
+			#region Multiplication with Sum
+			// Const1 * (Any + Const2)		=>		NewConst + (Const1 * Any)
+			new Rule()
+				.Where(op => {
+					return op is Mul mul
+						&& mul.A is Constant
+						&& mul.B is Sum sum
+						&& sum.B is Constant;
+				})
+				.Replace(op => {
+					Mul mul = op as Mul;
+					Sum sum = mul.B as Sum;
+
+					Constant ca = mul.A as Constant;
+					Constant cb = sum.B as Constant;
+					Constant newConst = new Constant(ca.Value * cb.Value);
+					Mul newMul = new Mul(mul.A, sum.A);
+
+					return new Sum(newConst, newMul);
+				})
+			,
+
+
+			// Const1 * (Const2 + Any)		=>		NewConst + (Const1 * Any)
+			new Rule()
+				.Where(op => {
+					return op is Mul mul
+						&& mul.A is Constant
+						&& mul.B is Sum sum
+						&& sum.A is Constant;
+				})
+				.Replace(op => {
+					Mul mul = op as Mul;
+					Sum sum = mul.B as Sum;
+
+					Constant ca = mul.A as Constant;
+					Constant cb = sum.A as Constant;
+					Constant newConst = new Constant(ca.Value * cb.Value);
+					Mul newMul = new Mul(mul.A, sum.B);
+
+					return new Sum(newConst, newMul);
+				})
+			,
+
+
+			// (Any + Const1) * Const2		=>		NewConst + (Const2 * Any)
+			new Rule()
+				.Where(op => {
+					return op is Mul mul
+						&& mul.B is Constant
+						&& mul.A is Sum sum
+						&& sum.B is Constant;
+				})
+				.Replace(op => {
+					Mul mul = op as Mul;
+					Sum sum = mul.A as Sum;
+
+					Constant ca = mul.B as Constant;
+					Constant cb = sum.B as Constant;
+					Constant newConst = new Constant(ca.Value * cb.Value);
+					Mul newMul = new Mul(mul.B, sum.A);
+
+					return new Sum(newConst, newMul);
+				})
+			,
+
+
+			// (Const1 + Any) * Const2		=>		NewConst + (Const2 * Any)
+			new Rule()
+				.Where(op => {
+					return op is Mul mul
+						&& mul.B is Constant
+						&& mul.A is Sum sum
+						&& sum.A is Constant;
+				})
+				.Replace(op => {
+					Mul mul = op as Mul;
+					Sum sum = mul.A as Sum;
+
+					Constant ca = mul.B as Constant;
+					Constant cb = sum.A as Constant;
+					Constant newConst = new Constant(ca.Value * cb.Value);
+					Mul newMul = new Mul(mul.B, sum.B);
+
+					return new Sum(newConst, newMul);
+				})
+			,
+			#endregion
+
+			#region Multiplication with Substract
+			// Const1 * (Any - Const2)		=>		(Const1 * Any) - NewConst
+			new Rule()
+				.Where(op => {
+					return op is Mul mul
+						&& mul.A is Constant
+						&& mul.B is Sub sub
+						&& sub.B is Constant;
+				})
+				.Replace(op => {
+					Mul mul = op as Mul;
+					Sub sub = mul.B as Sub;
+
+					Constant ca = mul.A as Constant;
+					Constant cb = sub.B as Constant;
+					Constant newConst = new Constant(ca.Value * cb.Value);
+					Mul newMul = new Mul(mul.A, sub.A);
+
+					return new Sub(newMul, newConst);
+				})
+			,
+
+
+			// Const1 * (Const2 - Any)		=>		NewConst - (Const1 * Any)
+			new Rule()
+				.Where(op => {
+					return op is Mul mul
+						&& mul.A is Constant
+						&& mul.B is Sub sub
+						&& sub.A is Constant;
+				})
+				.Replace(op => {
+					Mul mul = op as Mul;
+					Sub sub = mul.B as Sub;
+
+					Constant ca = mul.A as Constant;
+					Constant cb = sub.A as Constant;
+					Constant newConst = new Constant(ca.Value * cb.Value);
+					Mul newMul = new Mul(mul.A, sub.B);
+
+					return new Sub(newConst, newMul);
+				})
+			,
+
+
+			// (Any - Const1) * Const2		=>		(Const2 * Any) - NewConst
+			new Rule()
+				.Where(op => {
+					return op is Mul mul
+						&& mul.B is Constant
+						&& mul.A is Sub sub
+						&& sub.B is Constant;
+				})
+				.Replace(op => {
+					Mul mul = op as Mul;
+					Sub sub = mul.A as Sub;
+
+					Constant ca = mul.B as Constant;
+					Constant cb = sub.B as Constant;
+					Constant newConst = new Constant(ca.Value * cb.Value);
+					Mul newMul = new Mul(mul.B, sub.A);
+
+					return new Sub(newMul, newConst);
+				})
+			,
+
+
+			// (Const1 - Any) * Const2		=>		NewConst - (Const2 * Any)
+			new Rule()
+				.Where(op => {
+					return op is Mul mul
+						&& mul.B is Constant
+						&& mul.A is Sub sub
+						&& sub.A is Constant;
+				})
+				.Replace(op => {
+					Mul mul = op as Mul;
+					Sub sub = mul.A as Sub;
+
+					Constant ca = mul.B as Constant;
+					Constant cb = sub.A as Constant;
+					Constant newConst = new Constant(ca.Value * cb.Value);
+					Mul newMul = new Mul(mul.B, sub.B);
+
+					return new Sub(newConst, newMul);
+				})
+			,
+			#endregion
 			#endregion
 
 			#region Скорочення подібних
