@@ -489,6 +489,144 @@
 				})
 			,
 			#endregion
+			
+			#region Sum with Substract
+			// Any + (Any - Const) 		=>		(Any + Any) - Const
+			new Rule()
+				.Where(op => {
+					return op is Sum sum
+						&& sum.B is Sub sub
+						&& sub.B is Constant;
+				})
+				.Replace(op => {
+					Sum sum = op as Sum;
+					Sub sub = sum.B as Sub;
+
+					Sum newSum = new Sum(sum.A, sub.A);
+					return new Sub(newSum, sub.B);
+				})
+			,
+
+
+			// Any + (Const - Any)		=>		Const + (Any - Any)
+			new Rule()
+				.Where(op => {
+					return op is Sum sum
+						&& sum.B is Sub sub
+						&& sub.A is Constant;
+				})
+				.Replace(op => {
+					Sum sum = op as Sum;
+					Sub sub = sum.B as Sub;
+
+					Sub newSub = new Sub(sum.A, sub.B);
+					return new Sum(sub.A, newSub);
+				})
+			,
+
+
+			// (Any - Const) + Any		=>		(Any + Any)	- Const
+			new Rule()
+				.Where(op => {
+					return op is Sum sum
+						&& sum.A is Sub sub
+						&& sub.B is Constant;
+				})
+				.Replace(op => {
+					Sum sum = op as Sum;
+					Sub sub = sum.A as Sub;
+
+					Sum newSum = new Sum(sub.A, sum.B);
+					return new Sub(newSum, sub.B);
+				})
+			,
+
+
+			// (Const - An1) + An2		=>		Const + (An2 - An1)
+			new Rule()
+				.Where(op => {
+					return op is Sum sum
+						&& sum.A is Sub sub
+						&& sub.A is Constant;
+				})
+				.Replace(op => {
+					Sum sum = op as Sum;
+					Sub sub = sum.A as Sub;
+
+					Sub newSub = new Sub(sum.B, sub.B);
+					return new Sum(sub.A, newSub);
+				})
+			,
+			#endregion
+			
+			#region Substract sith Sum
+			// Any - (Any + Const)		=>		(Any - Any) - Const
+			new Rule()
+				.Where(op => {
+					return op is Sub sub
+						&& sub.B is Sum sum
+						&& sum.B is Constant;
+				})
+				.Replace(op => {
+					Sub sub = op as Sub;
+					Sum sum = sub.B as Sum;
+
+					Sub newSub = new Sub(sub.A, sum.A);
+					return new Sub(newSub, sum.B);
+				})
+			,
+
+
+			// Any - (Const + Any)		=>		(Any - Any) - Const
+			new Rule()
+				.Where(op => {
+					return op is Sub sub
+						&& sub.B is Sum sum
+						&& sum.A is Constant;
+				})
+				.Replace(op => {
+					Sub sub = op as Sub;
+					Sum sum = sub.B as Sum;
+
+					Sub newSub = new Sub(sub.A, sum.B);
+					return new Sub(newSub, sum.A);
+				})
+			,
+
+
+			// (An1 + Const) - An2		=>		Const + (An1 - An2)
+			new Rule()
+				.Where(op => {
+					return op is Sub sub
+						&& sub.A is Sum sum
+						&& sum.B is Constant;
+				})
+				.Replace(op => {
+					Sub sub = op as Sub;
+					Sum sum = sub.A as Sum;
+
+					Sub newSub = new Sub(sum.A, sub.B);
+					return new Sum(sum.B, newSub);
+				})
+			,
+
+
+			// (Const + An1) - An2		=>		Const + (An1 - An2)
+			new Rule()
+				.Where(op => {
+					return op is Sub sub
+						&& sub.A is Sum sum
+						&& sum.A is Constant;
+				})
+				.Replace(op => {
+					Sub sub = op as Sub;
+					Sum sum = sub.A as Sum;
+
+					Sub newSub = new Sub(sum.B, sub.B);
+					return new Sum(sum.A, newSub);
+				})
+			,
+			#endregion
 			#endregion
 
 			#region Скорочення подібних
