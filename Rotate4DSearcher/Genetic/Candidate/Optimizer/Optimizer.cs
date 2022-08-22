@@ -820,7 +820,7 @@
 				.Replace(op => new Mul(new Constant(2), (op as Sum).A))
 			,
 
-
+			#region Positives and Negatives
 			// A + (Any - A) => Any
 			new Rule()
 				.Where(op =>
@@ -897,8 +897,9 @@
 					return sum.A;
 				})
 			,
+			#endregion
 
-
+			#region (A * B) + (A * C) = A * (B + C)
 			// (A * B) + (A * C) => A * (B + C)
 			new Rule()
 				.Where(op => {
@@ -976,7 +977,8 @@
 					Sum newSum = new Sum(mulA.A, mulB.A);
 					return new Mul(mulA.B, newSum);
 				})
-		#endregion
+			#endregion
+			#endregion
 		};
 
 
