@@ -79,6 +79,7 @@
 			#endregion
 
 			#region Підйом констант, переміщення їх вправо
+			#region Sum
 			// Any + (Any + Const) => Const + (Any + Any)		Constants go up
 			new Rule()
 				.Where(op =>
@@ -145,8 +146,9 @@
 					return new Sum(sumA.A, new Sum(sum.B, sumA.B));
 				})
 			,
+			#endregion
 
-
+			#region Multiplication
 			// Any * (Any * Const) => Const * (Any * Any)		Constants go up
 			new Rule()
 				.Where(op =>
@@ -211,212 +213,6 @@
 					Mul mul = op as Mul;
 					Mul mulA = mul.A as Mul;
 					return new Mul(mulA.A, new Mul(mul.B, mulA.B));
-				})
-			,
-			#endregion
-
-			#region Зведення констант
-			// Constant $ Constant => Constant
-			new Rule()
-				.Where(op =>
-				{
-					return op is BinaryOperator binOp
-						&& binOp.A is Constant
-						&& binOp.B is Constant;
-				})
-				.Replace(op => new Constant(op.Calculate(ArgsBox.Empty)))
-			,
-
-			#region Додавання
-			// Const + (Const + Any) => NewConst + Any
-			new Rule()
-				.Where(op =>
-				{
-					return op is Sum sum
-						&& sum.A is Constant
-						&& sum.B is Sum sumB
-						&& sumB.A is Constant;
-				})
-				.Replace(op =>
-				{
-					Sum sum = op as Sum;
-
-					Constant ca = sum.A as Constant;
-					Sum sumB = sum.B as Sum;
-					Constant cb = sumB.A as Constant;
-
-					Constant a = new Constant(ca.Value + cb.Value);
-					IOperator b = sumB.B;
-					return new Sum(a, b);
-				})
-			,
-
-
-			// Const + (Any + Const) => NewConst + Any
-			new Rule()
-				.Where(op =>
-				{
-					return op is Sum sum
-						&& sum.A is Constant
-						&& sum.B is Sum sumB
-						&& sumB.B is Constant;
-				})
-				.Replace(op =>
-				{
-					Sum sum = op as Sum;
-
-					Constant ca = sum.A as Constant;
-					Sum sumB = sum.B as Sum;
-					Constant cb = sumB.B as Constant;
-
-					Constant a = new Constant(ca.Value + cb.Value);
-					IOperator b = sumB.A;
-					return new Sum(a, b);
-				})
-			,
-
-
-			// (Const + Any) + Const => NewConst + Any
-			new Rule()
-				.Where(op =>
-				{
-					return op is Sum sum
-						&& sum.A is Sum sumA
-						&& sum.B is Constant
-						&& sumA.A is Constant;
-				})
-				.Replace(op =>
-				{
-					Sum sum = op as Sum;
-
-					Sum sumA = sum.A as Sum;
-					Constant ca = sum.B as Constant;
-					Constant cb = sumA.A as Constant;
-
-					Constant a = new Constant(ca.Value + cb.Value);
-					IOperator b = sumA.B;
-					return new Sum(a, b);
-				})
-			,
-
-
-			// (Any + Const) + Const => NewConst + Any
-			new Rule()
-				.Where(op =>
-				{
-					return op is Sum sum
-						&& sum.A is Sum sumA
-						&& sum.B is Constant
-						&& sumA.B is Constant;
-				})
-				.Replace(op =>
-				{
-					Sum sum = op as Sum;
-
-					Sum sumA = sum.A as Sum;
-					Constant ca = sum.B as Constant;
-					Constant cb = sumA.B as Constant;
-
-					Constant a = new Constant(ca.Value + cb.Value);
-					IOperator b = sumA.A;
-					return new Sum(a, b);
-				})
-			,
-			#endregion
-
-			#region Multiplication
-			// Const * (Const * Any) => NewConst * Any
-			new Rule()
-				.Where(op =>
-				{
-					return op is Mul mul
-						&& mul.A is Constant
-						&& mul.B is Mul mulB
-						&& mulB.A is Constant;
-				})
-				.Replace(op =>
-				{
-					Mul mul = op as Mul;
-
-					Constant ca = mul.A as Constant;
-					Mul mulB = mul.B as Mul;
-					Constant cb = mulB.A as Constant;
-
-					Constant a = new Constant(ca.Value * cb.Value);
-					IOperator b = mulB.B;
-					return new Mul(a, b);
-				})
-			,
-
-
-			// Const * (Any * Const) => NewConst * Any
-			new Rule()
-				.Where(op =>
-				{
-					return op is Mul mul
-						&& mul.A is Constant
-						&& mul.B is Mul mulB
-						&& mulB.B is Constant;
-				})
-				.Replace(op =>
-				{
-					Mul mul = op as Mul;
-
-					Constant ca = mul.A as Constant;
-					Mul mulB = mul.B as Mul;
-					Constant cb = mulB.B as Constant;
-
-					Constant a = new Constant(ca.Value * cb.Value);
-					IOperator b = mulB.A;
-					return new Mul(a, b);
-				})
-			,
-
-
-			// (Const * Any) * Const => NewConst * Any
-			new Rule()
-				.Where(op =>
-				{
-					return op is Mul mul
-						&& mul.A is Mul mulA
-						&& mul.B is Constant
-						&& mulA.A is Constant;
-				})
-				.Replace(op =>
-				{
-					Mul mul = op as Mul;
-
-					Mul mulA = mul.A as Mul;
-					Constant ca = mul.B as Constant;
-					Constant cb = mulA.A as Constant;
-
-					Constant a = new Constant(ca.Value * cb.Value);
-					IOperator b = mulA.B;
-					return new Mul(a, b);
-				})
-			,
-
-
-			// (Any * Const) * Const => NewConst * Any
-			new Rule()
-				.Where(op =>
-				{
-					return op is Mul mul
-						&& mul.A is Mul mulA
-						&& mul.B is Constant
-						&& mulA.B is Constant;
-				})
-				.Replace(op =>
-				{
-					Mul mul = op as Mul;
-
-					Mul mulA = mul.A as Mul;
-					Constant ca = mul.B as Constant;
-					Constant cb = mulA.B as Constant;
-
-					Constant a = new Constant(ca.Value * cb.Value);
-					IOperator b = mulA.A;
-					return new Mul(a, b);
 				})
 			,
 			#endregion
@@ -624,6 +420,213 @@
 
 					Sub newSub = new Sub(sum.B, sub.B);
 					return new Sum(sum.A, newSub);
+				})
+			,
+			#endregion
+			#endregion
+
+			#region Зведення констант
+			// Constant $ Constant => Constant
+			new Rule()
+				.Where(op =>
+				{
+					return op is BinaryOperator binOp
+						&& binOp.A is Constant
+						&& binOp.B is Constant;
+				})
+				.Replace(op => new Constant(op.Calculate(ArgsBox.Empty)))
+			,
+
+			#region Sum
+			// Const + (Const + Any) => NewConst + Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum sum
+						&& sum.A is Constant
+						&& sum.B is Sum sumB
+						&& sumB.A is Constant;
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+
+					Constant ca = sum.A as Constant;
+					Sum sumB = sum.B as Sum;
+					Constant cb = sumB.A as Constant;
+
+					Constant a = new Constant(ca.Value + cb.Value);
+					IOperator b = sumB.B;
+					return new Sum(a, b);
+				})
+			,
+
+
+			// Const + (Any + Const) => NewConst + Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum sum
+						&& sum.A is Constant
+						&& sum.B is Sum sumB
+						&& sumB.B is Constant;
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+
+					Constant ca = sum.A as Constant;
+					Sum sumB = sum.B as Sum;
+					Constant cb = sumB.B as Constant;
+
+					Constant a = new Constant(ca.Value + cb.Value);
+					IOperator b = sumB.A;
+					return new Sum(a, b);
+				})
+			,
+
+
+			// (Const + Any) + Const => NewConst + Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum sum
+						&& sum.A is Sum sumA
+						&& sum.B is Constant
+						&& sumA.A is Constant;
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+
+					Sum sumA = sum.A as Sum;
+					Constant ca = sum.B as Constant;
+					Constant cb = sumA.A as Constant;
+
+					Constant a = new Constant(ca.Value + cb.Value);
+					IOperator b = sumA.B;
+					return new Sum(a, b);
+				})
+			,
+
+
+			// (Any + Const) + Const => NewConst + Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum sum
+						&& sum.A is Sum sumA
+						&& sum.B is Constant
+						&& sumA.B is Constant;
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+
+					Sum sumA = sum.A as Sum;
+					Constant ca = sum.B as Constant;
+					Constant cb = sumA.B as Constant;
+
+					Constant a = new Constant(ca.Value + cb.Value);
+					IOperator b = sumA.A;
+					return new Sum(a, b);
+				})
+			,
+			#endregion
+
+			#region Multiplication
+			// Const * (Const * Any) => NewConst * Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.A is Constant
+						&& mul.B is Mul mulB
+						&& mulB.A is Constant;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+
+					Constant ca = mul.A as Constant;
+					Mul mulB = mul.B as Mul;
+					Constant cb = mulB.A as Constant;
+
+					Constant a = new Constant(ca.Value * cb.Value);
+					IOperator b = mulB.B;
+					return new Mul(a, b);
+				})
+			,
+
+
+			// Const * (Any * Const) => NewConst * Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.A is Constant
+						&& mul.B is Mul mulB
+						&& mulB.B is Constant;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+
+					Constant ca = mul.A as Constant;
+					Mul mulB = mul.B as Mul;
+					Constant cb = mulB.B as Constant;
+
+					Constant a = new Constant(ca.Value * cb.Value);
+					IOperator b = mulB.A;
+					return new Mul(a, b);
+				})
+			,
+
+
+			// (Const * Any) * Const => NewConst * Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.A is Mul mulA
+						&& mul.B is Constant
+						&& mulA.A is Constant;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+
+					Mul mulA = mul.A as Mul;
+					Constant ca = mul.B as Constant;
+					Constant cb = mulA.A as Constant;
+
+					Constant a = new Constant(ca.Value * cb.Value);
+					IOperator b = mulA.B;
+					return new Mul(a, b);
+				})
+			,
+
+
+			// (Any * Const) * Const => NewConst * Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.A is Mul mulA
+						&& mul.B is Constant
+						&& mulA.B is Constant;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+
+					Mul mulA = mul.A as Mul;
+					Constant ca = mul.B as Constant;
+					Constant cb = mulA.B as Constant;
+
+					Constant a = new Constant(ca.Value * cb.Value);
+					IOperator b = mulA.A;
+					return new Mul(a, b);
 				})
 			,
 			#endregion
