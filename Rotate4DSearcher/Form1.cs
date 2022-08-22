@@ -28,7 +28,8 @@ namespace Rotate4DSearcher
 			{
 				if (array[i] != null)
 				{
-					candidates.Items.Add(array[i]);
+					string[] strings = array[i].ToString().Split('\n');
+					candidates.Items.AddRange(strings);
 				}
 			}
 

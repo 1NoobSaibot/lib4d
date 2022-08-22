@@ -15,39 +15,38 @@ namespace Rotate4DSearcher.Genetic
 		}
 
 
-		public override double Calculate(ArgsBox args)
+		public double Calculate(ArgsBox args)
 		{
 			return _Value;
 		}
 
 
-		public override IOperator Clone()
+		public IOperator Clone()
 		{
 			return new Constant(_Value);
 		}
 
 
-		public override string ToStringFullBracketsString(ArgsBox args)
+		public string ToStringFullBracketsString(ArgsBox args)
 		{
 			return _Value.ToString();
 		}
 
 
-		public override void AddOperatorsToArray(List<IOperator> list)
+		public void AddOperatorsToArray(List<IOperator> list)
 		{
 			list.Add(this);
 		}
 
 
-		public override IOperator GetMutatedClone(Random rnd)
+		public IOperator GetMutatedClone(Random rnd)
 		{
 			switch (rnd.Next(4))
 			{
 				case 0:
 					return new Argument(rnd);
 				case 1:
-					return new BinaryOperator(rnd, this);
-
+					return BinaryOperator.CreateRandom(rnd, this);
 				default:
 					return ChangeValue(rnd);
 			}
@@ -61,25 +60,25 @@ namespace Rotate4DSearcher.Genetic
 		}
 
 
-		public override bool Contains(IOperator children)
+		public bool Contains(IOperator children)
 		{
 			return false;
 		}
 
 
-		public override int GetAmountOfNodes()
+		public int GetAmountOfNodes()
 		{
 			return 1;
 		}
 
 
-		public override bool IsZero()
+		public bool IsZero()
 		{
 			return Math.Abs(_Value) < 0.01;
 		}
 
 
-		public override bool Equals(object obj)
+		public bool Equals(object obj)
 		{
 			if (obj is Constant constant)
 			{

@@ -46,8 +46,15 @@ namespace Rotate4DSearcher.Genetic
 			{
 				return new AlgebraicExpression(clone);
 			}
-			IOperator parent = FindParent(operators, choosen);
-			(parent as BinaryOperator).ReplaceChildren(choosen, clone);
+			BinaryOperator parent = FindParent(operators, choosen) as BinaryOperator;
+			if (parent.A == choosen)
+			{
+				parent.A = clone;
+			}
+			else
+			{
+				parent.B = clone;
+			}
 			return new AlgebraicExpression(clonedRoot);
 		}
 
@@ -81,7 +88,7 @@ namespace Rotate4DSearcher.Genetic
 			string symbol;
 			IOperator a;
 			IOperator b;
-			Action action;
+			char action;
 
 			symbol = reader.GetNextSymbol();
 			if (symbol == "(")
@@ -99,9 +106,7 @@ namespace Rotate4DSearcher.Genetic
 			}
 
 			symbol = reader.GetNextSymbol();
-			action = symbol == "+"
-				? Action.Add
-				: (symbol == "-") ? Action.Subtract : Action.Multiply;
+			action = symbol[0];
 
 			symbol = reader.GetNextSymbol();
 			if (symbol == "(")
@@ -116,7 +121,18 @@ namespace Rotate4DSearcher.Genetic
 			{
 				reader.GetNextSymbol();  // it should be ")"
 			}
-			return new BinaryOperator(a, action, b);
+
+			switch (action)
+			{
+				case '+':
+					return new Sum(a, b);
+				case '-':
+					return new Sub(a, b);
+				case '*':
+					return new Mul(a, b);
+			}
+
+			throw new Exception("Unknown Action type: " + action);
 		}
 
 

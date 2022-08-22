@@ -97,7 +97,16 @@ namespace Rotate4DSearcher.Genetic
 		public override string ToString()
 		{
 			string[][] array = ToStringArray();
-			return Error + "  |  " + array[0][0] + "  |  " + array[0][1];
+			string res = Error + "  |";
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					res += "\n   " + _formulas[i, j].ToString();
+				}
+			}
+
+			return res;
 		}
 
 

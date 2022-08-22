@@ -20,34 +20,38 @@
 			new Rule()
 				.Where(op =>
 				{
-					return op is BinaryOperator binOp
-						&& binOp.action == Action.Multiply
-						&& (binOp.A.IsZero() || binOp.B.IsZero());
+					return op is Mul mul
+						&& (mul.A.IsZero() || mul.B.IsZero());
 				})
 				.Replace(_ => new Constant(0))
 			,
 
 
-			// A + 0 => A;		0 + 0 => 0
+			// A + 0 => A;
 			new Rule()
 				.Where(op => {
-					return op is BinaryOperator b
-						&& b.action == Action.Add
-						&& (b.A.IsZero() || b.B.IsZero());
+					return op is Sum b && b.B.IsZero();
 				})
-				.Replace(op =>
+				.Replace(op => (op as Sum).A)
+			,
+
+
+			// 0 + B = B
+			new Rule()
+				.Where(op => {
+					return op is Sum b && b.A.IsZero();
+				})
+				.Replace(op => (op as Sum).B)
+			,
+
+
+			// A + A => 2 * A
+			new Rule()
+				.Where(op =>
 				{
-					BinaryOperator binOp = op as BinaryOperator;
-					if (binOp.A.IsZero())
-					{
-						if (binOp.B.IsZero())
-						{
-							return new Constant(0);
-						}
-						return binOp.B;
-					}
-					return binOp.A;
+					return op is Sum s && s.A.Equals(s.B);
 				})
+				.Replace(op => new Mul(new Constant(2), (op as Sum).A))
 			,
 
 
@@ -55,76 +59,543 @@
 			new Rule()
 				.Where(op =>
 				{
-					return op is BinaryOperator binOp
-						&& binOp.action == Action.Subtract
-						&& binOp.A.Equals(binOp.B);
+					return op is Sub sub && sub.A.Equals(sub.B);
 				})
 				.Replace(_ => new Constant(0))
 			,
 
 
-			// 1 * A => A
+			// A - 0 => A
 			new Rule()
 				.Where(op =>
 				{
-					return op is BinaryOperator binOp
-						&& binOp.action == Action.Multiply
-						&& ((binOp.A is Constant ca && ca.Value == 1) || (binOp.B is Constant cb && cb.Value == 1));
+					return op is Sub sub && sub.B.IsZero();
+				})
+				.Replace(op => (op as Sub).A)
+			,
+
+
+			// 1 * B => B
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.A is Constant ca
+						&& ca.Value == 1;
+				})
+				.Replace(op => (op as Mul).B)
+			,
+
+
+			// A * 1 => A
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.B is Constant cb
+						&& cb.Value == 1;
+				})
+				.Replace(op => (op as Mul).A)
+			,
+
+
+			// Any + (Any + Const) => Const + (Any + Any)		Constants go up
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum sum
+						&& sum.B is Sum sumB
+						&& sumB.B is Constant;
 				})
 				.Replace(op =>
 				{
-					BinaryOperator binOp = op as BinaryOperator;
-					if (binOp.A is Constant ca && ca.Value == 1)
+					Sum sum = op as Sum;
+					Sum sumB = sum.B as Sum;
+					return new Sum(sumB.B, new Sum(sum.A, sumB.A));
+				})
+			,
+
+
+			// Any + (Const + Any) => Const + (Any + Any)		Constants go up
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum sum
+						&& sum.B is Sum sumB
+						&& sumB.A is Constant;
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+					Sum sumB = sum.B as Sum;
+					return new Sum(sumB.A, new Sum(sum.A, sumB.B));
+				})
+			,
+
+
+			// (Any + Const) + Any => Const + (Any + Any)		Constants go up
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum sum
+						&& sum.A is Sum sumA
+						&& sumA.B is Constant;
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+					Sum sumA = sum.A as Sum;
+					return new Sum(sumA.B, new Sum(sum.B, sumA.A));
+				})
+			,
+
+
+			// (Const + Any) + Any => Const + (Any + Any)		Constants go up
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum sum
+						&& sum.A is Sum sumA
+						&& sumA.A is Constant;
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+					Sum sumA = sum.A as Sum;
+					return new Sum(sumA.A, new Sum(sum.B, sumA.B));
+				})
+			,
+
+
+
+
+
+			// Any * (Any * Const) => Const * (Any * Any)		Constants go up
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.B is Mul mulB
+						&& mulB.B is Constant;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+					Mul mulB = mul.B as Mul;
+					return new Mul(mulB.B, new Mul(mul.A, mulB.A));
+				})
+			,
+
+
+			// Any * (Const * Any) => Const * (Any * Any)		Constants go up
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.B is Mul mulB
+						&& mulB.A is Constant;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+					Mul mulB = mul.B as Mul;
+					return new Mul(mulB.A, new Mul(mul.A, mulB.B));
+				})
+			,
+
+
+			// (Any * Const) * Any => Const * (Any * Any)		Constants go up
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.A is Mul mulA
+						&& mulA.B is Constant;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+					Mul mulA = mul.A as Mul;
+					return new Mul(mulA.B, new Mul(mul.B, mulA.A));
+				})
+			,
+
+
+			// (Const * Any) * Any => Const * (Any * Any)		Constants go up
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.A is Mul mulA
+						&& mulA.A is Constant;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+					Mul mulA = mul.A as Mul;
+					return new Mul(mulA.A, new Mul(mul.B, mulA.B));
+				})
+			,
+
+
+
+
+
+			// Const + (Const + Any) => NewConst + Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum sum
+						&& sum.A is Constant
+						&& sum.B is Sum sumB
+						&& sumB.A is Constant;
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+
+					Constant ca = sum.A as Constant;
+					Sum sumB = sum.B as Sum;
+					Constant cb = sumB.A as Constant;
+
+					Constant a = new Constant(ca.Value + cb.Value);
+					IOperator b = sumB.B;
+					return new Sum(a, b);
+				})
+			,
+
+
+			// Const + (Any + Const) => NewConst + Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum sum
+						&& sum.A is Constant
+						&& sum.B is Sum sumB
+						&& sumB.B is Constant;
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+
+					Constant ca = sum.A as Constant;
+					Sum sumB = sum.B as Sum;
+					Constant cb = sumB.B as Constant;
+
+					Constant a = new Constant(ca.Value + cb.Value);
+					IOperator b = sumB.A;
+					return new Sum(a, b);
+				})
+			,
+
+
+			// (Const + Any) + Const => NewConst + Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum sum
+						&& sum.A is Sum sumA
+						&& sum.B is Constant
+						&& sumA.A is Constant;
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+
+					Sum sumA = sum.A as Sum;
+					Constant ca = sum.B as Constant;
+					Constant cb = sumA.A as Constant;
+
+					Constant a = new Constant(ca.Value + cb.Value);
+					IOperator b = sumA.B;
+					return new Sum(a, b);
+				})
+			,
+
+
+			// (Any + Const) + Const => NewConst + Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum sum
+						&& sum.A is Sum sumA
+						&& sum.B is Constant
+						&& sumA.B is Constant;
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+
+					Sum sumA = sum.A as Sum;
+					Constant ca = sum.B as Constant;
+					Constant cb = sumA.B as Constant;
+
+					Constant a = new Constant(ca.Value + cb.Value);
+					IOperator b = sumA.A;
+					return new Sum(a, b);
+				})
+			,
+
+
+
+
+
+
+			// Const * (Const * Any) => NewConst * Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.A is Constant
+						&& mul.B is Mul mulB
+						&& mulB.A is Constant;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+
+					Constant ca = mul.A as Constant;
+					Mul mulB = mul.B as Mul;
+					Constant cb = mulB.A as Constant;
+
+					Constant a = new Constant(ca.Value * cb.Value);
+					IOperator b = mulB.B;
+					return new Mul(a, b);
+				})
+			,
+
+
+			// Const * (Any * Const) => NewConst * Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.A is Constant
+						&& mul.B is Mul mulB
+						&& mulB.B is Constant;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+
+					Constant ca = mul.A as Constant;
+					Mul mulB = mul.B as Mul;
+					Constant cb = mulB.B as Constant;
+
+					Constant a = new Constant(ca.Value * cb.Value);
+					IOperator b = mulB.A;
+					return new Mul(a, b);
+				})
+			,
+
+
+			// (Const * Any) * Const => NewConst * Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.A is Mul mulA
+						&& mul.B is Constant
+						&& mulA.A is Constant;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+
+					Mul mulA = mul.A as Mul;
+					Constant ca = mul.B as Constant;
+					Constant cb = mulA.A as Constant;
+
+					Constant a = new Constant(ca.Value * cb.Value);
+					IOperator b = mulA.B;
+					return new Mul(a, b);
+				})
+			,
+
+
+			// (Any * Const) * Const => NewConst * Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.A is Mul mulA
+						&& mul.B is Constant
+						&& mulA.B is Constant;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+
+					Mul mulA = mul.A as Mul;
+					Constant ca = mul.B as Constant;
+					Constant cb = mulA.B as Constant;
+
+					Constant a = new Constant(ca.Value * cb.Value);
+					IOperator b = mulA.A;
+					return new Mul(a, b);
+				})
+			,
+
+
+
+
+
+
+
+			// A + (Any - A) => Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum sum
+						&& sum.B is Sub subB
+						&& subB.B.Equals(sum.A);
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+					Sub subB = sum.B as Sub;
+					return subB.A;
+				})
+			,
+
+
+			// (Any - B) + B => Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum sum
+						&& sum.A is Sub subA
+						&& subA.B.Equals(sum.B);
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+					Sub subA = sum.A as Sub;
+					return subA.A;
+				})
+			,
+
+
+			// A - (Any + A) => Any
+			// A - (A + Any) => Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sub sub
+						&& sub.B is Sum sum
+						&& (sub.A.Equals(sum.A) || sub.A.Equals(sum.B));
+				})
+				.Replace(op =>
+				{
+					Sub sub = op as Sub;
+					Sum sum = sub.B as Sum;
+					if (sub.A.Equals(sum.A))
 					{
-						return binOp.B;
+						return sum.B;
 					}
-					return binOp.A;
+					return sum.A;
+				})
+			,
+
+
+			// (Any + A) - A => Any
+			// (A + Any) - A => Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sub sub
+						&& sub.A is Sum sum
+						&& (sub.B.Equals(sum.A) || sub.B.Equals(sum.B));
+				})
+				.Replace(op =>
+				{
+					Sub sub = op as Sub;
+					Sum sum = sub.A as Sum;
+					if (sub.B.Equals(sum.A))
+					{
+						return sum.B;
+					}
+					return sum.A;
 				})
 			,
 
 
 			// (A * B) + (A * C) => A * (B + C)
 			new Rule()
-				.Where(op =>
-				{
-					if (op is BinaryOperator b && b.action == Action.Add)
-					{
-						if (b.A is BinaryOperator _a && b.B is BinaryOperator _b)
-						{
-							if (_a.action == Action.Multiply && _b.action == Action.Multiply)
-							{
-								return _a.A.Equals(_b.A)
-									|| _a.A.Equals(_b.B)
-									|| _a.B.Equals(_b.A)
-									|| _a.B.Equals(_b.B);
-							}
-						}
-					}
-					return false;
+				.Where(op => {
+					return op is Sum sum
+						&& sum.A is Mul mulA
+						&& sum.B is Mul mulB
+						&& mulA.A.Equals(mulB.A);
 				})
 				.Replace(op =>
 				{
-					BinaryOperator root = op as BinaryOperator;
-					BinaryOperator a = root.A as BinaryOperator;
-					BinaryOperator b = root.B as BinaryOperator;
+					Sum sum = op as Sum;
+					Mul mulA = sum.A as Mul;
+					Mul mulB = sum.B as Mul;
 
-					if (a.A.Equals(b.A))
-					{
-						IOperator sum1 = new BinaryOperator(a.B, Action.Add, b.B);
-						return new BinaryOperator(a.A, Action.Multiply, sum1);
-					}
-					if (a.A.Equals(b.B))
-					{
-						IOperator sum2 = new BinaryOperator(a.B, Action.Add, b.A);
-						return new BinaryOperator(a.A, Action.Multiply, sum2);
-					}
-					if (a.B.Equals(b.A))
-					{
-						IOperator sum3 = new BinaryOperator(a.A, Action.Add, b.B);
-						return new BinaryOperator(a.B, Action.Multiply, sum3);
-					}
-					IOperator sum4 = new BinaryOperator(a.A, Action.Add, b.A);
-					return new BinaryOperator(a.B, Action.Multiply, sum4);
+					Sum newSum = new Sum(mulA.B, mulB.B);
+					return new Mul(mulA.A, newSum);
+				})
+			,
+
+
+			// (A * B) + (C * A) => A * (B + C)
+			new Rule()
+				.Where(op => {
+					return op is Sum sum
+						&& sum.A is Mul mulA
+						&& sum.B is Mul mulB
+						&& mulA.A.Equals(mulB.B);
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+					Mul mulA = sum.A as Mul;
+					Mul mulB = sum.B as Mul;
+
+					Sum newSum = new Sum(mulA.B, mulB.A);
+					return new Mul(mulA.A, newSum);
+				})
+			,
+
+
+			// (A * B) + (B * C) => B * (A + C)
+			new Rule()
+				.Where(op => {
+					return op is Sum sum
+						&& sum.A is Mul mulA
+						&& sum.B is Mul mulB
+						&& mulA.B.Equals(mulB.A);
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+					Mul mulA = sum.A as Mul;
+					Mul mulB = sum.B as Mul;
+
+					Sum newSum = new Sum(mulA.A, mulB.B);
+					return new Mul(mulA.B, newSum);
+				})
+			,
+
+
+			// (A * B) + (C * B) => B * (A + C)
+			new Rule()
+				.Where(op => {
+					return op is Sum sum
+						&& sum.A is Mul mulA
+						&& sum.B is Mul mulB
+						&& mulA.B.Equals(mulB.B);
+				})
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+					Mul mulA = sum.A as Mul;
+					Mul mulB = sum.B as Mul;
+
+					Sum newSum = new Sum(mulA.A, mulB.A);
+					return new Mul(mulA.B, newSum);
 				})
 		};
 

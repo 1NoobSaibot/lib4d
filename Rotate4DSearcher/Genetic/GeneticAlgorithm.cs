@@ -8,7 +8,7 @@ namespace Rotate4DSearcher.Genetic
 	public class GeneticAlgorithm
 	{
 		private const int GENERATION_COUNT = 1000;
-		private const int AMOUNT_OF_CHOOSEN = 10;
+		private const int AMOUNT_OF_CHOOSEN = 2;
 
 		public static int GenerationCounter { get; private set; }
 		public static Candidate[] TheBest = new Candidate[AMOUNT_OF_CHOOSEN];
