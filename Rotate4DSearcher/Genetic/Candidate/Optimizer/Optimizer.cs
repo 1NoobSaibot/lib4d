@@ -4,18 +4,7 @@
 	{
 		private static Rule[] _rules = new Rule[]
 		{
-			// Constant $ Constant => Constant
-			new Rule()
-				.Where(op =>
-				{
-					return op is BinaryOperator binOp
-						&& binOp.A is Constant
-						&& binOp.B is Constant;
-				})
-				.Replace(op => new Constant(op.Calculate(ArgsBox.Empty)))
-			,
-
-
+			#region Пусті операції
 			// 0 * Any => 0
 			new Rule()
 				.Where(op =>
@@ -42,16 +31,6 @@
 					return op is Sum b && b.A.IsZero();
 				})
 				.Replace(op => (op as Sum).B)
-			,
-
-
-			// A + A => 2 * A
-			new Rule()
-				.Where(op =>
-				{
-					return op is Sum s && s.A.Equals(s.B);
-				})
-				.Replace(op => new Mul(new Constant(2), (op as Sum).A))
 			,
 
 
@@ -97,8 +76,9 @@
 				})
 				.Replace(op => (op as Mul).A)
 			,
+			#endregion
 
-
+			#region Підйом констант, переміщення їх вправо
 			// Any + (Any + Const) => Const + (Any + Any)		Constants go up
 			new Rule()
 				.Where(op =>
@@ -167,9 +147,6 @@
 			,
 
 
-
-
-
 			// Any * (Any * Const) => Const * (Any * Any)		Constants go up
 			new Rule()
 				.Where(op =>
@@ -236,11 +213,21 @@
 					return new Mul(mulA.A, new Mul(mul.B, mulA.B));
 				})
 			,
+			#endregion
 
+			#region Зведення констант
+			// Constant $ Constant => Constant
+			new Rule()
+				.Where(op =>
+				{
+					return op is BinaryOperator binOp
+						&& binOp.A is Constant
+						&& binOp.B is Constant;
+				})
+				.Replace(op => new Constant(op.Calculate(ArgsBox.Empty)))
+			,
 
-
-
-
+			#region Додавання
 			// Const + (Const + Any) => NewConst + Any
 			new Rule()
 				.Where(op =>
@@ -335,12 +322,9 @@
 					return new Sum(a, b);
 				})
 			,
+			#endregion
 
-
-
-
-
-
+			#region Multiplication
 			// Const * (Const * Any) => NewConst * Any
 			new Rule()
 				.Where(op =>
@@ -435,11 +419,87 @@
 					return new Mul(a, b);
 				})
 			,
+			#endregion
+
+			#region Substract
+			// Any - (Any - Constant)		=> 	Constant + (Any - Any)
+			new Rule()
+				.Where(op => {
+					return op is Sub sub
+						&& sub.B is Sub subB
+						&& subB.B is Constant;
+				})
+				.Replace(op => {
+					Sub sub = op as Sub;
+					Sub subB = sub.B as Sub;
+
+					Sub newSub = new Sub(sub.A, subB.A);
+					return new Sum(subB.B, newSub);
+				})
+			,
 
 
+			// Any - (Constant - Any)		=>	(Any + Any)	- Constant
+			new Rule()
+				.Where(op => {
+					return op is Sub sub
+						&& sub.B is Sub subB
+						&& subB.A is Constant;
+				})
+				.Replace(op => {
+					Sub sub = op as Sub;
+					Sub subB = sub.B as Sub;
+
+					Sum newSum = new Sum(sub.A, subB.B);
+					return new Sub(newSum, subB.A);
+				})
+			,
 
 
+			// (Any - Constant) - Any		=>	(Any - Any)	- Constant
+			new Rule()
+				.Where(op => {
+					return op is Sub sub
+						&& sub.A is Sub subA
+						&& subA.B is Constant;
+				})
+				.Replace(op => {
+					Sub sub = op as Sub;
+					Sub subA = sub.A as Sub;
 
+					Sub newSub = new Sub(subA.A, sub.B);
+					return new Sub(newSub, subA.B);
+				})
+			,
+
+
+			// (Constant - Any) - Any		=>	Constant - (Any + Any)
+			new Rule()
+				.Where(op => {
+					return op is Sub sub
+						&& sub.A is Sub subA
+						&& subA.A is Constant;
+				})
+				.Replace(op => {
+					Sub sub = op as Sub;
+					Sub subA = sub.A as Sub;
+
+					Sum newSum = new Sum(subA.B, sub.B);
+					return new Sub(subA.A, newSum);
+				})
+			,
+			#endregion
+			#endregion
+
+			#region Скорочення подібних
+			// A + A => 2 * A
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sum s && s.A.Equals(s.B);
+				})
+				.Replace(op => new Mul(new Constant(2), (op as Sum).A))
+			,
 
 
 			// A + (Any - A) => Any
@@ -597,6 +657,7 @@
 					Sum newSum = new Sum(mulA.A, mulB.A);
 					return new Mul(mulA.B, newSum);
 				})
+		#endregion
 		};
 
 

@@ -13,7 +13,6 @@ namespace Rotate4DSearcher.Genetic
 		public static int GenerationCounter { get; private set; }
 		public static Candidate[] TheBest = new Candidate[AMOUNT_OF_CHOOSEN];
 
-		private static bool _samplesWereUpdated = true;
 		private static bool _shouldStop = false;
 		private static readonly Random _rnd = new Random();
 

@@ -85,7 +85,7 @@ namespace Rotate4DSearcher.Genetic
 		}
 
 
-		public bool Equals(object b)
+		public override bool Equals(object b)
 		{
 			if (b is Argument agrument)
 			{
