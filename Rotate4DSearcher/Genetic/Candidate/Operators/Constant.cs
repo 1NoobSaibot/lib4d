@@ -55,7 +55,18 @@ namespace Rotate4DSearcher.Genetic
 
 		private IOperator ChangeValue(Random rnd)
 		{
-			_Value += rnd.NextDouble() * 0.002 - 0.001;
+			double amplitude = 2;
+
+			double divByTen_Times = rnd.Next(14);
+			double divB = 1;
+			for (int i = 0; i < divByTen_Times; i++)
+			{
+				divB *= 10;
+			}
+
+			amplitude /= divB;
+			
+			_Value += rnd.NextDouble() * amplitude - (amplitude / 2);
 			return this;
 		}
 
