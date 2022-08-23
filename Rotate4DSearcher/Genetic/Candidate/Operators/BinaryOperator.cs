@@ -42,7 +42,7 @@ namespace Rotate4DSearcher.Genetic
 		}
 
 
-		public void AddOperatorsToArray(List<IOperator> list)
+		public override void AddOperatorsToArray(List<IOperator> list)
 		{
 			A.AddOperatorsToArray(list);
 			B.AddOperatorsToArray(list);
@@ -50,29 +50,29 @@ namespace Rotate4DSearcher.Genetic
 		}
 
 
-		public abstract double Calculate(ArgsBox args);
+		public abstract override double Calculate(ArgsBox args);
 
-		public abstract string ToStringFullBracketsString(ArgsBox args);
-
-
-		public abstract IOperator Clone();
+		public abstract override string ToStringFullBracketsString(ArgsBox args);
 
 
-		public abstract IOperator GetMutatedClone(Random rnd);
+		public abstract override IOperator Clone();
 
 
-		public bool Contains(IOperator children)
+		public abstract override IOperator GetMutatedClone(Random rnd);
+
+
+		public override bool Contains(IOperator children)
 		{
 			return A == children || B == children;
 		}
 
 
-		public int GetAmountOfNodes()
+		public override int GetAmountOfNodes()
 		{
 			return 1 + A.GetAmountOfNodes() + B.GetAmountOfNodes();
 		}
 
 
-		public abstract bool IsZero();
+		public abstract override bool IsZero();
 	}
 }

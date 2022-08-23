@@ -18,31 +18,31 @@ namespace Rotate4DSearcher.Genetic
 			this.index = rnd.Next(9);
 		}
 
-		public double Calculate(ArgsBox args)
+		public override double Calculate(ArgsBox args)
 		{
 			return args.GetValue(index);
 		}
 
 
-		public string ToStringFullBracketsString(ArgsBox args)
+		public override string ToStringFullBracketsString(ArgsBox args)
 		{
 			return args.GetName(index);
 		}
 
 
-		public IOperator Clone()
+		public override IOperator Clone()
 		{
 			return new Argument(index);
 		}
 
 
-		public void AddOperatorsToArray(List<IOperator> list)
+		public override void AddOperatorsToArray(List<IOperator> list)
 		{
 			list.Add(this);
 		}
 
 
-		public IOperator GetMutatedClone(Random rnd)
+		public override IOperator GetMutatedClone(Random rnd)
 		{
 			switch(rnd.Next(3))
 			{
@@ -68,18 +68,18 @@ namespace Rotate4DSearcher.Genetic
 		}
 
 
-		public bool Contains(IOperator children)
+		public override bool Contains(IOperator children)
 		{
 			return false;
 		}
 
-		public int GetAmountOfNodes()
+		public override int GetAmountOfNodes()
 		{
 			return 1;
 		}
 
 
-		public bool IsZero()
+		public override bool IsZero()
 		{
 			return false;
 		}

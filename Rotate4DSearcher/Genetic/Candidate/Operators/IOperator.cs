@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace Rotate4DSearcher.Genetic
 {
-	public interface IOperator
+	public abstract class IOperator
 	{
-		double Calculate(ArgsBox args);
-		string ToStringFullBracketsString(ArgsBox args);
+		public abstract double Calculate(ArgsBox args);
+		public abstract string ToStringFullBracketsString(ArgsBox args);
 
 		/// <summary>
 		/// This method requires deep cloning
 		/// </summary>
 		/// <returns>new IOperator</returns>
-		IOperator Clone();
-		void AddOperatorsToArray(List<IOperator> list);
+		public abstract IOperator Clone();
+		public abstract void AddOperatorsToArray(List<IOperator> list);
 
 		/// <summary>
 		/// This method will be called inside cloned tree.
@@ -21,12 +21,41 @@ namespace Rotate4DSearcher.Genetic
 		/// </summary>
 		/// <param name="rnd"></param>
 		/// <returns>new or this</returns>
-		IOperator GetMutatedClone(Random rnd);
+		public abstract IOperator GetMutatedClone(Random rnd);
 
-		bool Contains(IOperator children);
+		public abstract bool Contains(IOperator children);
 
-		int GetAmountOfNodes();
+		public abstract int GetAmountOfNodes();
 
-		bool IsZero();
+		public abstract bool IsZero();
+
+
+		public static IOperator operator +(IOperator a, IOperator b) {
+			if (a is Constant ca && b is Constant cb)
+			{
+				return new Constant(ca.Value + cb.Value);
+			}
+			return new Sum(a, b);
+		}
+
+
+		public static IOperator operator -(IOperator a, IOperator b)
+		{
+			if (a is Constant ca && b is Constant cb)
+			{
+				return new Constant(ca.Value - cb.Value);
+			}
+			return new Sub(a, b);
+		}
+
+
+		public static IOperator operator *(IOperator a, IOperator b)
+		{
+			if (a is Constant ca && b is Constant cb)
+			{
+				return new Constant(ca.Value * cb.Value);
+			}
+			return new Mul(a, b);
+		}
 	}
 }

@@ -92,7 +92,7 @@
 				{
 					Sum sum = op as Sum;
 					Sum sumB = sum.B as Sum;
-					return new Sum(sumB.B, new Sum(sum.A, sumB.A));
+					return sumB.B + (sum.A + sumB.A);
 				})
 			,
 
@@ -109,7 +109,7 @@
 				{
 					Sum sum = op as Sum;
 					Sum sumB = sum.B as Sum;
-					return new Sum(sumB.A, new Sum(sum.A, sumB.B));
+					return sumB.A + (sum.A + sumB.B);
 				})
 			,
 
@@ -126,7 +126,7 @@
 				{
 					Sum sum = op as Sum;
 					Sum sumA = sum.A as Sum;
-					return new Sum(sumA.B, new Sum(sum.B, sumA.A));
+					return sumA.B + (sum.B + sumA.A);
 				})
 			,
 
@@ -143,7 +143,7 @@
 				{
 					Sum sum = op as Sum;
 					Sum sumA = sum.A as Sum;
-					return new Sum(sumA.A, new Sum(sum.B, sumA.B));
+					return sumA.A + (sum.B + sumA.B);
 				})
 			,
 			#endregion
@@ -161,7 +161,7 @@
 				{
 					Mul mul = op as Mul;
 					Mul mulB = mul.B as Mul;
-					return new Mul(mulB.B, new Mul(mul.A, mulB.A));
+					return mulB.B * (mul.A * mulB.A);
 				})
 			,
 
@@ -178,7 +178,7 @@
 				{
 					Mul mul = op as Mul;
 					Mul mulB = mul.B as Mul;
-					return new Mul(mulB.A, new Mul(mul.A, mulB.B));
+					return mulB.A * (mul.A * mulB.B);
 				})
 			,
 
@@ -974,8 +974,8 @@
 					Mul mulA = sum.A as Mul;
 					Mul mulB = sum.B as Mul;
 
-					Sum newSum = new Sum(mulA.A, mulB.A);
-					return new Mul(mulA.B, newSum);
+					IOperator newSum = mulA.A + mulB.A;
+					return mulA.B * newSum;
 				})//*/
 			#endregion
 			#endregion
