@@ -10,6 +10,8 @@ namespace StatementSystem4D
 		// It means that this vector is positive or negative X, Y, Z or Q only
 		public bool IsBasic => (Math.Abs(X) + Math.Abs(Y) + Math.Abs(Z) + Math.Abs(Q)) == 1;
 
+		public bool IsPositiveBasic => IsBasic && ((X + Y + Z + Q) > 0);
+
 		public Direction4D(int x, int y, int z, int q)
 		{
 			X = x;

@@ -183,6 +183,14 @@ namespace StatementSystem4D
 				.PickC(s => s.D)
 				.PickD(s => s.C)
 			,
+
+
+			// [A|B] 90  => C->D			=>>>>
+			// [A|B] 90	 => CD->-CD
+			new Rule()
+				.Where((s, _) => s.Alpha == Angle.A90 && s.AreAllVectorsBasic() && s.AreAllVectorsDifferent())
+				.PickC(s => s.C + s.D)
+				.PickD(s => -s.C + s.D)
 		};
 
 		static void Main(string[] args)
