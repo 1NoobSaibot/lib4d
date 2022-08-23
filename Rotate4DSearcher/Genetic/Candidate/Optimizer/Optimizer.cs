@@ -976,8 +976,85 @@
 
 					Sum newSum = new Sum(mulA.A, mulB.A);
 					return new Mul(mulA.B, newSum);
-				})
+				})//*/
 			#endregion
+			#endregion
+
+			#region Розкриття множення
+			// (A + B) * C		=>		(A * C) + (B * C)
+			/*new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.A is Sum sum;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+					Sum sum = mul.A as Sum;
+
+					Mul mulA = new Mul(sum.A, mul.B);
+					Mul mulB = new Mul(sum.B, mul.B);
+					return new Sum(mulA, mulB);
+				})
+			,
+
+
+			// C * (A + B)		=>		(A * C) + (B * C)
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.B is Sum sum;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+					Sum sum = mul.B as Sum;
+
+					Mul mulA = new Mul(sum.A, mul.A);
+					Mul mulB = new Mul(sum.B, mul.A);
+					return new Sum(mulA, mulB);
+				})
+			,
+
+
+			// (A - B) * C		=>		(A * C) - (B * C)
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.A is Sub;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+					Sub sub = mul.A as Sub;
+
+					Mul mulA = new Mul(sub.A, mul.B);
+					Mul mulB = new Mul(sub.B, mul.B);
+					return new Sub(mulA, mulB);
+				})
+			,
+
+
+			// C * (A - B)		=>		(A * C) - (B * C)
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.B is Sub;
+				})
+				.Replace(op =>
+				{
+					Mul mul = op as Mul;
+					Sub sub = mul.B as Sub;
+
+					Mul mulA = new Mul(sub.A, mul.A);
+					Mul mulB = new Mul(sub.B, mul.A);
+					return new Sub(mulA, mulB);
+				})
+			,*/
 			#endregion
 		};
 
