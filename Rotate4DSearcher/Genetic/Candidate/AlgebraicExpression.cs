@@ -20,8 +20,8 @@ namespace Rotate4DSearcher.Genetic
 
 		public AlgebraicExpression(string expression, ArgsBox args)
 		{
-			ExpressionReader reader = new ExpressionReader(expression);
-			RootOperator = Parse(reader, args);
+			ExpressionParser parser = new ExpressionParser(expression, args);
+			RootOperator = parser.root;
 			RootOperator = Optimizer.Optimize(RootOperator);
 		}
 
@@ -63,7 +63,7 @@ namespace Rotate4DSearcher.Genetic
 		{
 			if (_AsString == null)
 			{
-				_AsString = RootOperator.ToStringFullBracketsString(ArgsBox.Empty);
+				_AsString = RootOperator.ToString(ArgsBox.Empty);
 			}
 			return _AsString;
 		}
@@ -80,72 +80,6 @@ namespace Rotate4DSearcher.Genetic
 			}
 
 			return null;
-		}
-
-
-		private IOperator Parse(ExpressionReader reader, ArgsBox args)
-		{
-			string symbol;
-			IOperator a;
-			IOperator b;
-			char action;
-
-			symbol = reader.GetNextSymbol();
-			if (symbol == "(")
-			{
-				a = Parse(reader, args);
-			}
-			else
-			{
-				a = ReadArgumentOrConstant(symbol, args);
-			}
-			
-			if (reader.IsRead())
-			{
-				return a;
-			}
-
-			symbol = reader.GetNextSymbol();
-			action = symbol[0];
-
-			symbol = reader.GetNextSymbol();
-			if (symbol == "(")
-			{
-				b = Parse(reader, args);
-			}
-			else
-			{
-				b = ReadArgumentOrConstant(symbol, args);
-			}
-			if (reader.IsRead() == false)
-			{
-				reader.GetNextSymbol();  // it should be ")"
-			}
-
-			switch (action)
-			{
-				case '+':
-					return new Sum(a, b);
-				case '-':
-					return new Sub(a, b);
-				case '*':
-					return new Mul(a, b);
-			}
-
-			throw new Exception("Unknown Action type: " + action);
-		}
-
-
-		private IOperator ReadArgumentOrConstant(string symbol, ArgsBox args)
-		{
-			try
-			{
-				return new Constant(Double.Parse(symbol));
-			}
-			catch(Exception)
-			{}
-			
-			return new Argument(args.GetIndexByName(symbol));
 		}
 	}
 

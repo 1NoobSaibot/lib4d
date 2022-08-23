@@ -27,7 +27,7 @@ namespace Rotate4DSearcher.Genetic
 		}
 
 
-		public override string ToStringFullBracketsString(ArgsBox args)
+		public override string ToString(ArgsBox args)
 		{
 			return _Value.ToString();
 		}

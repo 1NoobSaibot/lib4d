@@ -6,7 +6,12 @@ namespace Rotate4DSearcher.Genetic
 	public abstract class IOperator
 	{
 		public abstract double Calculate(ArgsBox args);
-		public abstract string ToStringFullBracketsString(ArgsBox args);
+		public abstract string ToString(ArgsBox args);
+
+		public override string ToString()
+		{
+			throw new Exception("It's not implemented yet");
+		}
 
 		/// <summary>
 		/// This method requires deep cloning

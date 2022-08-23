@@ -6,6 +6,7 @@ namespace Rotate4DSearcher.Genetic
 	public abstract class BinaryOperator : IOperator
 	{
 		public IOperator A, B;
+		public abstract int GetPriority();
 
 
 		public BinaryOperator(IOperator a, IOperator b)
@@ -52,7 +53,7 @@ namespace Rotate4DSearcher.Genetic
 
 		public abstract override double Calculate(ArgsBox args);
 
-		public abstract override string ToStringFullBracketsString(ArgsBox args);
+		public abstract override string ToString(ArgsBox args);
 
 
 		public abstract override IOperator Clone();
@@ -74,5 +75,21 @@ namespace Rotate4DSearcher.Genetic
 
 
 		public abstract override bool IsZero();
+
+
+		protected string WrapOperandsIfItsPriorityLessThanMy(IOperator op, ArgsBox args)
+		{
+			return (op is BinaryOperator binA && binA.GetPriority() < this.GetPriority())
+				? ("( " + op.ToString(args) + " )")
+				: op.ToString(args);
+		}
+
+
+		protected string WrapOperandsIfItsPriorityLessOrEqualsToMy(IOperator op, ArgsBox args)
+		{
+			return (op is BinaryOperator binB && binB.GetPriority() <= this.GetPriority())
+				? ("( " + op.ToString(args) + " )")
+				: op.ToString(args);
+		}
 	}
 }

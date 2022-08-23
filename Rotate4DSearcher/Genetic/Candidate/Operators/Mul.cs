@@ -4,6 +4,8 @@ namespace Rotate4DSearcher.Genetic
 {
 	public class Mul : BinaryOperator
 	{
+		public override int GetPriority() => 2;
+
 		public Mul(IOperator a, IOperator b): base(a, b)
 		{ }
 
@@ -15,9 +17,12 @@ namespace Rotate4DSearcher.Genetic
 		}
 
 
-		public override string ToStringFullBracketsString(ArgsBox args)
+		public override string ToString(ArgsBox args)
 		{
-			return "( " + A.ToStringFullBracketsString(args) + " * " + B.ToStringFullBracketsString(args) + " )";
+
+			string a = WrapOperandsIfItsPriorityLessThanMy(A, args);
+			string b = WrapOperandsIfItsPriorityLessThanMy(B, args);
+			return a + " * " + b;
 		}
 
 
