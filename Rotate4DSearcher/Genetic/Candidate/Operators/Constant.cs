@@ -57,7 +57,7 @@ namespace Rotate4DSearcher.Genetic
 		{
 			double amplitude = 2;
 
-			double divByTen_Times = rnd.Next(14);
+			double divByTen_Times = rnd.Next(15);
 			double divB = 1;
 			for (int i = 0; i < divByTen_Times; i++)
 			{
@@ -85,7 +85,7 @@ namespace Rotate4DSearcher.Genetic
 
 		public override bool IsZero()
 		{
-			return Math.Abs(_Value) < 0.000001;
+			return Math.Abs(_Value) == 0.0;
 		}
 
 

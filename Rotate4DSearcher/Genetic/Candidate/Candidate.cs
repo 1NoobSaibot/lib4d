@@ -6,7 +6,8 @@ namespace Rotate4DSearcher.Genetic
 	public class Candidate
 	{
 		private AlgebraicExpression[,] _formulas;
-		public double Error = 0;
+		private double _errorBuf = 0;
+		public double Error { get; private set; } = 0;
 
 		public readonly int AmountOfNodes;
 
@@ -122,7 +123,24 @@ namespace Rotate4DSearcher.Genetic
 			}
 			return amount;
 		}
+
+
+		public void ResetError()
+		{
+			_errorBuf = 0;
+		}
+
+
+		public void UpdateError()
+		{
+			Error = _errorBuf;
+		}
+
+
+		public void AddError(double deltaError)
+		{
+			_errorBuf += deltaError;
+		}
 	}
-	
 }
 

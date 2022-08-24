@@ -7,7 +7,7 @@ namespace Rotate4DSearcher.Genetic
 {
 	public class GeneticAlgorithm
 	{
-		private const int GENERATION_COUNT = 1000;
+		private const int GENERATION_COUNT = 10;
 		private const int AMOUNT_OF_CHOOSEN = 2;
 
 		public static int GenerationCounter { get; private set; }
@@ -99,7 +99,7 @@ namespace Rotate4DSearcher.Genetic
 			for (int i = 0; i < _candidates.Length; i++)
 			{
 				Candidate candidate = _candidates[i];
-				candidate.Error = 0;
+				candidate.ResetError();
 
 				for (int j = 0; j < _samples.Length; j++)
 				{
@@ -114,9 +114,11 @@ namespace Rotate4DSearcher.Genetic
 						Vector4D actual = t * pairs[k].from;
 						Vector4D difference = actual - pairs[k].to;
 						double error = difference.Abs;
-						candidate.Error += error;
+						candidate.AddError(error);
 					}
 				}
+
+				candidate.UpdateError();
 			}
 		}
 
