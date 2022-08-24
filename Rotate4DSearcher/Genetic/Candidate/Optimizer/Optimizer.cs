@@ -426,16 +426,53 @@
 			#endregion
 
 			#region Зведення констант
-			// Constant $ Constant => Constant
+			#region Primitive C +-* C => C
+			// Constant + Constant => Constant
 			new Rule()
 				.Where(op =>
 				{
-					return op is BinaryOperator binOp
-						&& binOp.A is Constant
-						&& binOp.B is Constant;
+					return op is Sum sum
+						&& sum.A is Constant
+						&& sum.B is Constant;
 				})
-				.Replace(op => new Constant(op.Calculate(ArgsBox.Empty)))
+				.Replace(op =>
+				{
+					Sum sum = op as Sum;
+					return sum.A + sum.B; // It should return a constant-node, not a sum.
+				})
 			,
+
+
+			// Constant - Constant => Constant
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sub sub
+						&& sub.A is Constant
+						&& sub.B is Constant;
+				})
+				.Replace(op =>
+				{
+					Sub sub = op as Sub;
+					return sub.A - sub.B;
+				})
+			,
+
+
+			// Constant * Constant => Constant
+			new Rule()
+				.Where(op =>
+				{
+					return op is Mul mul
+						&& mul.A is Constant
+						&& mul.B is Constant;
+				})
+				.Replace(op => {
+					Mul mul = op as Mul;
+					return mul.A * mul.B;
+				})
+			,
+			#endregion
 
 			#region Sum
 			// Const + (Const + Any) => NewConst + Any
@@ -532,6 +569,99 @@
 					return new Sum(a, b);
 				})
 			,
+			#endregion
+
+			#region Sub
+			// Const - (Const - Any) => NewConst + Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sub sub
+						&& sub.A is Constant
+						&& sub.B is Sub subB
+						&& subB.A is Constant;
+				})
+				.Replace(op =>
+				{
+					Sub sub = op as Sub;
+
+					Constant ca = sub.A as Constant;
+					Sub subB = sub.B as Sub;
+					Constant cb = subB.A as Constant;
+
+					IOperator newConstant = ca - cb;
+					return newConstant + subB.B;
+				})
+			,
+
+
+			// Const - (Any - Const) => NewConst - Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sub sub
+						&& sub.A is Constant
+						&& sub.B is Sub subB
+						&& subB.B is Constant;
+				})
+				.Replace(op =>
+				{
+					Sub sub = op as Sub;
+
+					Constant ca = sub.A as Constant;
+					Sub subB = sub.B as Sub;
+					Constant cb = subB.B as Constant;
+
+					IOperator newConst = ca + cb;
+					return newConst - subB.A;
+				})
+			,
+
+
+			// (Const - Any) - Const => NewConst - Any
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sub sub
+						&& sub.A is Sub subA
+						&& sub.B is Constant
+						&& subA.A is Constant;
+				})
+				.Replace(op =>
+				{
+					Sub sub = op as Sub;
+
+					Sub subA = sub.A as Sub;
+					Constant ca = sub.B as Constant;
+					Constant cb = subA.A as Constant;
+
+					IOperator newConstant = ca - cb;
+					return newConstant - subA.B;
+				})
+			,
+
+
+			// (Any - Const) - Const => Any - newConst
+			new Rule()
+				.Where(op =>
+				{
+					return op is Sub sub
+						&& sub.A is Sub subA
+						&& sub.B is Constant
+						&& subA.B is Constant;
+				})
+				.Replace(op =>
+				{
+					Sub sub = op as Sub;
+
+					Sub subA = sub.A as Sub;
+					Constant ca = sub.B as Constant;
+					Constant cb = subA.B as Constant;
+
+					IOperator newConst = ca + cb;
+					return subA.A - newConst;
+				})
+			,//*/
 			#endregion
 
 			#region Multiplication
@@ -976,7 +1106,8 @@
 
 					IOperator newSum = mulA.A + mulB.A;
 					return mulA.B * newSum;
-				})//*/
+				})
+			,//*/
 			#endregion
 			#endregion
 
@@ -1054,7 +1185,7 @@
 					Mul mulB = new Mul(sub.B, mul.A);
 					return new Sub(mulA, mulB);
 				})
-			,*/
+			,//*/
 			#endregion
 		};
 

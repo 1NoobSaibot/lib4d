@@ -44,7 +44,6 @@
 			// 
 			// candidatesUpdater
 			// 
-			this.candidatesUpdater.Interval = 3000;
 			this.candidatesUpdater.Tick += new System.EventHandler(this.candidatesUpdater_Tick);
 			// 
 			// logLabel
