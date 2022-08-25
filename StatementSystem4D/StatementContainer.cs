@@ -5,7 +5,8 @@ namespace StatementSystem4D
 	public class StatementContainer
 	{
 		private List<Statement> _acceptedStatements = new List<Statement>();
-		private List<Statement> _temporaryAcceptedStatements = new List<Statement>();
+		private List<Statement> _temporaryAcceptedStatements;
+		private List<Conclusion> _conclusions;
 		private Rule[] _rules;
 
 
@@ -13,40 +14,36 @@ namespace StatementSystem4D
 			_rules = rules;
 		}
 
-		public List<Statement> AddStatement(Statement statement)
+		public List<Conclusion> AddStatement(Statement statement)
 		{
-			if (_DoesStatementExist(statement))
-			{
-				return new List<Statement>();
-			}
-			_temporaryAcceptedStatements.Add(statement);
+			_temporaryAcceptedStatements = new List<Statement>();
+			_conclusions = new List<Conclusion>();
 
-			for (int i = 0; i < _rules.Length; i++)
-			{
-				Statement consequence = _rules[i].CreateNewStatement(statement, this);
-				_AddConsequence(consequence);
-			}
+			_AddConsequence(statement);
 
 			_acceptedStatements.AddRange(_temporaryAcceptedStatements);
-			List<Statement> addedStatements = _temporaryAcceptedStatements;
-			_temporaryAcceptedStatements = new List<Statement>();
-			return addedStatements;
+			return _conclusions;
 		}
 
-		private void _AddConsequence(Statement statement) {
+		private bool _AddConsequence(Statement statement) {
 			try
 			{
 				if (_DoesStatementExist(statement))
 				{
-					return;
+					return false;
 				}
 				_temporaryAcceptedStatements.Add(statement);
 
 				for (int i = 0; i < _rules.Length; i++)
 				{
 					Statement consequence = _rules[i].CreateNewStatement(statement, this);
-					_AddConsequence(consequence);
+					bool accepted = _AddConsequence(consequence);
+					if (accepted)
+					{
+						_conclusions.Add(new Conclusion(statement, consequence, i));
+					}
 				}
+				return true;
 			}
 			catch (StatementContradictionException statementExeption)
 			{

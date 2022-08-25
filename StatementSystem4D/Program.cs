@@ -27,7 +27,7 @@ namespace StatementSystem4D
 			// [A|B] Alpha=90 => C ->  D  ===>
 			// [A|B] Alpha=90 => D -> -C
 			new Rule()
-				.Where((s, _) => s.Alpha == Angle.A90)
+				.Where((s, _) => s.Alpha == Angle.A90 && s.C.HasNoCommonWith(s.A) && s.C.HasNoCommonWith(s.B))
 				.PickC(s => s.D)
 				.PickD(s => -s.C)
 			,
@@ -169,7 +169,7 @@ namespace StatementSystem4D
 			// [A|B] 90  => C ->  D    =>>>>
 			// [A|B] 180 => C -> -C
 			new Rule()
-				.Where((s, _) => s.Alpha == Angle.A90)
+				.Where((s, _) => s.Alpha == Angle.A90 && s.C.IsBasic && s.D.IsBasic)
 				.PickAlpha(_ => Angle.A180)
 				.PickD(s => -s.C)
 			,
@@ -206,8 +206,8 @@ namespace StatementSystem4D
 				Console.WriteLine("---------------------------------------");
 				try
 				{
-					List<Statement> consequences = container.AddStatement(Statement.Parse(statement));
-					PrintConsequences(consequences);
+					List<Conclusion> conclusions = container.AddStatement(Statement.Parse(statement));
+					PrintConclusions(conclusions);
 					SaveStatements(container);
 				}
 				catch (StatementContradictionException contradiction)
@@ -236,12 +236,12 @@ namespace StatementSystem4D
 		}
 
 
-		private static void PrintConsequences(List<Statement> consequences)
+		private static void PrintConclusions(List<Conclusion> conclusions)
 		{
 			Console.WriteLine("Added New Statements:");
-			for (int i = 0; i < consequences.Count; i++)
+			for (int i = 0; i < conclusions.Count; i++)
 			{
-				Console.WriteLine(consequences[i].ToString());
+				Console.WriteLine(conclusions[i].ToString());
 			}
 			Console.WriteLine("---------------------------------------");
 		}

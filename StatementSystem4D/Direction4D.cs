@@ -27,6 +27,23 @@ namespace StatementSystem4D
 		}
 
 
+		/// <summary>
+		/// Returns True if Vectors has no common set components
+		/// X, YZQ => true
+		/// XY, -XZ => false
+		/// </summary>
+		/// <param name="a"></param>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
+		internal bool HasNoCommonWith(Direction4D a)
+		{
+			return (Math.Abs(X) == 0 || Math.Abs(a.X) == 0)
+				&& (Math.Abs(Y) == 0 || Math.Abs(a.Y) == 0)
+				&& (Math.Abs(Z) == 0 || Math.Abs(a.Z) == 0)
+				&& (Math.Abs(Q) == 0 || Math.Abs(a.Q) == 0);
+		}
+
+
 		public static bool operator !=(Direction4D a, Direction4D b)
 		{
 			return !(a == b);

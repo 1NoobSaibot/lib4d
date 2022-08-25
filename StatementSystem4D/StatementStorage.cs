@@ -29,6 +29,10 @@ namespace StatementSystem4D
 
 		public static void Save(Statement[] statements)
 		{
+			if (statements.Length == 0)
+			{
+				return;
+			}
 			using (StreamWriter writer = new StreamWriter(fileName, false))
 			{
 				StringBuilder builder = new StringBuilder(statements[0].ToString());
