@@ -9,7 +9,7 @@ namespace Rotate4DSearcher
 		public Form1()
 		{
 			InitializeComponent();
-			GeneticAlgorithm.Start();
+			RotationMatrixSearcher.Start();
 			candidatesUpdater.Start();
 		}
 
@@ -22,7 +22,7 @@ namespace Rotate4DSearcher
 
 		private void candidatesUpdater_Tick(object sender, EventArgs e)
 		{
-			Candidate[] array = GeneticAlgorithm.TheBest;
+			Candidate[] array = RotationMatrixSearcher.TheBest ?? new Candidate[0];
 			candidates.Items.Clear();
 			for (int i = 0; i < array.Length; i++)
 			{
@@ -33,7 +33,7 @@ namespace Rotate4DSearcher
 				}
 			}
 
-			logLabel.Text = "Generation: " + GeneticAlgorithm.GenerationCounter;
+			logLabel.Text = "Generation: " + RotationMatrixSearcher.GetGenerationCount();
 		}
 	}
 }

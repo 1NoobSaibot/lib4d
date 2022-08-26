@@ -21,7 +21,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -70,7 +70,7 @@
     <Compile Include="Genetic\Candidate\Optimizer\Delegates.cs" />
     <Compile Include="Genetic\Candidate\Optimizer\Rule.cs" />
     <Compile Include="Genetic\Candidate\Optimizer\Optimizer.cs" />
-    <Compile Include="Genetic\GeneticAlgorithm.cs" />
+    <Compile Include="Genetic\Searcher.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SamplesStore.cs" />
@@ -104,6 +104,10 @@
     <ProjectReference Include="..\Lib4D\Lib4D.csproj">
       <Project>{7F4F5888-8D4E-4EED-BBF2-7886259563DF}</Project>
       <Name>Lib4D</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MathGen\MathGen\MathGen.csproj">
+      <Project>{4782bfee-0b3a-4154-b559-f79d44bbe3e0}</Project>
+      <Name>MathGen</Name>
     </ProjectReference>
     <ProjectReference Include="..\StatementSystem4D\StatementSystem4D.csproj">
       <Project>{B18F5056-A08A-4722-9BA8-64A125C0364F}</Project>
