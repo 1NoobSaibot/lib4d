@@ -1,24 +1,27 @@
 ﻿using Lib4D;
+using MathGen.Double;
 using System;
 
 namespace Rotate4DSearcher.Genetic
 {
 	public class Candidate
 	{
-		private AlgebraicExpression[,] _formulas;
+		private Function[,] _formulas;
 		private double _errorBuf = 0;
 		public double Error { get; private set; } = 0;
 
 		public readonly int AmountOfNodes;
 
-		public Candidate(string[][] formulas)
+		public Candidate(string[][] formulas, Random rnd)
 		{
-			_formulas = new AlgebraicExpression[4, 4];
+			ArgsDescription args = new ArgsDescription("c", "s", "n", "xy", "xz", "xq", "yz", "yq", "zq");
+			FunctionRandomContext rndCtx = new FunctionRandomContext(args, rnd);
+			_formulas = new Function[4, 4];
 			for (int i = 0; i < 4; i++)
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					_formulas[i, j] = new AlgebraicExpression(formulas[i][j], ArgsBox.Empty);
+					_formulas[i, j] = new Function(rndCtx, formulas[i][j]);
 				}
 			}
 
@@ -27,7 +30,7 @@ namespace Rotate4DSearcher.Genetic
 
 		public Candidate(Random rnd, Candidate candidateA)
 		{
-			_formulas = new AlgebraicExpression[4, 4];
+			_formulas = new Function[4, 4];
 			for (int i = 0; i < 4; i++)
 			{
 				for (int j = 0; j < 4; j++)
@@ -45,7 +48,7 @@ namespace Rotate4DSearcher.Genetic
 
 		public Candidate(Random rnd, Candidate candidateA, Candidate candidateB)
 		{
-			_formulas = new AlgebraicExpression[4, 4];
+			_formulas = new Function[4, 4];
 			for (int i = 0; i < 4; i++)
 			{
 				for (int j = 0; j < 4; j++)
@@ -66,14 +69,14 @@ namespace Rotate4DSearcher.Genetic
 
 		public Transform4D CreateTransform(Bivector4D surface, double angle)
 		{
-			ArgsBox args = new ArgsBox(surface, angle);
+			double[] args = ArgsBox.ToArrayOfArguments(surface, angle);
 			double[,] matrix = new double[5, 5];
 			matrix[4, 4] = 1;
 			for (int i = 0; i < 4; i++)
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					matrix[i, j] = _formulas[i, j].RootOperator.Calculate(args);
+					matrix[i, j] = _formulas[i, j].Calculate(args);
 				}
 			}
 			return new Transform4D(matrix);
@@ -118,7 +121,7 @@ namespace Rotate4DSearcher.Genetic
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					amount += _formulas[i, j].RootOperator.GetAmountOfNodes();
+					amount += _formulas[i, j].GetAmountOfNodes();
 				}
 			}
 			return amount;

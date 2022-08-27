@@ -54,7 +54,7 @@ namespace Rotate4DSearcher.Genetic
 
 			for (int i = 0; i < candidates.Count; i++)
 			{
-				Candidate candidate = new Candidate(candidates[i]);
+				Candidate candidate = new Candidate(candidates[i], _rnd);
 				this.LoadCandidate(candidate);
 			}
 		}

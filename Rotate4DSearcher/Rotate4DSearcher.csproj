@@ -55,21 +55,9 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Genetic\Candidate\AlgebraicExpression.cs" />
     <Compile Include="Genetic\Candidate\ArgsBox.cs" />
     <Compile Include="Genetic\Candidate\Candidate.cs" />
     <Compile Include="Genetic\CandidatesStorage.cs" />
-    <Compile Include="Genetic\Candidate\ExpressionParser.cs" />
-    <Compile Include="Genetic\Candidate\Operators\Sub.cs" />
-    <Compile Include="Genetic\Candidate\Operators\Mul.cs" />
-    <Compile Include="Genetic\Candidate\Operators\Sum.cs" />
-    <Compile Include="Genetic\Candidate\Operators\BinaryOperator.cs" />
-    <Compile Include="Genetic\Candidate\Operators\Constant.cs" />
-    <Compile Include="Genetic\Candidate\Operators\Argument.cs" />
-    <Compile Include="Genetic\Candidate\Operators\IOperator.cs" />
-    <Compile Include="Genetic\Candidate\Optimizer\Delegates.cs" />
-    <Compile Include="Genetic\Candidate\Optimizer\Rule.cs" />
-    <Compile Include="Genetic\Candidate\Optimizer\Optimizer.cs" />
     <Compile Include="Genetic\Searcher.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
