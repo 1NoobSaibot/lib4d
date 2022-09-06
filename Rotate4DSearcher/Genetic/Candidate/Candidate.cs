@@ -8,7 +8,7 @@ namespace Rotate4DSearcher.Genetic
 	public class Candidate
 	{
 		private static StandartOptimizer _stdOptimizer = new StandartOptimizer();
-		private static HardOptimizer _hardOptimizer = new HardOptimizer(TimeSpan.FromSeconds(60));
+		private static HardOptimizer _hardOptimizer = new HardOptimizer(TimeSpan.FromSeconds(5));
 		
 		private Function[,] _formulas;
 		private double _errorBuf = 0;
@@ -106,7 +106,7 @@ namespace Rotate4DSearcher.Genetic
 		public override string ToString()
 		{
 			string[][] array = ToStringArray();
-			string res = Error + "  |";
+			string res = Error + "  |  Nodes: " + AmountOfNodes;
 			for (int i = 0; i < 4; i++)
 			{
 				for (int j = 0; j < 4; j++)
