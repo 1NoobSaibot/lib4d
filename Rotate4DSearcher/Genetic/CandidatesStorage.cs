@@ -45,25 +45,25 @@ namespace Rotate4DSearcher.Genetic
 
 		public static string[][] FirstCandidate()
 		{
-			string s00 = "( c * ( ( yz + yq ) + zq ) ) + ( n * ( ( xq + xz ) + xy ) * 0.5 )";
-			string s01 = "( n * xy ) - ( s * zq )";
-			string s02 = "( n * xz ) + ( s * yq )";
-			string s03 = "( n * xq ) + ( s * yz )";
+			string s00 = "( c * ( ( yz + yq ) + zq ) ) + ( ( 1 - c ) * ( ( xq + xz ) + xy ) * 0,5 )";
+			string s01 = "( ( 1 - c ) * xy ) - ( s * zq )";
+			string s02 = "( ( 1 - c ) * xz ) + ( s * yq )";
+			string s03 = "( ( 1 - c ) * xq ) + ( s * yz )";
 
-			string s10 = "( n * xy ) + ( s * zq )";
-			string s11 = "( c * ( ( xz + xq ) + zq ) ) + ( n * ( ( yq + yz ) + xy ) * 0.5 )";
-			string s12 = "( n * yz ) - ( s * xq )";
-			string s13 = "( n * yq ) + ( s * xz )";
+			string s10 = "( ( 1 - c ) * xy ) + ( s * zq )";
+			string s11 = "( c * ( ( xz + xq ) + zq ) ) + ( ( 1 - c ) * ( ( yq + yz ) + xy ) * 0,5 )";
+			string s12 = "( ( 1 - c ) * yz ) - ( s * xq )";
+			string s13 = "( ( 1 - c ) * yq ) + ( s * xz )";
 
-			string s20 = "( n * xz ) - ( s * yq )";
-			string s21 = "( n * yz ) + ( s * xq )";
-			string s22 = "( c * ( ( xy + xq ) + yq ) ) + ( n * ( ( yz + xz ) + zq ) * 0.5 )";
-			string s23 = "( n * zq ) - ( s * xy )";
+			string s20 = "( ( 1 - c ) * xz ) - ( s * yq )";
+			string s21 = "( ( 1 - c ) * yz ) + ( s * xq )";
+			string s22 = "( c * ( ( xy + xq ) + yq ) ) + ( ( 1 - c ) * ( ( yz + xz ) + zq ) * 0,5 )";
+			string s23 = "( ( 1 - c ) * zq ) - ( s * xy )";
 
-			string s30 = "( n * xq ) - ( s * yz )";
-			string s31 = "( n * yq ) - ( s * xz )";
-			string s32 = "( n * zq ) + ( s * xy )";
-			string s33 = "( c * ( ( xy + xz ) + yz ) ) + ( n * ( ( xq + yq ) + zq ) * 0.5 )";
+			string s30 = "( ( 1 - c ) * xq ) - ( s * yz )";
+			string s31 = "( ( 1 - c ) * yq ) - ( s * xz )";
+			string s32 = "( ( 1 - c ) * zq ) + ( s * xy )";
+			string s33 = "( c * ( ( xy + xz ) + yz ) ) + ( ( 1 - c ) * ( ( xq + yq ) + zq ) * 0,5 )";
 
 			return new string[4][]
 			{

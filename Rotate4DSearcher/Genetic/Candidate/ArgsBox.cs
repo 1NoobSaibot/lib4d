@@ -8,10 +8,9 @@ namespace Rotate4DSearcher.Genetic
 	{
 		public static double[] ToArrayOfArguments(Bivector4D b, double angle)
 		{
-			double[] res = new double[9];
+			double[] res = new double[8];
 			res[(int)NameToIndex.C] = Math.Cos(angle);
 			res[(int)NameToIndex.S] = Math.Sin(angle);
-			res[(int)NameToIndex.N] = 1 - res[(int)NameToIndex.C];
 			res[(int)NameToIndex.XY] =  b.XY;
 			res[(int)NameToIndex.XZ] = b.XZ;
 			res[(int)NameToIndex.XQ] = b.XQ;
@@ -28,7 +27,6 @@ namespace Rotate4DSearcher.Genetic
 	{
 		C = 0,
 		S,
-		N,
 		XY,
 		XZ,
 		XQ,

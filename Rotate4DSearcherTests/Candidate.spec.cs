@@ -11,7 +11,7 @@ namespace Rotate4DSearcherTests
 		[TestMethod]
 		public void CanPassTransform4DTest()
 		{
-			Candidate candidate = new Candidate(CandidatesStorage.FirstCandidate());
+			Candidate candidate = new Candidate(CandidatesStorage.FirstCandidate(), new Random());
 
 			Vector4D z = new Vector4D(0, 0, 1, 0);
 			Vector4D q = new Vector4D(0, 0, 0, 1);

@@ -50,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Candidate.spec.cs" />
-    <Compile Include="AlgebraicExpression.spec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +59,10 @@
     <ProjectReference Include="..\Lib4D\Lib4D.csproj">
       <Project>{7F4F5888-8D4E-4EED-BBF2-7886259563DF}</Project>
       <Name>Lib4D</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MathGen\MathGen\MathGen.csproj">
+      <Project>{4782BFEE-0B3A-4154-B559-F79D44BBE3E0}</Project>
+      <Name>MathGen</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rotate4DSearcher\Rotate4DSearcher.csproj">
       <Project>{451CD588-963A-4FE2-AD9C-D4807BA4A617}</Project>

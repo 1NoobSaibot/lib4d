@@ -1,11 +1,15 @@
 ﻿using Lib4D;
 using MathGen.Double;
+using MathGen.Double.Compression;
 using System;
 
 namespace Rotate4DSearcher.Genetic
 {
 	public class Candidate
 	{
+		private static StandartOptimizer _stdOptimizer = new StandartOptimizer();
+		private static HardOptimizer _hardOptimizer = new HardOptimizer(TimeSpan.FromSeconds(60));
+		
 		private Function[,] _formulas;
 		private double _errorBuf = 0;
 		public double Error { get; private set; } = 0;
@@ -14,7 +18,7 @@ namespace Rotate4DSearcher.Genetic
 
 		public Candidate(string[][] formulas, Random rnd)
 		{
-			ArgsDescription args = new ArgsDescription("c", "s", "n", "xy", "xz", "xq", "yz", "yq", "zq");
+			ArgsDescription args = new ArgsDescription("c", "s", "xy", "xz", "xq", "yz", "yq", "zq");
 			FunctionRandomContext rndCtx = new FunctionRandomContext(args, rnd);
 			_formulas = new Function[4, 4];
 			for (int i = 0; i < 4; i++)
@@ -22,6 +26,7 @@ namespace Rotate4DSearcher.Genetic
 				for (int j = 0; j < 4; j++)
 				{
 					_formulas[i, j] = new Function(rndCtx, formulas[i][j]);
+					_formulas[i, j] = _hardOptimizer.Optimize(_formulas[i, j]);
 				}
 			}
 
@@ -41,7 +46,7 @@ namespace Rotate4DSearcher.Genetic
 
 			int x = rnd.Next(4);
 			int y = rnd.Next(4);
-			_formulas[x, y] = _formulas[x, y].GetMutatedClone();
+			_formulas[x, y] = _stdOptimizer.Optimize(_formulas[x, y].GetMutatedClone());
 
 			AmountOfNodes = CalculateAmountOfNodes();
 		}
@@ -62,7 +67,7 @@ namespace Rotate4DSearcher.Genetic
 
 			int x = rnd.Next(4);
 			int y = rnd.Next(4);
-			_formulas[x, y] = _formulas[x, y].GetMutatedClone();
+			_formulas[x, y] = _stdOptimizer.Optimize(_formulas[x, y].GetMutatedClone());
 
 			AmountOfNodes = CalculateAmountOfNodes();
 		}
