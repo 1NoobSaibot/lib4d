@@ -4,7 +4,7 @@ namespace HyperCube
 {
 	internal class Animation
 	{
-		private Vector4D[,,,] vertexes = new Vector4D[2, 2, 2, 2];
+		private Vector4DFloat[,,,] vertexes = new Vector4DFloat[2, 2, 2, 2];
 
 
 		public Animation()
@@ -17,7 +17,7 @@ namespace HyperCube
 					{
 						for (int q = 0; q < 2; q++)
 						{
-							vertexes[x, y, z, q] = new Vector4D(
+							vertexes[x, y, z, q] = new Vector4DFloat(
 								x == 0 ? -1 : 1,
 								y == 0 ? -1 : 1,
 								z == 0 ? -1 : 1,

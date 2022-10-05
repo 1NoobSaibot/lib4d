@@ -2,11 +2,11 @@
 
 namespace Lib4D
 {
-	public class Transform4D
+	public class Transform4DDouble
 	{
 		private double[,] _matrix;
 
-		public Transform4D(double[,] matrix)
+		public Transform4DDouble (double[,] matrix)
 		{
 			if (matrix.GetWidth() != 5 || matrix.GetHeight() != 5)
 			{
@@ -16,12 +16,12 @@ namespace Lib4D
 			_matrix = matrix;
 		}
 
-		public Transform4D()
+		public Transform4DDouble ()
 		{
 			_matrix = _CreateIdentityMatrix();
 		}
 
-		public void Translate (Vector4D t)
+		public void Translate (Vector4DDouble t)
 		{
 			Translate(t.X, t.Y, t.Z, t.Q);
 		}
@@ -38,7 +38,7 @@ namespace Lib4D
 		}
 
 
-		public void Scale(Vector4D k)
+		public void Scale(Vector4DDouble k)
 		{
 			Scale(k.X, k.Y, k.Z, k.Q);
 		}
@@ -58,7 +58,7 @@ namespace Lib4D
 		}
 
 
-		public void Rotate(Bivector4D b, double angle)
+		public void Rotate(Bivector4DDouble b, double angle)
 		{
 			double c = Math.Cos(angle);
 			double s = Math.Sin(angle);
@@ -89,29 +89,29 @@ namespace Lib4D
 
 		
 		#region Static Constructors
-		public static Transform4D GetTranslate(Vector4D t)
+		public static Transform4DDouble GetTranslate(Vector4DDouble t)
 		{
 			return GetTranslate(t.X, t.Y, t.Z, t.Q);
 		}
 
 
-		public static Transform4D GetTranslate(double tx, double ty, double tz, double tq)
+		public static Transform4DDouble GetTranslate(double tx, double ty, double tz, double tq)
 		{
-			Transform4D t = new Transform4D();
+			Transform4DDouble t = new Transform4DDouble();
 			t.Translate(tx, ty, tz, tq);
 			return t;
 		}
 
 
-		public static Transform4D GetScale(Vector4D k)
+		public static Transform4DDouble GetScale(Vector4DDouble k)
 		{
 			return GetScale(k.X, k.Y, k.Z, k.Q);
 		}
 
 
-		public static Transform4D GetScale(double kx, double ky, double kz, double kq)
+		public static Transform4DDouble GetScale(double kx, double ky, double kz, double kq)
 		{
-			Transform4D t = new Transform4D();
+			Transform4DDouble t = new Transform4DDouble();
 			t.Scale(kx, ky, kz, kq);
 			return t;
 		}
@@ -119,7 +119,7 @@ namespace Lib4D
 
 
 		#region Operators
-		public static Vector4D operator *(Transform4D t, Vector4D v)
+		public static Vector4DDouble operator *(Transform4DDouble t, Vector4DDouble v)
 		{
 			double[,] column = new double[1, 5];
 			column[0, 0] = v.X;
@@ -130,13 +130,13 @@ namespace Lib4D
 
 			column = MatrixMath.Mul(t._matrix, column);
 
-			return new Vector4D(column[0, 0], column[0, 1], column[0, 2], column[0, 3]);
+			return new Vector4DDouble(column[0, 0], column[0, 1], column[0, 2], column[0, 3]);
 		}
 
 
-		public static Transform4D operator *(Transform4D a, Transform4D b)
+		public static Transform4DDouble operator *(Transform4DDouble a, Transform4DDouble b)
 		{
-			return new Transform4D()
+			return new Transform4DDouble()
 			{
 				_matrix = MatrixMath.Mul(a._matrix, b._matrix)
 			};

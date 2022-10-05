@@ -2,7 +2,7 @@
 
 namespace Lib4D
 {
-	public struct Vector4D
+	public struct Vector4DDouble
 	{
 		public double X, Y, Z, Q;
 
@@ -16,7 +16,7 @@ namespace Lib4D
 		public double Abs => Math.Sqrt(AbsQuad);
 
 
-		public Vector4D (double x = 0, double y = 0, double z = 0, double q = 0)
+		public Vector4DDouble (double x = 0, double y = 0, double z = 0, double q = 0)
 		{
 			X = x;
 			Y = y;
@@ -25,16 +25,16 @@ namespace Lib4D
 		}
 
 
-		public Vector4D Normalize()
+		public Vector4DDouble Normalize()
 		{
 			double k = 1 / Abs;
 			return k * this;
 		}
 
 
-		public static Vector4D operator +(Vector4D a, Vector4D b)
+		public static Vector4DDouble operator +(Vector4DDouble a, Vector4DDouble b)
 		{
-			return new Vector4D (
+			return new Vector4DDouble (
 				a.X + b.X,
 				a.Y + b.Y,
 				a.Z + b.Z,
@@ -43,9 +43,9 @@ namespace Lib4D
 		}
 
 
-		public static Vector4D operator -(Vector4D a, Vector4D b)
+		public static Vector4DDouble operator -(Vector4DDouble a, Vector4DDouble b)
 		{
-			return new Vector4D(
+			return new Vector4DDouble(
 				a.X - b.X,
 				a.Y - b.Y,
 				a.Z - b.Z,
@@ -54,9 +54,9 @@ namespace Lib4D
 		}
 
 
-		public static Vector4D operator *(Vector4D a, double b)
+		public static Vector4DDouble operator *(Vector4DDouble a, double b)
 		{
-			return new Vector4D(
+			return new Vector4DDouble(
 				a.X * b,
 				a.Y * b,
 				a.Z * b,
@@ -65,9 +65,9 @@ namespace Lib4D
 		}
 
 
-		public static Vector4D operator *(double b, Vector4D a)
+		public static Vector4DDouble operator *(double b, Vector4DDouble a)
 		{
-			return new Vector4D(
+			return new Vector4DDouble(
 				a.X * b,
 				a.Y * b,
 				a.Z * b,
@@ -76,13 +76,13 @@ namespace Lib4D
 		}
 
 
-		public static bool operator ==(Vector4D a, Vector4D b)
+		public static bool operator ==(Vector4DDouble a, Vector4DDouble b)
 		{
 			return a.X == b.X && a.Y == b.Y && a.Z == b.Z && a.Q == b.Q;
 		}
 
 
-		public static bool operator !=(Vector4D a, Vector4D b)
+		public static bool operator !=(Vector4DDouble a, Vector4DDouble b)
 		{
 			return !(a == b);
 		}
@@ -95,7 +95,7 @@ namespace Lib4D
 				{
 					throw new Exception("Index is out of range 4D Vector: " + i);
 				}
-				fixed (Vector4D* thisPtr = &this)
+				fixed (Vector4DDouble* thisPtr = &this)
 				{
 					return ((double*)thisPtr)[i];
 				}
@@ -106,7 +106,7 @@ namespace Lib4D
 				{
 					throw new Exception("Index is out of range 4D Vector: " + i);
 				}
-				fixed (Vector4D* thisPtr = &this)
+				fixed (Vector4DDouble* thisPtr = &this)
 				{
 					((double*)thisPtr)[i] = value;
 				}

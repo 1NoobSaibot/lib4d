@@ -12,17 +12,17 @@ namespace HyperCube
 		}
 
 
-		public Bivector4D GetAxis()
+		public Bivector4DFloat GetAxis()
 		{
-			Vector4D a = aVectorPicker.GetVector();
-			Vector4D b = bVectorPicker.GetVector();
-			return new Bivector4D(a, b);
+			Vector4DFloat a = aVectorPicker.GetVector();
+			Vector4DFloat b = bVectorPicker.GetVector();
+			return new Bivector4DFloat(a, b);
 		}
 
 
-		public double GetAngle()
+		public float GetAngle()
 		{
-			return anglePicker.Value / 180.0 * Math.PI;
+			return (float)(anglePicker.Value / 180.0 * Math.PI);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 ﻿namespace Lib4D
 {
-	public class Bivector4D
+	public class Bivector4DDouble
 	{
 		private double[,] _matrix;
 		public double[,] Matrix => _matrix;
@@ -13,13 +13,13 @@
 		public double ZQ => _matrix[2, 3];
 
 
-		private Bivector4D()
+		private Bivector4DDouble()
 		{
 			_matrix = new double[4, 4];
 		}
 
 
-		public Bivector4D(Vector4D a1, Vector4D a2)
+		public Bivector4DDouble(Vector4DDouble a1, Vector4DDouble a2)
 		{
 			_matrix = new double[4, 4];
 			for (int i = 0; i < 4; i++)
@@ -32,39 +32,39 @@
 		}
 
 
-		public static bool operator ==(Bivector4D a, Bivector4D b)
+		public static bool operator ==(Bivector4DDouble a, Bivector4DDouble b)
 		{
 			return a._matrix.EqualsTo(b._matrix);
 		}
 
 
-		public static bool operator !=(Bivector4D a, Bivector4D b)
+		public static bool operator !=(Bivector4DDouble a, Bivector4DDouble b)
 		{
 			return !a._matrix.EqualsTo(b._matrix);
 		}
 
 
-		public static bool operator ==(Bivector4D b, double d) {
+		public static bool operator ==(Bivector4DDouble b, double d) {
 			double dt = b._matrix.GetDeterminant();
 			return dt == d;
 		}
 
 
-		public static bool operator !=(Bivector4D b, double d) {
+		public static bool operator !=(Bivector4DDouble b, double d) {
 			double dt = b._matrix.GetDeterminant();
 			return dt != d;
 		}
 
 
-		public static Bivector4D operator -(Bivector4D b)
+		public static Bivector4DDouble operator -(Bivector4DDouble b)
 		{
 			return -1.0 * b;
 		}
 
 
-		public static Bivector4D operator *(double a, Bivector4D b)
+		public static Bivector4DDouble operator *(double a, Bivector4DDouble b)
 		{
-			Bivector4D res = new Bivector4D()
+			Bivector4DDouble res = new Bivector4DDouble()
 			{
 				_matrix = b._matrix.Mul(a),
 			};
@@ -73,9 +73,9 @@
 		}
 
 
-		public static Bivector4D operator +(Bivector4D a, Bivector4D b)
+		public static Bivector4DDouble operator +(Bivector4DDouble a, Bivector4DDouble b)
 		{
-			return new Bivector4D()
+			return new Bivector4DDouble()
 			{
 				_matrix = MatrixMath.Add(a._matrix, b._matrix)
 			};

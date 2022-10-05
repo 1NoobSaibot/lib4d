@@ -135,9 +135,9 @@ namespace StatementSystem4D
 		}
 
 
-		public Vector4D ToVector4D()
+		public Vector4DDouble ToVector4D()
 		{
-			Vector4D v = new Vector4D(X, Y, Z, Q);
+			Vector4DDouble v = new Vector4DDouble(X, Y, Z, Q);
 			return v.Normalize();
 		}
 

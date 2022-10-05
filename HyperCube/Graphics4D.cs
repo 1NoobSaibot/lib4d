@@ -1,22 +1,18 @@
 ﻿using Lib4D;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HyperCube
 {
 	internal class Graphics4D
 	{
-		private Transform4D _transform = new Transform4D();
+		private Transform4DFloat _transform = new Transform4DFloat();
 		private Pen _pen = new Pen(new SolidBrush(Color.Green));
 		private Graphics _canvas;
 		private Graphics _buffer;
 		private Image _bufferImage;
 
-		public Transform4D Transform => _transform;
+		public Transform4DFloat Transform => _transform;
 
 		public Graphics4D (Image canvas)
 		{
@@ -27,23 +23,23 @@ namespace HyperCube
 		}
 
 
-		public void SetTransform(Transform4D t)
+		public void SetTransform(Transform4DFloat t)
 		{
 			_transform = t;
 		}
 		
 
-		public void DrawLine(Vector4D a, Vector4D b)
+		public void DrawLine(Vector4DFloat a, Vector4DFloat b)
 		{
 			a = _transform * a;
 			b = _transform * b;
-			const double cameraDistance = 1000;
-			double aDistance = cameraDistance - Math.Sqrt(a.Z * a.Z + a.Q * a.Q);
-			double bDistance = cameraDistance - Math.Sqrt(b.Z * b.Z + b.Q * b.Q);
-			const double k = 1000;
-			double aScale = k / aDistance;
-			double bScale = k / bDistance;
-			_buffer.DrawLine(_pen, (float)(a.X * aScale), (float)(a.Y * aScale), (float)(b.X * bScale), (float)(b.Y * bScale));
+			const float cameraDistance = 1000;
+			float aDistance = cameraDistance - (float)Math.Sqrt(a.Z * a.Z + a.Q * a.Q);
+			float bDistance = cameraDistance - (float)Math.Sqrt(b.Z * b.Z + b.Q * b.Q);
+			const float k = 1000;
+			float aScale = k / aDistance;
+			float bScale = k / bDistance;
+			_buffer.DrawLine(_pen, a.X * aScale, a.Y * aScale, b.X * bScale, b.Y * bScale);
 		}
 
 

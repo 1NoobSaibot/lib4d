@@ -5,12 +5,12 @@ using System;
 namespace Lib4D_Tests.Vectors
 {
 	[TestClass]
-	public class Vector4DSpec
+	public class Vector4DDoubleSpec
 	{
 		[TestMethod]
 		public void GettingComponentsByIndexer()
 		{
-			Vector4D v = new Vector4D(3, 5, 7, 11);
+			Vector4DDouble v = new Vector4DDouble(3, 5, 7, 11);
 			Assert.AreEqual(3, v[0]);
 			Assert.AreEqual(5, v[1]);
 			Assert.AreEqual(7, v[2]);
@@ -26,19 +26,19 @@ namespace Lib4D_Tests.Vectors
 		[TestMethod]
 		public void SettingcomponentsByIndexer()
 		{
-			Vector4D v = new Vector4D();
+			Vector4DDouble v = new Vector4DDouble();
 			v[0] = 1;
 			v[1] = 2;
 			v[2] = 3;
 			v[3] = 4;
-			Assert.AreEqual(new Vector4D(1, 2, 3, 4), v);
+			Assert.AreEqual(new Vector4DDouble(1, 2, 3, 4), v);
 		}
 
 
 		[TestMethod]
 		public void IndexerThrowsErrorsWhenIndexIsOutOfRange()
 		{
-			Vector4D v = new Vector4D();
+			Vector4DDouble v = new Vector4DDouble();
 			Assert.ThrowsException<Exception>(() => v[-1] = 4);
 			Assert.ThrowsException<Exception>(() => v[4] = 4);
 			Assert.ThrowsException<Exception>(() => { double d = v[-1]; });
