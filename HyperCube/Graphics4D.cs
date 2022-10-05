@@ -53,5 +53,18 @@ namespace HyperCube
 		{
 			_buffer.Clear(Color.Black);
 		}
+
+		internal void DrawVertex(Vector4DFloat v)
+		{
+			v = _transform * v;
+			const float cameraDistance = 1000;
+			float aDistance = cameraDistance - (float)Math.Sqrt(v.Z * v.Z + v.Q * v.Q);
+			const float k = 1000;
+			float aScale = k / aDistance;
+
+			const float R = 6;
+			const float bias = R / 2;
+			_buffer.FillEllipse(_pen.Brush, v.X * aScale - bias, v.Y * aScale - bias, R, R);
+		}
 	}
 }

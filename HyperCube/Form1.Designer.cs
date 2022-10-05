@@ -32,6 +32,7 @@
 			this.canvas = new System.Windows.Forms.PictureBox();
 			this.looper = new System.Windows.Forms.Timer(this.components);
 			this.axisPicker = new HyperCube.AxisPicker();
+			this.shapePicker = new System.Windows.Forms.ListBox();
 			((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -56,11 +57,20 @@
 			this.axisPicker.Size = new System.Drawing.Size(274, 279);
 			this.axisPicker.TabIndex = 1;
 			// 
+			// shapePicker
+			// 
+			this.shapePicker.FormattingEnabled = true;
+			this.shapePicker.Location = new System.Drawing.Point(845, 359);
+			this.shapePicker.Name = "shapePicker";
+			this.shapePicker.Size = new System.Drawing.Size(120, 82);
+			this.shapePicker.TabIndex = 2;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(977, 450);
+			this.Controls.Add(this.shapePicker);
 			this.Controls.Add(this.axisPicker);
 			this.Controls.Add(this.canvas);
 			this.Name = "Form1";
@@ -75,6 +85,7 @@
 		private System.Windows.Forms.PictureBox canvas;
 		private System.Windows.Forms.Timer looper;
 		private AxisPicker axisPicker;
+		private System.Windows.Forms.ListBox shapePicker;
 	}
 }
 

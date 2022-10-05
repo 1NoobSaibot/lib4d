@@ -24,6 +24,12 @@ namespace HyperCube
 			// graphics.Transform.Translate(_width * 0.5, _height * 0.5, 0, 0);
 			graphics.Transform.Scale(scale, scale, scale, scale);
 			looper.Start();
+
+			shapePicker.Items.Add(ShapeIndex.HyperCube);
+			shapePicker.Items.Add(ShapeIndex.Hexdecahedroid);
+			shapePicker.Items.Add(ShapeIndex.Octaplex);
+			shapePicker.Items.Add(ShapeIndex.Dodecaplex);
+			shapePicker.SelectedIndex = 0;
 		}
 
 
@@ -39,6 +45,7 @@ namespace HyperCube
 			
 			graphics.Transform.Rotate(b, angle);
 
+			animation.Shape = (ShapeIndex)shapePicker.SelectedItem;
 			animation.Draw(graphics);
 			graphics.RedrawScreen();
 			canvas.Invalidate();

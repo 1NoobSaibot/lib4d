@@ -7,6 +7,7 @@ namespace HyperCube.Shapes
 	internal class Octaplex : Shape4D
 	{
 		private Vector4DFloat[,] _lines;
+		private Vector4DFloat[] _verteces;
 
 		public Octaplex(float scale)
 		{
@@ -51,6 +52,13 @@ namespace HyperCube.Shapes
 				}
 			}
 
+			
+			_verteces = verteces.ToArray();
+			for (int i = 0; i < _verteces.Length; i++)
+			{
+				_verteces[i] *= scale;
+			}
+
 			List<(Vector4DFloat a, Vector4DFloat b)> lines = new List<(Vector4DFloat a, Vector4DFloat b)>();
 			for (int i = 0; i < verteces.Count - 1; i++)
 			{
@@ -92,6 +100,11 @@ namespace HyperCube.Shapes
 
 		public override void Draw(Graphics4D g)
 		{
+			for (int i = 0; i < _verteces.Length; i++)
+			{
+				g.DrawVertex(_verteces[i]);
+			}
+
 			for (int i = 0; i < _lines.GetLength(0); i++)
 			{
 				g.DrawLine(_lines[i, 0], _lines[i, 1]);
