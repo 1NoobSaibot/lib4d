@@ -1,4 +1,0 @@
-[submodule "MathGen"]
-	path = MathGen
-	url = git@github.com:1NoobSaibot/MathGen.git
-	branch = develop
