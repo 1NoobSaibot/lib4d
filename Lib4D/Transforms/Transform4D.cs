@@ -62,7 +62,6 @@ namespace Lib4D
 		{
 			double c = Math.Cos(angle);
 			double s = Math.Sin(angle);
-			
 			double xy = b.XY;
 			double xz = b.XZ;
 			double xq = b.XQ;
@@ -70,17 +69,25 @@ namespace Lib4D
 			double yq = b.YQ;
 			double zq = b.ZQ;
 
-			double[,] rotateMatrix = new double[5, 5]
+			double[,] uut = MatrixMath.Mul(b.Matrix, MatrixMath.Transpose(b.Matrix));
+			uut = uut.Mul(1.0 - c);
+			
+			double[,] sinAndCos = new double[4, 4]
 			{
-				{		c*(zq + yq + yz) + xq + xz + xy ,	s*zq														, -s*yq											, -s*yz									, 0 },
-				{  -s*zq														,	c*(zq + xq + xz) + yq + yz + xy	, s*xq											, -s*xz									, 0 },
-				{	  s*yq														,	-s*xq														, c*(yq + xq + xy) + yz + xz,	 s*xy									, 0 },
-				{		s*yz														,	s*xz														,	-s*xy											,  c*(yz + xz + xy) + xq, 0 },
-				{		0																,	0																, 0													,  0										, 1 }
+				{	 c			,  s * zq	, -s * yq	, -s * yz },
+				{ -s * zq	,	 c			,	 s * xq	, -s * xz },
+				{	 s * yq	,	-s * xq	,	 c			,  s * xy },
+				{  s * yz	,	 s * xz	,	-s * xy	,  c			},
 			};
 
-			_matrix = _matrix.Mul(rotateMatrix);
+			double[,] R = MatrixMath.Add(sinAndCos, uut);
+			R = MatrixMath.Extend(R, 5, 5);
+			R[4, 4] = 1;
+
+			_matrix = _matrix.Mul(R);
 		}
+
+		
 		#region Static Constructors
 		public static Transform4D GetTranslate(Vector4D t)
 		{

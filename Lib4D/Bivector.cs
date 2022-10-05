@@ -3,13 +3,14 @@
 	public class Bivector4D
 	{
 		private double[,] _matrix;
+		public double[,] Matrix => _matrix;
 
-		public double XY => _matrix[0, 1] - _matrix[1, 0];
-		public double XZ => _matrix[0, 2] - _matrix[2, 0];
-		public double XQ => _matrix[0, 3] - _matrix[3, 0];
-		public double YZ => _matrix[1, 2] - _matrix[2, 1];
-		public double YQ => _matrix[1, 3] - _matrix[3, 1];
-		public double ZQ => _matrix[2, 3] - _matrix[3, 2];
+		public double XY => _matrix[0, 1];
+		public double XZ => _matrix[0, 2];
+		public double XQ => _matrix[0, 3];
+		public double YZ => _matrix[1, 2];
+		public double YQ => _matrix[1, 3];
+		public double ZQ => _matrix[2, 3];
 
 
 		private Bivector4D()
@@ -25,7 +26,7 @@
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					_matrix[i, j] = 0.5 * (a1[i] * a2[j] - a1[j] * a2[i]);
+					_matrix[i, j] = a1[i] * a2[j] - a1[j] * a2[i];
 				}
 			}
 		}

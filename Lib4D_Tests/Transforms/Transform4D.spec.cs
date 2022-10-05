@@ -90,6 +90,21 @@ namespace Lib4D_Tests
 			t = new Transform4D();
 			t.Rotate(surface, Math.PI / 2);
 			_AreApproximatelyEqual(q, t * z);
+
+
+			// Axis ZQ 180, X => -X
+			t = new Transform4D();
+			surface = new Bivector4D(z, q);
+			t.Rotate(surface, Math.PI);
+			_AreApproximatelyEqual(x * -1, t * x);
+			_AreApproximatelyEqual(y * -1, t * y);
+
+			t = new Transform4D();
+			surface = new Bivector4D(new Vector4D(1, 1, 1).Normalize(), q);
+			t.Rotate(surface, Math.PI / 3 * 2);
+			_AreApproximatelyEqual(y, t * x);
+			_AreApproximatelyEqual(z, t * y);
+			_AreApproximatelyEqual(x, t * z);
 		}
 
 

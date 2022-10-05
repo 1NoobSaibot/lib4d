@@ -48,6 +48,7 @@ namespace Lib4D
 			return res;
 		}
 
+
 		public static bool EqualsTo(this double[,] a, double[,] b)
 		{
 			if (a.GetLength(0) != b.GetLength(0) || a.GetLength(1) != b.GetLength(1))
@@ -134,6 +135,18 @@ namespace Lib4D
 
 			return c;
 		}
+
+
+		public static double[,] Extend(double[,] sourceMatrix, int newWidth, int newHeight) {
+			double[,] res = new double[newWidth, newHeight];
+			for (int i = 0; i < sourceMatrix.GetWidth(); i++) {
+				for (int j = 0; j < sourceMatrix.GetHeight(); j++) {
+					res[i, j] = sourceMatrix[i, j];
+				}
+			}
+			return res;
+		}
+
 
 		public static int GetWidth (this double[,] a)
 		{
