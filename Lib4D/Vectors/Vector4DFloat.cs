@@ -76,6 +76,17 @@ namespace Lib4D
 		}
 
 
+		public static Vector4DFloat operator /(Vector4DFloat a, float b)
+		{
+			return new Vector4DFloat(
+				a.X / b,
+				a.Y / b,
+				a.Z / b,
+				a.Q / b
+			);
+		}
+
+
 		public static bool operator ==(Vector4DFloat a, Vector4DFloat b)
 		{
 			return a.X == b.X && a.Y == b.Y && a.Z == b.Z && a.Q == b.Q;

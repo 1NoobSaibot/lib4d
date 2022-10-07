@@ -9,19 +9,20 @@ namespace HyperCube
 	{
 		private Animation animation = new Animation();
 		private Graphics4D graphics;
-		private readonly double _width, _height;
+		private readonly float _width, _height;
 		private DateTime _prevTime = DateTime.Now;
 
 
 		public Form1()
 		{
 			InitializeComponent();
-			_width = canvas.Width;
-			_height = canvas.Height;
-			canvas.Image = new Bitmap(canvas.Width, canvas.Height);
+			_width = Screen.PrimaryScreen.Bounds.Width;
+			_height = Screen.PrimaryScreen.Bounds.Height;
+			canvas.Image = new Bitmap((int)_width, (int)_height);
 			graphics = new Graphics4D(canvas.Image);
-			float scale = 100;
+			float scale = _height / 5f;
 			// graphics.Transform.Translate(_width * 0.5, _height * 0.5, 0, 0);
+			graphics.Transform.Translate(0, 0, 5, 0);
 			graphics.Transform.Scale(scale, scale, scale, scale);
 			looper.Start();
 
