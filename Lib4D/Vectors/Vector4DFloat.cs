@@ -32,6 +32,15 @@ namespace Lib4D
 		}
 
 
+		public float[,] ToMatrixRow()
+		{
+			return new float[4, 1]
+			{
+				{ X }, { Y }, { Z }, { Q }
+			};
+		}
+
+
 		public static Vector4DFloat operator +(Vector4DFloat a, Vector4DFloat b)
 		{
 			return new Vector4DFloat(
@@ -73,6 +82,14 @@ namespace Lib4D
 				a.Z * b,
 				a.Q * b
 			);
+		}
+
+
+		public static Vector4DFloat operator *(Vector4DFloat v, float[,] m)
+		{
+			float[,] row = v.ToMatrixRow();
+			row = MatrixMathF.Mul(row, m);
+			return new Vector4DFloat(row[0, 0], row[1, 0], row[2, 0], row[3, 0]);
 		}
 
 
