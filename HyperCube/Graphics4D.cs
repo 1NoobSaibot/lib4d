@@ -12,6 +12,8 @@ namespace HyperCube
 		private Graphics _buffer;
 		private Image _bufferImage;
 
+		private Projector4dTo3d _4d_to_3D;
+
 		public Transform4DFloat Transform => _transform;
 
 		public Graphics4D (Image canvas)
@@ -20,6 +22,8 @@ namespace HyperCube
 			_bufferImage = new Bitmap(canvas.Width, canvas.Height);
 			_buffer = Graphics.FromImage(_bufferImage);
 			_buffer.TranslateTransform(canvas.Width * 0.5f, canvas.Height * 0.5f);
+
+			_4d_to_3D = new Projector4dTo3d(canvas.Width, canvas.Height, canvas.Height * 2);
 		}
 
 
@@ -103,75 +107,10 @@ namespace HyperCube
 		}
 
 
-		private Vector3DFloat _World4DTo3D(Vector4DFloat input)
-		{
-			Vector4DFloat from = new Vector4DFloat(0, 0, 0, 0);
-			Vector4DFloat to = new Vector4DFloat(0, 0, 2000, 0);
-			Vector4DFloat up = new Vector4DFloat(0, _bufferImage.Height * 0.5f, 0, 0);
-			Vector4DFloat over = new Vector4DFloat(_bufferImage.Width * 0.5f, 0, 0, 0);
-
-			Vector4DFloat D = (to - from).Normalize();
-			Vector4DFloat A = Cross4(up, over, D).Normalize();
-			Vector4DFloat B = Cross4(over, D, A).Normalize();
-			Vector4DFloat C = Cross4(D, A, B);
-
-			float[,] projectMatrix = new float[4, 4] {
-				{ A.X, A.Y, A.Z, A.Q },
-				{ B.X, B.Y, B.Z, B.Q },
-				{ C.X, C.Y, C.Z, C.Q },
-				{ D.X, D.Y, D.Z, D.Q }
-			};
-
-			Vector4DFloat p = (input - from) * projectMatrix;
-
-			float tan = up.Abs / (from - to).Abs;
-			Vector3DFloat res;
-			res.X = p.X * _bufferImage.Height * 0.5f / (input.Q * tan);
-			res.Y = p.Y * _bufferImage.Height * 0.5f / (input.Q * tan);
-			res.Z = p.Z * _bufferImage.Height * 0.5f / (input.Q * tan);
-
-			return new Vector3DFloat(input.X, input.Y, input.Z);
-		}
-
 
 		private Vector3DFloat _World4DToCamera(Vector4DFloat v)
 		{
-			return _World3DToCamera(_World4DTo3D(v));
-		}
-
-		private Vector4DFloat Cross4(Vector4DFloat a, Vector4DFloat b, Vector4DFloat c)
-		{
-			Vector4DFloat res = new Vector4DFloat();
-
-			res.X = MatrixMathF.GetDeterminant(new float[3, 3]
-			{
-				{ a.Y, b.Y, c.Y },
-				{ a.Z, b.Z, c.Z },
-				{ a.Q, b.Q, c.Q }
-			});
-
-			res.Y = -MatrixMathF.GetDeterminant(new float[3, 3]
-			{
-				{ a.X, b.X, c.X },
-				{ a.Z, b.Z, c.Z },
-				{ a.Q, b.Q, c.Q }
-			});
-
-			res.Z = MatrixMathF.GetDeterminant(new float[3, 3]
-			{
-				{ a.X, b.X, c.X },
-				{ a.Y, b.Y, c.Y },
-				{ a.Q, b.Q, c.Q }
-			});
-
-			res.Q = -MatrixMathF.GetDeterminant(new float[3, 3]
-			{
-				{ a.X, b.X, c.X },
-				{ a.Y, b.Y, c.Y },
-				{ a.Z, b.Z, c.Z }
-			});
-
-			return res;
+			return _World3DToCamera(_4d_to_3D.Project(v));
 		}
 	}
 }
