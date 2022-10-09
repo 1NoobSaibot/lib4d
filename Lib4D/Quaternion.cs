@@ -69,7 +69,7 @@ namespace Lib4D
 		}
 
 
-		public static Quaternion ByAxisAndAngle(Vector3D u, double alpha) {
+		public static Quaternion ByAxisAndAngle(Vector3DDouble u, double alpha) {
 			double sinHalfA = Math.Sin(alpha * 0.5);
 
 			return new Quaternion(

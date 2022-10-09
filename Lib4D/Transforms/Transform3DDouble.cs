@@ -2,12 +2,12 @@
 
 namespace Lib4D
 {
-	public class Transform3D
+	public class Transform3DDouble
 	{
 		private double[,] _matrix = _CreateIdentityMatrix();
 
 
-		public void Translate (Vector3D t)
+		public void Translate (Vector3DDouble t)
 		{
 			Translate (t.X, t.Y, t.Z);
 		}
@@ -23,7 +23,7 @@ namespace Lib4D
 		}
 
 
-		public void Rotate(Vector3D axis, double angle) {
+		public void Rotate(Vector3DDouble axis, double angle) {
 			Rotate(axis.X, axis.Y, axis.Z, angle);
 		}
 
@@ -78,7 +78,7 @@ namespace Lib4D
 		}
 
 
-		public void Scale(Vector3D k)
+		public void Scale(Vector3DDouble k)
 		{
 			Scale(k.X, k.Y, k.Z);
 		}
@@ -97,51 +97,51 @@ namespace Lib4D
 		}
 
 		#region Static Constructors
-		public static Transform3D GetTranslate(Vector3D t)
+		public static Transform3DDouble GetTranslate(Vector3DDouble t)
 		{
 			return GetTranslate(t.X, t.Y, t.Z);
 		}
 
 
-		public static Transform3D GetTranslate(double tx, double ty, double tz)
+		public static Transform3DDouble GetTranslate(double tx, double ty, double tz)
 		{
-			Transform3D t = new Transform3D();
+			Transform3DDouble t = new Transform3DDouble();
 			t.Translate(tx, ty, tz);
 			return t;
 		}
 
 
-		public static Transform3D GetScale(Vector3D k)
+		public static Transform3DDouble GetScale(Vector3DDouble k)
 		{
 			return GetScale(k.X, k.Y, k.Z);
 		}
 
 
-		public static Transform3D GetScale(double kx, double ky, double kz)
+		public static Transform3DDouble GetScale(double kx, double ky, double kz)
 		{
-			Transform3D t = new Transform3D();
+			Transform3DDouble t = new Transform3DDouble();
 			t.Scale(kx, ky, kz);
 			return t;
 		}
 
 
-		public static Transform3D GetRotate(Vector3D axis, double angle)
+		public static Transform3DDouble GetRotate(Vector3DDouble axis, double angle)
 		{
 			return GetRotate(axis.X, axis.Y, axis.Z, angle);
 		}
 
 
-		public static Transform3D GetRotate(double x, double y, double z, double angle)
+		public static Transform3DDouble GetRotate(double x, double y, double z, double angle)
 		{
-			Transform3D t = new Transform3D();
+			Transform3DDouble t = new Transform3DDouble();
 			t.Rotate(x, y, z, angle);
 			return t;
 		}
 
 
-		public static Transform3D GetRotate(Quaternion q)
+		public static Transform3DDouble GetRotate(Quaternion q)
 		{
-			Transform3D t = new Transform3D();
+			Transform3DDouble t = new Transform3DDouble();
 			t.Rotate(q);
 			return t;
 		}
@@ -149,7 +149,7 @@ namespace Lib4D
 
 
 		#region Operators
-		public static Vector3D operator *(Transform3D t, Vector3D v)
+		public static Vector3DDouble operator *(Transform3DDouble t, Vector3DDouble v)
 		{
 			double[,] column = new double[1, 4];
 			column[0, 0] = v.X;
@@ -159,13 +159,13 @@ namespace Lib4D
 
 			column = MatrixMath.Mul(t._matrix, column);
 
-			return new Vector3D(column[0, 0], column[0, 1], column[0, 2]);
+			return new Vector3DDouble(column[0, 0], column[0, 1], column[0, 2]);
 		}
 
 
-		public static Transform3D operator *(Transform3D a, Transform3D b)
+		public static Transform3DDouble operator *(Transform3DDouble a, Transform3DDouble b)
 		{
-			return new Transform3D()
+			return new Transform3DDouble()
 			{
 				_matrix = MatrixMath.Mul(a._matrix, b._matrix)
 			};

@@ -14,8 +14,8 @@ namespace Lib4D_Tests
 		public void TranslatingVectorWithIdentityTransform()
 		{
 			// Identity transform doesn't change Vectors
-			Transform3D identityTransform = new Transform3D();
-			Vector3D v = GetRandomVector();
+			Transform3DDouble identityTransform = new Transform3DDouble();
+			Vector3DDouble v = GetRandomVector();
 
 			Assert.AreEqual(v, identityTransform * v);
 		}
@@ -24,14 +24,14 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void Translate3D()
 		{
-			Transform3D transform = Transform3D.GetTranslate(5, -4, 3);
+			Transform3DDouble transform = Transform3DDouble.GetTranslate(5, -4, 3);
 			Assert.AreEqual(
-				new Vector3D(5, -4, 3),
-				transform * new Vector3D(0, 0, 0)
+				new Vector3DDouble(5, -4, 3),
+				transform * new Vector3DDouble(0, 0, 0)
 			);
 			Assert.AreEqual(
-				new Vector3D(6, -2, -5),
-				transform * new Vector3D(1, 2, -8)
+				new Vector3DDouble(6, -2, -5),
+				transform * new Vector3DDouble(1, 2, -8)
 			);
 		}
 
@@ -39,10 +39,10 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void Scale()
 		{
-			Transform3D transform = Transform3D.GetScale(2, 4, -6);
+			Transform3DDouble transform = Transform3DDouble.GetScale(2, 4, -6);
 			Assert.AreEqual(
-				new Vector3D(2, 4, -6),
-				transform * new Vector3D(1, 1, 1)
+				new Vector3DDouble(2, 4, -6),
+				transform * new Vector3DDouble(1, 1, 1)
 			);
 		}
 
@@ -51,46 +51,46 @@ namespace Lib4D_Tests
 		public void RotateAroundAxis()
 		{
 			// Around OX
-			Transform3D transform = Transform3D.GetRotate(new Vector3D(1, 0, 0), Math.PI / 2);
+			Transform3DDouble transform = Transform3DDouble.GetRotate(new Vector3DDouble(1, 0, 0), Math.PI / 2);
 			_AreApproximatelyEqual(
-				new Vector3D(0, 0, 1),
-				transform * new Vector3D(0, 1, 0)
+				new Vector3DDouble(0, 0, 1),
+				transform * new Vector3DDouble(0, 1, 0)
 			);
 			_AreApproximatelyEqual(
-				new Vector3D(0, -1, 1),
-				transform * new Vector3D(0, 1, 1)
+				new Vector3DDouble(0, -1, 1),
+				transform * new Vector3DDouble(0, 1, 1)
 			);
 
 			// Around OY
-			transform = Transform3D.GetRotate(new Vector3D(0, 1, 0), Math.PI / 2);
+			transform = Transform3DDouble.GetRotate(new Vector3DDouble(0, 1, 0), Math.PI / 2);
 			_AreApproximatelyEqual(
-				new Vector3D(1, 0, 0),
-				transform * new Vector3D(0, 0, 1)
+				new Vector3DDouble(1, 0, 0),
+				transform * new Vector3DDouble(0, 0, 1)
 			);
 			_AreApproximatelyEqual(
-				new Vector3D(1, 0, -1),
-				transform * new Vector3D(1, 0, 1)
+				new Vector3DDouble(1, 0, -1),
+				transform * new Vector3DDouble(1, 0, 1)
 			);
 
 			// Around OZ
-			transform = Transform3D.GetRotate(new Vector3D(0, 0, 1), Math.PI / 2);
+			transform = Transform3DDouble.GetRotate(new Vector3DDouble(0, 0, 1), Math.PI / 2);
 			_AreApproximatelyEqual(
-				new Vector3D(0, 1, 0),
-				transform * new Vector3D(1, 0, 0)
+				new Vector3DDouble(0, 1, 0),
+				transform * new Vector3DDouble(1, 0, 0)
 			);
 			_AreApproximatelyEqual(
-				new Vector3D(-1, 1, 0),
-				transform * new Vector3D(1, 1, 0)
+				new Vector3DDouble(-1, 1, 0),
+				transform * new Vector3DDouble(1, 1, 0)
 			);
 
-			transform = Transform3D.GetRotate(new Vector3D(1, 1, 1).Normalize(), Math.PI * 2 / 3);
+			transform = Transform3DDouble.GetRotate(new Vector3DDouble(1, 1, 1).Normalize(), Math.PI * 2 / 3);
 			_AreApproximatelyEqual(
-				new Vector3D(3, 1, 2),
-				transform * new Vector3D(1, 2, 3)
+				new Vector3DDouble(3, 1, 2),
+				transform * new Vector3DDouble(1, 2, 3)
 			);
 			_AreApproximatelyEqual(
-				new Vector3D(-3, -1, -2),
-				transform * new Vector3D(-1, -2, -3)
+				new Vector3DDouble(-3, -1, -2),
+				transform * new Vector3DDouble(-1, -2, -3)
 			);
 		}
 
@@ -100,14 +100,14 @@ namespace Lib4D_Tests
 		{
 			for (int i = 0; i < 10; i++)
 			{
-				Vector3D axis = GetRandomVector().Normalize();
+				Vector3DDouble axis = GetRandomVector().Normalize();
 				double angle = _rnd.NextDouble() * Math.PI * 2;
 				Quaternion q = Quaternion.ByAxisAndAngle(axis, angle);
 
-				Transform3D transformAxisAngle = Transform3D.GetRotate(axis, angle);
-				Transform3D transformQuaternion = Transform3D.GetRotate(q);
+				Transform3DDouble transformAxisAngle = Transform3DDouble.GetRotate(axis, angle);
+				Transform3DDouble transformQuaternion = Transform3DDouble.GetRotate(q);
 
-				Vector3D point = GetRandomVector();
+				Vector3DDouble point = GetRandomVector();
 				_AreApproximatelyEqual(
 					transformAxisAngle * point,
 					transformQuaternion * point
@@ -116,7 +116,7 @@ namespace Lib4D_Tests
 		}
 
 
-		private void _AreApproximatelyEqual(Vector3D expected, Vector3D actual)
+		private void _AreApproximatelyEqual(Vector3DDouble expected, Vector3DDouble actual)
 		{
 			try
 			{
@@ -143,11 +143,11 @@ namespace Lib4D_Tests
 		}
 
 
-		private Vector3D GetRandomVector()
+		private Vector3DDouble GetRandomVector()
 		{
 			const double amplitude = 1;
 
-			return new Vector3D(
+			return new Vector3DDouble(
 				_rnd.NextDouble() * 2 * amplitude - amplitude,	
 				_rnd.NextDouble() * 2 * amplitude - amplitude,	
 				_rnd.NextDouble() * 2 * amplitude - amplitude

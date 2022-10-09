@@ -33,13 +33,9 @@ namespace HyperCube
 		{
 			a = _transform * a;
 			b = _transform * b;
-			const float cameraDistance = 1000;
-			float aDistance = cameraDistance - (float)Math.Sqrt(a.Z * a.Z + a.Q * a.Q);
-			float bDistance = cameraDistance - (float)Math.Sqrt(b.Z * b.Z + b.Q * b.Q);
-			const float k = 1000;
-			float aScale = k / aDistance;
-			float bScale = k / bDistance;
-			_buffer.DrawLine(_pen, a.X * aScale, a.Y * aScale, b.X * bScale, b.Y * bScale);
+			Vector3DFloat aP = _World3DToCamera(new Vector3DFloat(a.X, a.Y, a.Z));
+			Vector3DFloat bP = _World3DToCamera(new Vector3DFloat(b.X, b.Y, b.Z));
+			_buffer.DrawLine(_pen, a.X, a.Y, b.X, b.Y);
 		}
 
 
@@ -57,14 +53,31 @@ namespace HyperCube
 		internal void DrawVertex(Vector4DFloat v)
 		{
 			v = _transform * v;
-			const float cameraDistance = 1000;
-			float aDistance = cameraDistance - (float)Math.Sqrt(v.Z * v.Z + v.Q * v.Q);
-			const float k = 1000;
-			float aScale = k / aDistance;
-
+			Vector3DFloat vProjected = _World3DToCamera(new Vector3DFloat(v.X, v.Y, v.Z));
 			const float R = 6;
 			const float bias = R / 2;
-			_buffer.FillEllipse(_pen.Brush, v.X * aScale - bias, v.Y * aScale - bias, R, R);
+			_buffer.FillEllipse(_pen.Brush, vProjected.X - bias, vProjected.Y - bias, R, R);
+		}
+
+		private Vector3DFloat _World3DToCamera(Vector3DFloat input)
+		{
+			Vector3DFloat from = new Vector3DFloat(0, 0, 0);
+			Vector3DFloat to = new Vector3DFloat(0, 0, 2000);
+			Vector3DFloat up = new Vector3DFloat(0, _bufferImage.Height * 0.5f, 0);
+
+			Vector3DFloat C = (to - from).Normalize();
+			Vector3DFloat A = (up * C).Normalize();
+			Vector3DFloat B = C * A;
+
+			float[,] projectionMatrix = new float[3, 3]
+			{
+				{ A.X, A.Y, A.Z },
+				{ B.X, B.Y, B.Z },
+				{ C.X, C.Y, C.Z }
+			};
+			// projectionMatrix = MatrixMathF.Transpose(projectionMatrix);
+
+			return (input - from) * projectionMatrix;
 		}
 	}
 }

@@ -2,21 +2,21 @@
 
 namespace Lib4D
 {
-	public struct Vector3D
+	public struct Vector3DFloat
 	{
-		public double X, Y, Z;
+		public float X, Y, Z;
 
 
-		public double AbsQuad
+		public float AbsQuad
 		{
 			get => X * X + Y * Y + Z * Z;
 		}
 
 
-		public double Abs => Math.Sqrt(AbsQuad);
+		public float Abs => (float)Math.Sqrt(AbsQuad);
 
 
-		public Vector3D (double x, double y, double z)
+		public Vector3DFloat (float x, float y, float z)
 		{
 			X = x;
 			Y = y;
@@ -24,28 +24,56 @@ namespace Lib4D
 		}
 
 
-		public Vector3D Normalize()
+		public Vector3DFloat Normalize()
 		{
-			double k = 1 / Abs;
-			return new Vector3D(k * X, k * Y, k * Z);
+			float k = 1 / Abs;
+			return new Vector3DFloat(k * X, k * Y, k * Z);
 		}
 
 
-		public static Vector3D operator +(Vector3D a, Vector3D b)
+		public float[,] ToMatrixRow()
 		{
-			return new Vector3D (a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+			float[,] res = new float[3, 1];
+			res[0, 0] = X;
+			res[1, 0] = Y;
+			res[2, 0] = Z;
+			return res;
 		}
 
 
-		public static Vector3D operator -(Vector3D a, Vector3D b)
+		public static Vector3DFloat operator +(Vector3DFloat a, Vector3DFloat b)
 		{
-			return new Vector3D(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+			return new Vector3DFloat (a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+		}
+
+
+		public static Vector3DFloat operator -(Vector3DFloat a, Vector3DFloat b)
+		{
+			return new Vector3DFloat(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
 		}
 
 
 		public override string ToString()
 		{
 			return "(" + X + "; " + Y + "; " + Z + ")";
+		}
+
+
+		public static Vector3DFloat operator *(Vector3DFloat a, Vector3DFloat b)
+		{
+			return new Vector3DFloat(
+				a.Y * b.Z - a.Z * b.Y,
+				a.Z * b.X - a.X * b.Z,
+				a.X * b.Y - a.Y * b.X
+			);
+		}
+
+
+		public static Vector3DFloat operator *(Vector3DFloat v, float[,] m)
+		{
+			float[,] row = v.ToMatrixRow();
+			row = MatrixMathF.Mul(row, m);
+			return new Vector3DFloat(row[0, 0], row[1, 0], row[2, 0]);
 		}
 	}
 }
