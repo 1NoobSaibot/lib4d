@@ -7,7 +7,7 @@ namespace HyperCube
 	internal class Graphics4D
 	{
 		private Transform4DFloat _transform = new Transform4DFloat();
-		private Pen _pen = new Pen(new SolidBrush(Color.Green));
+		private Pen _pen = new Pen(Color.White);
 		private Graphics _canvas;
 		private Graphics _buffer;
 		private Image _bufferImage;
@@ -35,6 +35,12 @@ namespace HyperCube
 
 		public void DrawLine(Vector4DFloat a, Vector4DFloat b)
 		{
+			DrawLine(_pen, a, b);
+		}
+
+
+		public void DrawLine(Pen pen, Vector4DFloat a, Vector4DFloat b)
+		{
 			a = _transform * a;
 			b = _transform * b;
 			Vector3DFloat aP = _World4DToCamera(a);
@@ -43,8 +49,9 @@ namespace HyperCube
 			aP = _ClearParams(aP);
 			bP = _ClearParams(bP);
 
-			_buffer.DrawLine(_pen, aP.X, aP.Y, bP.X, bP.Y);
+			_buffer.DrawLine(pen, aP.X, aP.Y, bP.X, bP.Y);
 		}
+
 
 		private Vector3DFloat _ClearParams(Vector3DFloat v)
 		{
@@ -72,7 +79,7 @@ namespace HyperCube
 			_buffer.Clear(Color.Black);
 		}
 
-		internal void DrawVertex(Vector4DFloat v)
+		public void DrawVertex(Vector4DFloat v)
 		{
 			v = _transform * v;
 			Vector3DFloat vProjected = _World4DToCamera(v);

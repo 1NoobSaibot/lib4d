@@ -31,9 +31,22 @@ namespace HyperCube
 		}
 
 
+		private readonly Vector4DFloat _axisX = new Vector4DFloat(1, 0, 0, 0);
+		private readonly Vector4DFloat _axisY = new Vector4DFloat(0, 1, 0, 0);
+		private readonly Vector4DFloat _axisZ = new Vector4DFloat(0, 0, 1, 0);
+		private readonly Vector4DFloat _axisQ = new Vector4DFloat(0, 0, 0, 1);
+		private readonly Pen _penX = new Pen(Color.Green, 3);
+		private readonly Pen _penY = new Pen(Color.Red, 3);
+		private readonly Pen _penZ = new Pen(Color.LightBlue, 3);
+		private readonly Pen _penQ = new Pen(Color.Yellow, 3);
 		private void looper_Tick(object sender, EventArgs e)
 		{
 			graphics.Clear();
+			Vector4DFloat zero = new Vector4DFloat();
+			graphics.DrawLine(_penX, zero, _axisX);
+			graphics.DrawLine(_penY, zero, _axisY);
+			graphics.DrawLine(_penZ, zero, _axisZ);
+			graphics.DrawLine(_penQ, zero, _axisQ);
 
 			Bivector4DFloat b = axisPicker.GetAxis();
 			DateTime currentTime = DateTime.Now;
