@@ -27,7 +27,7 @@ namespace Lib4D
 		public Vector3DFloat Normalize()
 		{
 			float k = 1 / Abs;
-			return new Vector3DFloat(k * X, k * Y, k * Z);
+			return this * k;
 		}
 
 
@@ -56,6 +56,26 @@ namespace Lib4D
 		public override string ToString()
 		{
 			return "(" + X + "; " + Y + "; " + Z + ")";
+		}
+
+
+		public static Vector3DFloat operator *(Vector3DFloat a, float b)
+		{
+			return new Vector3DFloat(
+				a.X * b,
+				a.Y * b,
+				a.Z * b
+			);
+		}
+
+
+		public static Vector3DFloat operator *(float l, Vector3DFloat r)
+		{
+			return new Vector3DFloat(
+				r.X * l,
+				r.Y * l,
+				r.Z * l
+			);
 		}
 
 

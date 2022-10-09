@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="Graphics4D.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Projector4dTo2d.cs" />
     <Compile Include="Projector4dTo3d.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shapes\Hypercube.cs" />

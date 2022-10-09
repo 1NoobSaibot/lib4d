@@ -12,7 +12,7 @@ namespace HyperCube
 		private Graphics _buffer;
 		private Image _bufferImage;
 
-		private Projector4dTo3d _4d_to_3D;
+		private Projector4dTo2d _4d_to_2D;
 
 		public Transform4DFloat Transform => _transform;
 
@@ -23,7 +23,7 @@ namespace HyperCube
 			_buffer = Graphics.FromImage(_bufferImage);
 			_buffer.TranslateTransform(canvas.Width * 0.5f, canvas.Height * 0.5f);
 
-			_4d_to_3D = new Projector4dTo3d(canvas.Width, canvas.Height, canvas.Height * 2);
+			_4d_to_2D = new Projector4dTo2d(canvas.Width, canvas.Height, canvas.Height * 2);
 		}
 
 
@@ -81,36 +81,10 @@ namespace HyperCube
 			_buffer.FillEllipse(_pen.Brush, vProjected.X - bias, vProjected.Y - bias, R, R);
 		}
 
-		private Vector3DFloat _World3DToCamera(Vector3DFloat input)
-		{
-			Vector3DFloat from = new Vector3DFloat(0, 0, 0);
-			Vector3DFloat to = new Vector3DFloat(0, 0, 2000);
-			Vector3DFloat up = new Vector3DFloat(0, _bufferImage.Height * 0.5f, 0);
-
-			Vector3DFloat C = (to - from).Normalize();
-			Vector3DFloat A = (up * C).Normalize();
-			Vector3DFloat B = C * A;
-
-			float[,] projectionMatrix = new float[3, 3]
-			{
-				{ A.X, A.Y, A.Z },
-				{ B.X, B.Y, B.Z },
-				{ C.X, C.Y, C.Z }
-			};
-			
-			float tan = up.Abs / (from - to).Abs;
-			Vector3DFloat P2 = (input - from) * projectionMatrix;
-			P2.X = P2.X / (P2.Z * tan) * _bufferImage.Height * 0.5f;
-			P2.Y = P2.Y / (P2.Z * tan) * _bufferImage.Height * 0.5f;
-
-			return P2;
-		}
-
-
 
 		private Vector3DFloat _World4DToCamera(Vector4DFloat v)
 		{
-			return _World3DToCamera(_4d_to_3D.Project(v));
+			return _4d_to_2D.Project(v) * (_bufferImage.Height / 2f);
 		}
 	}
 }
