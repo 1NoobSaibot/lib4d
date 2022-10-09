@@ -20,10 +20,7 @@ namespace HyperCube
 			_height = Screen.PrimaryScreen.Bounds.Height;
 			canvas.Image = new Bitmap((int)_width, (int)_height);
 			graphics = new Graphics4D(canvas.Image);
-			float scale = _height / 5f;
-			// graphics.Transform.Translate(_width * 0.5, _height * 0.5, 0, 0);
-			graphics.Transform.Translate(0, 0, 5, 0);
-			graphics.Transform.Scale(scale, scale, scale, scale);
+			graphics.Transform.Translate(0, 0, -10, 0);
 			looper.Start();
 
 			shapePicker.Items.Add(ShapeIndex.HyperCube);

@@ -35,7 +35,7 @@ namespace HyperCube
 			b = _transform * b;
 			Vector3DFloat aP = _World3DToCamera(new Vector3DFloat(a.X, a.Y, a.Z));
 			Vector3DFloat bP = _World3DToCamera(new Vector3DFloat(b.X, b.Y, b.Z));
-			_buffer.DrawLine(_pen, a.X, a.Y, b.X, b.Y);
+			_buffer.DrawLine(_pen, aP.X, aP.Y, bP.X, bP.Y);
 		}
 
 
@@ -77,7 +77,13 @@ namespace HyperCube
 			};
 			// projectionMatrix = MatrixMathF.Transpose(projectionMatrix);
 
-			return (input - from) * projectionMatrix;
+			// double angle = Math.PI / 6;
+			float tan = up.Abs / (from - to).Abs;
+			Vector3DFloat P2 = (input - from) * projectionMatrix;
+			P2.X = P2.X / (P2.Z * tan) * _bufferImage.Height * 0.5f;
+			P2.Y = P2.Y / (P2.Z * tan) * _bufferImage.Height * 0.5f;
+
+			return P2;
 		}
 	}
 }
