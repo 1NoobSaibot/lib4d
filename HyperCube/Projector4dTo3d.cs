@@ -4,15 +4,15 @@ namespace HyperCube
 {
 	internal class Projector4dTo3d
 	{
-		private float[,] _projectionMatrix;
-		private float _tan;
+		private readonly float[,] _projectionMatrix;
+		private readonly float _tan;
 
 		public Projector4dTo3d(int width, int height, int frustumDepth = 2000)
 		{
-			Vector4DFloat from = new Vector4DFloat(0, 0, 0, 0);
-			Vector4DFloat to = new Vector4DFloat(0, 0, frustumDepth, 0);
-			Vector4DFloat up = new Vector4DFloat(0, height * 0.5f, 0, 0);
-			Vector4DFloat over = new Vector4DFloat(width * 0.5f, 0, 0, 0);
+			Vector4DFloat from = new(0, 0, 0, 0);
+			Vector4DFloat to = new(0, 0, frustumDepth, 0);
+			Vector4DFloat up = new(0, height * 0.5f, 0, 0);
+			Vector4DFloat over = new(width * 0.5f, 0, 0, 0);
 
 			Vector4DFloat D = (to - from).Normalize();
 			Vector4DFloat A = Cross4(up, over, D).Normalize();
@@ -45,37 +45,38 @@ namespace HyperCube
 
 
 
-		private Vector4DFloat Cross4(Vector4DFloat a, Vector4DFloat b, Vector4DFloat c)
+		private static Vector4DFloat Cross4(Vector4DFloat a, Vector4DFloat b, Vector4DFloat c)
 		{
-			Vector4DFloat res = new Vector4DFloat();
-
-			res.X = MatrixMathF.GetDeterminant(new float[3, 3]
+			Vector4DFloat res = new()
 			{
-				{ a.Y, b.Y, c.Y },
-				{ a.Z, b.Z, c.Z },
-				{ a.Q, b.Q, c.Q }
-			});
+				X = MatrixMathF.GetDeterminant(new float[3, 3]
+				{
+					{ a.Y, b.Y, c.Y },
+					{ a.Z, b.Z, c.Z },
+					{ a.Q, b.Q, c.Q }
+				}),
 
-			res.Y = -MatrixMathF.GetDeterminant(new float[3, 3]
-			{
-				{ a.X, b.X, c.X },
-				{ a.Z, b.Z, c.Z },
-				{ a.Q, b.Q, c.Q }
-			});
+				Y = -MatrixMathF.GetDeterminant(new float[3, 3]
+				{
+					{ a.X, b.X, c.X },
+					{ a.Z, b.Z, c.Z },
+					{ a.Q, b.Q, c.Q }
+				}),
 
-			res.Z = MatrixMathF.GetDeterminant(new float[3, 3]
-			{
-				{ a.X, b.X, c.X },
-				{ a.Y, b.Y, c.Y },
-				{ a.Q, b.Q, c.Q }
-			});
+				Z = MatrixMathF.GetDeterminant(new float[3, 3]
+				{
+					{ a.X, b.X, c.X },
+					{ a.Y, b.Y, c.Y },
+					{ a.Q, b.Q, c.Q }
+				}),
 
-			res.Q = -MatrixMathF.GetDeterminant(new float[3, 3]
-			{
-				{ a.X, b.X, c.X },
-				{ a.Y, b.Y, c.Y },
-				{ a.Z, b.Z, c.Z }
-			});
+				Q = -MatrixMathF.GetDeterminant(new float[3, 3]
+				{
+					{ a.X, b.X, c.X },
+					{ a.Y, b.Y, c.Y },
+					{ a.Z, b.Z, c.Z }
+				})
+			};
 
 			return res;
 		}
