@@ -25,7 +25,7 @@ namespace HyperCube
 				{ C.X, C.Y, C.Z, C.Q },
 				{ D.X, D.Y, D.Z, D.Q }
 			};
-			float _tan = up.Abs / (from - to).Abs;
+			_tan = up.Abs / (from - to).Abs;
 		}
 
 

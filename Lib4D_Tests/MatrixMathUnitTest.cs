@@ -7,9 +7,6 @@ namespace Lib4D_Tests
 	[TestClass]
 	public class MatrixMathUnitTest
 	{
-		private Random _rnd = new Random();
-
-
 		[TestMethod]
 		public void Add()
 		{
@@ -154,7 +151,7 @@ namespace Lib4D_Tests
 		}
 
 
-		private void AssertEqual(double[,] a, double[,] b)
+		private static void AssertEqual(double[,] a, double[,] b)
 		{
 			try
 			{

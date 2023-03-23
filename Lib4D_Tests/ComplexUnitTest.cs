@@ -1,121 +1,296 @@
 ﻿using Lib4D;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace Lib4D_Tests
 {
 	[TestClass]
 	public class ComplexUnitTest
 	{
-		private Random _rnd = new Random();
-
 		[TestMethod]
 		public void Equals()
 		{
-			Complex a = new Complex();
-			Complex b = new Complex(0, 0);
-			Assert.IsTrue(a == b);
+			(Complex, Complex, bool)[] samples =
+			{
+				(new(), new(), true),
+				(new(1), new(1), true),
+				(new(0, 2), new(0, 2), true),
+				(new(-7, 2), new(-7, 2), true),
 
-			a = new Complex(-1, 2);
-			b = new Complex(-1, 2);
-			Assert.IsTrue(a == b);
+				(new(0, 2), new(-7, 2), false),
+				(new(-7), new(-7, 2), false),
+				(new(0), new(-7, 2), false),
+			};
 
-			a = new Complex(0, 3);
-			b = new Complex(2, 3);
-			Assert.IsFalse(a == b);
 
-			a = new Complex(2, -3);
-			b = new Complex(2, 3);
-			Assert.IsFalse(a == b);
+			for (int i = 0; i < samples.Length; i++)
+			{
+				(var a, var b, var isEqual) = samples[i];
+				Assert.AreEqual(isEqual, a == b);
+				Assert.AreEqual(isEqual, b == a);
+				Assert.AreEqual(isEqual, a.Equals(b));
+				Assert.AreEqual(isEqual, b.Equals(a));
+
+				Assert.AreEqual(!isEqual, a != b);
+				Assert.AreEqual(!isEqual, b != a);
+
+				if (isEqual)
+				{
+					Assert.AreEqual(a, b);
+				}
+				else
+				{
+					Assert.AreNotEqual(a, b);
+				}
+			}
 		}
+
+
+		[TestMethod]
+		public void CastFloatToComplex()
+		{
+			for (double i = -10; i < 10; i += 0.1)
+			{
+				Assert.AreEqual(new Complex(i), (Complex)i);
+			}
+		}
+
 
 		[TestMethod]
 		public void Add()
 		{
-			Complex a = new Complex(0, 0);
-			Complex b = new Complex(1, 1);
-			Assert.AreEqual(a + b, b);
+			(Complex, Complex, Complex)[] samples =
+			{
+				(new(), new(), new()),
+				(new(1), new(2), new(3)),
+				(new(0, 1), new(0, 2), new(0, 3)),
+				(new(1, 5), new(2, 7), new(3, 12))
+			};
 
-			a = new Complex(0, 1);
-			Assert.AreEqual(a + a, new Complex(0, 2));
-			b = new Complex(1, 0);
-			Assert.AreEqual(b + b, new Complex(2, 0));
+			for (int i = 0; i < samples.Length; i++)
+			{
+				(var a, var b, var c) = samples[i];
+				Assert.AreEqual(c, a + b);
+				Assert.AreEqual(c, b + a);
+			}
+
+			ForEachComplex(complex =>
+			{
+				for (int floatNum = -5; floatNum < 5; floatNum++)
+				{
+					Complex expectedSum = complex + (Complex)floatNum;
+					Assert.AreEqual(expectedSum, complex + (double)floatNum);
+					Assert.AreEqual(expectedSum, (double)floatNum + complex);
+				}
+			});
 		}
+
 
 		[TestMethod]
 		public void Sub()
 		{
-			Complex a = new Complex(0, 0);
-			Complex b = new Complex(1, 1);
-			Assert.AreEqual(b + a, b);
+			ForEachPairOfComplex((a, b) =>
+			{
+				Complex sum = a + b;
+				Assert.AreEqual(a, sum - b);
+				Assert.AreEqual(b, sum - a);
+			});
 
-			a = new Complex(3, 0);
-			b = new Complex(2, 0);
-			Assert.AreEqual(a - b, new Complex(1, 0));
-
-			a = new Complex(0, 3);
-			b = new Complex(0, 2);
-			Assert.AreEqual(a - b, new Complex(0, 1));
+			ForEachComplex(complex =>
+			{
+				for (int floatNum = -5; floatNum < 5; floatNum++)
+				{
+					Assert.AreEqual(complex - (Complex)floatNum, complex - floatNum);
+					Assert.AreEqual((Complex)floatNum - complex, floatNum - complex);
+				}
+			});
 		}
+
 
 		[TestMethod]
 		public void Mul()
 		{
-			Complex zero = new Complex();
-			Complex b = new Complex(2, 5);
-			Assert.AreEqual(zero * b, zero);
+			// Is commutative
+			ForEachPairOfComplex((a, b) =>
+			{
+				Assert.AreEqual(a * b, b * a);
+			});
 
-			Complex one = new Complex(1, 0);
-			Assert.AreEqual(one * b, b);
+			ForEachComplex(complex =>
+			{
+				for (double floatNum = -5; floatNum < 5; floatNum += 0.25)
+				{
+					Complex expected = complex * (Complex)floatNum;
+					Assert.AreEqual(expected, complex * floatNum);
+					Assert.AreEqual(expected, floatNum * complex);
+				}
+			});
 
-			Complex imaginaryOne = new Complex(0, 1);
-			Assert.AreEqual(b * imaginaryOne, new Complex(-5, 2));
+			Complex zero = new();
+			ForEachComplex(complex =>
+			{
+				Assert.AreEqual(zero, complex * zero);
+			});
+
+			Complex one = new(1);
+			ForEachComplex(complex =>
+			{
+				Assert.AreEqual(complex, complex * one);
+			});
+
+			Complex i = new(0, 1);
+			Assert.AreEqual((Complex)(-1), i * i);
+			Assert.AreEqual(new Complex(0, -1), i * -1);
+			Assert.AreEqual(one, i * new Complex(0, -1));
 		}
+
 
 		[TestMethod]
-		public void Abs()
+		public void UnaryMinus()
 		{
-			Assert.AreEqual(new Complex().Abs(), 0);
-
-			Complex one = new Complex(1, 0);
-			Assert.AreEqual(one.Abs(), 1);
-
-			Complex negativeOne = new Complex(1, 0);
-			Assert.AreEqual(negativeOne.Abs(), 1);
-
-			Complex imaginaryOne = new Complex(0, 1);
-			Assert.AreEqual(imaginaryOne.Abs(), 1);
-
-			Complex negativeImaginaryOne = new Complex(0, 1);
-			Assert.AreEqual(negativeImaginaryOne.Abs(), 1);
-
-			Complex c = new Complex(-3, 4);
-			Assert.AreEqual(c.Abs(), 5);
+			ForEachComplex(complex =>
+			{
+				Assert.AreEqual(complex * -1, -complex);
+			});
 		}
+
+
+		[TestMethod]
+		public void Magnitude()
+		{
+			Assert.AreEqual(0, new Complex().Magnitude);
+
+			Complex one = new(1);
+			Assert.AreEqual(one.Magnitude, 1);
+
+			Complex negativeOne = new(1);
+			Assert.AreEqual(negativeOne.Magnitude, 1);
+
+			Complex imaginaryOne = new(0, 1);
+			Assert.AreEqual(imaginaryOne.Magnitude, 1);
+
+			Complex negativeImaginaryOne = new(0, 1);
+			Assert.AreEqual(negativeImaginaryOne.Magnitude, 1);
+
+			Complex c = new(-3, 4);
+			Assert.AreEqual(c.Magnitude, 5);
+		}
+
 
 		[TestMethod]
 		public void Div()
 		{
-			Complex two = new Complex(2, 0);
-			Complex four = new Complex(4, 0);
-			Assert.AreEqual(four / two, two);
-
-
-			Complex a = getComplexWithNotNullAbs();
-			Complex b = getComplexWithNotNullAbs();
-			Complex c = a * b;
-			Assert.AreEqual(c / a, b);
-			Assert.AreEqual(c / b, a);
-		}
-		
-		private Complex getComplexWithNotNullAbs()
-		{
-			Complex a;
-			do
+			ForEachPairOfComplex((a, b) =>
 			{
-				a = new Complex(_rnd.Next(200) - 100, _rnd.Next(200) - 100);
-			} while (a.Abs() == 0);
-			return a;
+				if (b.Magnitude == 0)
+				{
+					return;
+				}
+
+				var res = a / b;
+				AssertApproximatelyEqual(a, res * b);
+			});
+
+			ForEachComplex(complex =>
+			{
+				for (double i = -5; i < 5; i += 0.125)
+				{
+					if (i != 0)
+					{
+						Assert.AreEqual(complex / (Complex)i, complex / i);
+					}
+					if (complex.Magnitude != 0)
+					{
+						Assert.AreEqual((Complex)i / complex, i / complex);
+					}
+				}
+			});
+		}
+
+
+		[TestMethod]
+		public void Sqrt()
+		{
+			ForEachComplex(complex =>
+			{
+				var root = Complex.Sqrt(complex);
+				try
+				{
+					AssertApproximatelyEqual(complex, root * root);
+				}
+				catch (AssertFailedException)
+				{
+					root = Complex.Sqrt(complex);
+					throw new AssertFailedException(
+						$"Bad square root: argument={complex}, root={root}, root*root={root * root}"
+					);
+				}
+			});
+
+			for (double floatNum = -10; floatNum < 10; floatNum += 0.125)
+			{
+				Assert.AreEqual(
+					Complex.Sqrt((Complex)floatNum),
+					Complex.Sqrt(floatNum)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void AbsQuad()
+		{
+			ForEachComplex(complex => {
+				AssertApproximatelyEqual(complex.Abs() * complex.Abs(), complex.AbsQuad());
+			});
+		}
+
+
+
+		private static void ForEachComplex(Action<Complex> action)
+		{
+			for (double r = -5; r < 5; r += 0.125)
+			{
+				for (double i = -5; i < 5; i += 0.125)
+				{
+					action(new Complex(r, i));
+				}
+			}
+		}
+
+
+		private static void ForEachPairOfComplex(Action<Complex, Complex> action)
+		{
+			ForEachComplex(a =>
+			{
+				ForEachComplex(b =>
+				{
+					action(a, b);
+				});
+			});
+		}
+
+
+		private static void AssertApproximatelyEqual(Complex a, Complex b)
+		{
+			try
+			{
+				AssertApproximatelyEqual(a.R, b.R);
+				AssertApproximatelyEqual(a.I, b.I);
+			}
+			catch (AssertFailedException)
+			{
+				throw new AssertFailedException($"Two complex numbers {a} and {b} are not enough equal");
+			}
+		}
+
+
+		private static void AssertApproximatelyEqual(double a, double b)
+		{
+			const double epsilon = 0.0000000000001;
+			double delta = Math.Abs(a - b);
+			if (delta > epsilon)
+			{
+				throw new AssertFailedException();
+			}
 		}
 	}
 }

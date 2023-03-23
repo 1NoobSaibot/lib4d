@@ -9,29 +9,29 @@ namespace Lib4D
 		#region Getters
 		public double R
 		{
-			get => ri.r;
-			set => ri.r = value;
+			get => ri.R;
+			set => ri.R = value;
 		}
 		public double I
 		{
-			get => ri.i;
-			set => ri.i = value;
+			get => ri.I;
+			set => ri.I = value;
 		}
 		public double J
 		{
-			get => jk.r;
-			set => jk.r = value;
+			get => jk.R;
+			set => jk.R = value;
 		}
 		public double K
 		{
-			get => jk.i;
-			set => jk.i = value;
+			get => jk.I;
+			set => jk.I = value;
 		}
 
 		public double AbsQuad => R*R + I*I + J*J + K*K;
 		public double Abs => Math.Sqrt(AbsQuad);
 
-		public Quaternion ConjugateQuaternion => new Quaternion(R, -I, -J, -K);
+		public Quaternion ConjugateQuaternion => new(R, -I, -J, -K);
 		#endregion
 
 		#region Constructors
