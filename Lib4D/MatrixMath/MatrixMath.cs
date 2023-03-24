@@ -1,9 +1,10 @@
-﻿using System;
+﻿using System.Numerics;
 
 namespace Lib4D
 {
 	public static class MatrixMath {
-		public static double[,] Add(double[,] a, double[,] b)
+		public static TNumber[,] Add<TNumber>(TNumber[,] a, TNumber[,] b)
+			where TNumber : INumber<TNumber>
 		{
 			int width = a.GetWidth();
 			int height = a.GetHeight();
@@ -12,7 +13,7 @@ namespace Lib4D
 				throw new ArgumentException("Matrixes have different size");
 			}
 
-			double[,] result = new double[width, height];
+			TNumber[,] result = new TNumber[width, height];
 			for (int i = 0; i < width; i++)
 			{
 				for (int j = 0; j < height; j++)
@@ -25,17 +26,20 @@ namespace Lib4D
 		}
 
 
-		public static double GetDeterminant(this double[,] matrix) {
-			QuadMatrixDeterminantCalculator calc = new QuadMatrixDeterminantCalculator(matrix);
+		public static TNumber GetDeterminant<TNumber>(this TNumber[,] matrix)
+			where TNumber : INumber<TNumber>
+		{
+			var calc = new QuadMatrixDeterminantCalculator<TNumber>(matrix);
 			return calc.Determinant;
 		}
 
 
-		public static double[,] Transpose (this double[,] matrixA)
+		public static TNumber[,] Transpose<TNumber>(this TNumber[,] matrixA)
+			where TNumber : INumber<TNumber>
 		{
 			int width = matrixA.GetLength(0);
 			int height = matrixA.GetLength(1);
-			double[,] res = new double[height, width];
+			TNumber[,] res = new TNumber[height, width];
 
 			for (int x = 0; x < width; x++)
 			{
@@ -49,7 +53,8 @@ namespace Lib4D
 		}
 
 
-		public static bool EqualsTo(this double[,] a, double[,] b)
+		public static bool EqualsTo<TNumber>(this TNumber[,] a, TNumber[,] b)
+			where TNumber : INumber<TNumber>
 		{
 			if (a.GetLength(0) != b.GetLength(0) || a.GetLength(1) != b.GetLength(1))
 			{
@@ -79,22 +84,24 @@ namespace Lib4D
 		/// </summary>
 		/// <param name="width"></param>
 		/// <returns>Quad Identity Matrix</returns>
-		public static double[,] CreateIdentity(int width)
+		public static TNumber[,] CreateIdentity<TNumber>(int width)
+			where TNumber : INumber<TNumber>
 		{
-			double[,] m = new double[width, width];
+			TNumber[,] m = new TNumber[width, width];
 			for (int i = 0; i < width; i++)
 			{
-				m[i, i] = 1;
+				m[i, i] = TNumber.One;
 			}
 			return m;
 		}
 
 
-		public static double[,] Mul(this double[,] a, double b)
+		public static TNumber[,] Mul<TNumber>(this TNumber[,] a, TNumber b)
+			where TNumber : INumber<TNumber>
 		{
 			int width = a.GetWidth();
 			int height = a.GetHeight();
-			double[,] c = new double[width, height];
+			TNumber[,] c = new TNumber[width, height];
 
 			for (int x = 0; x < width; x++)
 			{
@@ -108,7 +115,8 @@ namespace Lib4D
 		}
 
 
-		public static double[,] Mul (this double[,] a, double[,] b)
+		public static TNumber[,] Mul<TNumber>(this TNumber[,] a, TNumber[,] b)
+			where TNumber : INumber<TNumber>
 		{
 			// Ширина матрицы A равна высоте B
 			if (a.GetWidth() != b.GetHeight()) {
@@ -118,13 +126,13 @@ namespace Lib4D
 			int commonWidth = a.GetWidth();
 			int width = b.GetWidth();
 			int height = a.GetHeight();
-			double[,] c = new double[width, height];
+			TNumber[,] c = new TNumber[width, height];
 
 			for (int x = 0; x < width; x++)
 			{
 				for (int y = 0; y < height; y++)
 				{
-					double sum = 0.0;
+					TNumber sum = TNumber.Zero;
 					for (int i = 0; i < commonWidth; i++)
 					{
 						sum += a[i, y] * b[x, i];
@@ -137,8 +145,10 @@ namespace Lib4D
 		}
 
 
-		public static double[,] Extend(double[,] sourceMatrix, int newWidth, int newHeight) {
-			double[,] res = new double[newWidth, newHeight];
+		public static TNumber[,] Extend<TNumber>(TNumber[,] sourceMatrix, int newWidth, int newHeight)
+			where TNumber : INumber<TNumber>
+		{
+			TNumber[,] res = new TNumber[newWidth, newHeight];
 			for (int i = 0; i < sourceMatrix.GetWidth(); i++) {
 				for (int j = 0; j < sourceMatrix.GetHeight(); j++) {
 					res[i, j] = sourceMatrix[i, j];
@@ -148,12 +158,12 @@ namespace Lib4D
 		}
 
 
-		public static int GetWidth (this double[,] a)
+		public static int GetWidth<T>(this T[,] a)
 		{
 			return a.GetLength(0);
 		}
 
-		public static int GetHeight(this double[,] a)
+		public static int GetHeight<T>(this T[,] a)
 		{
 			return a.GetLength(1);
 		}

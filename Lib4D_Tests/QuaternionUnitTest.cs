@@ -1,15 +1,11 @@
 ﻿using Lib4D;
 using Lib4D_Tests.Helpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace Lib4D_Tests
 {
 	[TestClass]
 	public class QuaternionUnitTest
 	{
-		private Random _rnd = new Random();
-		private static readonly Quaternion Q_ZERO = new();
 		private static readonly Complex C_ZERO = new();
 
 

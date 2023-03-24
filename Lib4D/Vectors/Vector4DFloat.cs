@@ -88,7 +88,7 @@ namespace Lib4D
 		public static Vector4DFloat operator *(Vector4DFloat v, float[,] m)
 		{
 			float[,] row = v.ToMatrixRow();
-			row = MatrixMathF.Mul(row, m);
+			row = MatrixMath.Mul(row, m);
 			return new Vector4DFloat(row[0, 0], row[1, 0], row[2, 0], row[3, 0]);
 		}
 

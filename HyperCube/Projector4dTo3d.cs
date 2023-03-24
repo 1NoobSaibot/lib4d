@@ -49,28 +49,28 @@ namespace HyperCube
 		{
 			Vector4DFloat res = new()
 			{
-				X = MatrixMathF.GetDeterminant(new float[3, 3]
+				X = MatrixMath.GetDeterminant(new float[3, 3]
 				{
 					{ a.Y, b.Y, c.Y },
 					{ a.Z, b.Z, c.Z },
 					{ a.Q, b.Q, c.Q }
 				}),
 
-				Y = -MatrixMathF.GetDeterminant(new float[3, 3]
+				Y = -MatrixMath.GetDeterminant(new float[3, 3]
 				{
 					{ a.X, b.X, c.X },
 					{ a.Z, b.Z, c.Z },
 					{ a.Q, b.Q, c.Q }
 				}),
 
-				Z = MatrixMathF.GetDeterminant(new float[3, 3]
+				Z = MatrixMath.GetDeterminant(new float[3, 3]
 				{
 					{ a.X, b.X, c.X },
 					{ a.Y, b.Y, c.Y },
 					{ a.Q, b.Q, c.Q }
 				}),
 
-				Q = -MatrixMathF.GetDeterminant(new float[3, 3]
+				Q = -MatrixMath.GetDeterminant(new float[3, 3]
 				{
 					{ a.X, b.X, c.X },
 					{ a.Y, b.Y, c.Y },

@@ -92,7 +92,7 @@ namespace Lib4D
 		public static Vector3DFloat operator *(Vector3DFloat v, float[,] m)
 		{
 			float[,] row = v.ToMatrixRow();
-			row = MatrixMathF.Mul(row, m);
+			row = MatrixMath.Mul(row, m);
 			return new Vector3DFloat(row[0, 0], row[1, 0], row[2, 0]);
 		}
 	}

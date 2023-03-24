@@ -18,7 +18,7 @@ namespace Lib4D
 
 		public Transform4DFloat ()
 		{
-			_matrix = _CreateIdentityMatrix();
+			_matrix = CreateIdentityMatrix();
 		}
 
 		public void Translate (Vector4DFloat t)
@@ -29,12 +29,12 @@ namespace Lib4D
 
 		public void Translate(float tx, float ty, float tz, float tq)
 		{
-			float[,] transformMatrix = _CreateIdentityMatrix();
+			float[,] transformMatrix = CreateIdentityMatrix();
 			transformMatrix[4, 0] = tx;
 			transformMatrix[4, 1] = ty;
 			transformMatrix[4, 2] = tz;
 			transformMatrix[4, 3] = tq;
-			_matrix = MatrixMathF.Mul(_matrix, transformMatrix);
+			_matrix = MatrixMath.Mul(_matrix, transformMatrix);
 		}
 
 
@@ -54,7 +54,7 @@ namespace Lib4D
 				{  0,  0,  0, kq, 0 },
 				{  0,  0,  0,  0, 1 },
 			};
-			_matrix = MatrixMathF.Mul(_matrix, scaleMatrix);
+			_matrix = MatrixMath.Mul(_matrix, scaleMatrix);
 		}
 
 
@@ -69,7 +69,7 @@ namespace Lib4D
 			float yq = b.YQ;
 			float zq = b.ZQ;
 
-			float[,] uut = MatrixMathF.Mul(b.Matrix, MatrixMathF.Transpose(b.Matrix));
+			float[,] uut = MatrixMath.Mul(b.Matrix, MatrixMath.Transpose(b.Matrix));
 			uut = uut.Mul(1.0f - c);
 			
 			float[,] sinAndCos = new float[4, 4]
@@ -80,8 +80,8 @@ namespace Lib4D
 				{  s * yz	,	 s * xz	,	-s * xy	,  c			},
 			};
 
-			float[,] R = MatrixMathF.Add(sinAndCos, uut);
-			R = MatrixMathF.Extend(R, 5, 5);
+			float[,] R = MatrixMath.Add(sinAndCos, uut);
+			R = MatrixMath.Extend(R, 5, 5);
 			R[4, 4] = 1;
 
 			_matrix = _matrix.Mul(R);
@@ -97,7 +97,7 @@ namespace Lib4D
 
 		public static Transform4DFloat GetTranslate(float tx, float ty, float tz, float tq)
 		{
-			Transform4DFloat t = new Transform4DFloat();
+			Transform4DFloat t = new();
 			t.Translate(tx, ty, tz, tq);
 			return t;
 		}
@@ -111,7 +111,7 @@ namespace Lib4D
 
 		public static Transform4DFloat GetScale(float kx, float ky, float kz, float kq)
 		{
-			Transform4DFloat t = new Transform4DFloat();
+			Transform4DFloat t = new();
 			t.Scale(kx, ky, kz, kq);
 			return t;
 		}
@@ -128,7 +128,7 @@ namespace Lib4D
 			column[0, 3] = v.Q;
 			column[0, 4] = 1;
 
-			column = MatrixMathF.Mul(t._matrix, column);
+			column = MatrixMath.Mul(t._matrix, column);
 
 			return new Vector4DFloat(column[0, 0], column[0, 1], column[0, 2], column[0, 3]);
 		}
@@ -138,12 +138,12 @@ namespace Lib4D
 		{
 			return new Transform4DFloat()
 			{
-				_matrix = MatrixMathF.Mul(a._matrix, b._matrix)
+				_matrix = MatrixMath.Mul(a._matrix, b._matrix)
 			};
 		}
 		#endregion
 
-		private static float[,] _CreateIdentityMatrix()
+		private static float[,] CreateIdentityMatrix()
 		{
 			return new float[5, 5]
 			{

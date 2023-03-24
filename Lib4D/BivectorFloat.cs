@@ -64,7 +64,7 @@
 
 		public static Bivector4DFloat operator *(float a, Bivector4DFloat b)
 		{
-			Bivector4DFloat res = new Bivector4DFloat()
+			Bivector4DFloat res = new()
 			{
 				_matrix = b._matrix.Mul(a),
 			};
@@ -75,9 +75,9 @@
 
 		public static Bivector4DFloat operator +(Bivector4DFloat a, Bivector4DFloat b)
 		{
-			return new Bivector4DFloat()
+			return new()
 			{
-				_matrix = MatrixMathF.Add(a._matrix, b._matrix)
+				_matrix = MatrixMath.Add(a._matrix, b._matrix)
 			};
 		}
 	}

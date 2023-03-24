@@ -45,7 +45,7 @@ namespace Lib4D_Tests
 			// Determinant of identity quad matrixes always equals to 1
 			for (int i = 2; i <= 10; i++)
 			{
-				double[,] identity = MatrixMath.CreateIdentity(i);
+				double[,] identity = MatrixMath.CreateIdentity<double>(i);
 				Assert.AreEqual(1, identity.GetDeterminant());
 			}
 
@@ -124,7 +124,7 @@ namespace Lib4D_Tests
 			double[,] three = new double[1, 1] { { 3 } };
 			AssertEqual(three, identity.Mul(3));
 
-			identity = MatrixMath.CreateIdentity(3);
+			identity = MatrixMath.CreateIdentity<double>(3);
 			AssertEqual(
 				new double[3, 3]
 				{

@@ -19,7 +19,7 @@ namespace Lib4D
 			transformMatrix[3, 0] = tx;
 			transformMatrix[3, 1] = ty;
 			transformMatrix[3, 2] = tz;
-			_matrix = MatrixMathF.Mul(_matrix, transformMatrix);
+			_matrix = MatrixMath.Mul(_matrix, transformMatrix);
 		}
 
 
@@ -48,7 +48,7 @@ namespace Lib4D
 				{ 0															, 0															, 0															, 1 }
 			};
 
-			_matrix = MatrixMathF.Mul(_matrix, rotateMatrix);
+			_matrix = MatrixMath.Mul(_matrix, rotateMatrix);
 		}
 
 
@@ -75,7 +75,7 @@ namespace Lib4D
 				{ 0									,		0									,		0									,	1	}
 			};
 
-			_matrix = MatrixMathF.Mul(_matrix, rotateMatrix);
+			_matrix = MatrixMath.Mul(_matrix, rotateMatrix);
 		}
 
 
@@ -94,7 +94,7 @@ namespace Lib4D
 				{  0,  0, kz, 0 },
 				{  0,  0,  0, 1 },
 			};
-			_matrix = MatrixMathF.Mul(_matrix, scaleMatrix);
+			_matrix = MatrixMath.Mul(_matrix, scaleMatrix);
 		}
 
 		#region Static Constructors
@@ -158,7 +158,7 @@ namespace Lib4D
 			column[0, 2] = v.Z;
 			column[0, 3] = 1;
 
-			column = MatrixMathF.Mul(t._matrix, column);
+			column = MatrixMath.Mul(t._matrix, column);
 
 			return new Vector3DFloat(column[0, 0], column[0, 1], column[0, 2]);
 		}
@@ -168,7 +168,7 @@ namespace Lib4D
 		{
 			return new Transform3DFloat()
 			{
-				_matrix = MatrixMathF.Mul(a._matrix, b._matrix)
+				_matrix = MatrixMath.Mul(a._matrix, b._matrix)
 			};
 		}
 		#endregion
