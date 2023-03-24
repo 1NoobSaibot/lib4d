@@ -1,4 +1,5 @@
 ﻿using Lib4D;
+using Lib4D_Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -8,196 +9,302 @@ namespace Lib4D_Tests
 	public class QuaternionUnitTest
 	{
 		private Random _rnd = new Random();
+		private static readonly Quaternion Q_ZERO = new();
+		private static readonly Complex C_ZERO = new();
+
 
 		[TestMethod]
 		public void Equals()
 		{
-			Quaternion a = new Quaternion();
-			Quaternion b = new Quaternion(0, 0, 0, 0);
-			Assert.IsTrue(a == b);
+			(Quaternion, Quaternion, bool)[] samples =
+			{
+				(new(), new(), true), 
+				(new(7), new(7), true),
+				(new(i:7), new(i:7), true),
+				(new(j:7), new(j:7), true),
+				(new(k:7), new(k:7), true),
+				(new(1, 2, 3, 4), new(1, 2, 3, 4), true),
 
-			a = new Quaternion(-1, 2, 3, -4);
-			b = new Quaternion(-1, 2, 3, -4);
-			Assert.IsTrue(a == b);
+				(new(), new(1), false),
+				(new(), new(i:1), false),
+				(new(), new(j:1), false),
+				(new(), new(k:1), false)
+			};
 
-			a = new Quaternion(-3, 2, 3, -4);
-			b = new Quaternion(-1, 2, 3, -4);
-			Assert.IsFalse(a == b);
+			foreach (var sample in samples)
+			{
+				(var a, var b, var areEqual) = sample;
+				Assert.AreEqual(areEqual, a == b);
+				Assert.AreEqual(areEqual, a.Equals(b));
+				Assert.AreEqual(areEqual, b == a);
+				Assert.AreEqual(areEqual, b.Equals(a));
 
-			a = new Quaternion(-1, 2, 3, -4);
-			b = new Quaternion(-1, 3, 3, -4);
-			Assert.IsFalse(a == b);
+				Assert.AreEqual(!areEqual, a != b);
+				Assert.AreEqual(!areEqual, b != a);
 
-			a = new Quaternion(-1, 2, 3, -4);
-			b = new Quaternion(-1, 2, -3, -4);
-			Assert.IsFalse(a == b);
-
-			a = new Quaternion(-1, 2, 3, -5);
-			b = new Quaternion(-1, 2, 3, -4);
-			Assert.IsFalse(a == b);
+				if (areEqual)
+				{
+					Assert.AreEqual(a, b);
+				}
+				else
+				{
+					Assert.AreNotEqual(a, b);
+				}
+			}
 		}
+
+
+		[TestMethod]
+		public void CastComplexToQuaternion()
+		{
+			ComplexTestHelper.ForEachComplex(c =>
+			{
+				Quaternion q = (Quaternion)c;
+				Assert.AreEqual(q.ri, c);
+				Assert.AreEqual(q.jk, C_ZERO);
+				Assert.AreEqual(q.R, c.R);
+				Assert.AreEqual(q.I, c.I);
+				Assert.AreEqual(q.J, 0);
+				Assert.AreEqual(q.K, 0);
+			});
+		}
+
+
+		[TestMethod]
+		public void CastFloatToQuaternion()
+		{
+			ComplexTestHelper.ForEachFloat(f =>
+			{
+				Quaternion q = (Quaternion)f;
+				Assert.AreEqual(q.R, f);
+				Assert.AreEqual(q.I, 0);
+				Assert.AreEqual(q.J, 0);
+				Assert.AreEqual(q.K, 0);
+			});
+		}
+
 
 		[TestMethod]
 		public void Add()
 		{
-			Quaternion a = new Quaternion(0, 0);
-			Quaternion b = new Quaternion(1, 1);
-			Assert.AreEqual(a + b, b);
-
-			a = new Quaternion(1, 0, 0, 0);
-			Assert.AreEqual(a + a, new Quaternion(2, 0, 0, 0));
-			a = new Quaternion(0, 1, 0, 0);
-			Assert.AreEqual(a + a, new Quaternion(0, 2, 0, 0));
-			a = new Quaternion(0, 0, 1, 0);
-			Assert.AreEqual(a + a, new Quaternion(0, 0, 2, 0));
-			a = new Quaternion(0, 0, 0, 1);
-			Assert.AreEqual(a + a, new Quaternion(0, 0, 0, 2));
-
-			a = new Quaternion(-3, 2, -1, 4);
-			b = new Quaternion(10, 1, -5, -1);
-			Quaternion c = new Quaternion(7, 3, -6, 3);
-			Assert.AreEqual(a + b, c);
-
-			for (int i = 0; i < 10; i++)
+			(Quaternion, Quaternion, Quaternion)[] samples =
 			{
-				a = getQuaternion();
-				b = getQuaternion();
-				Assert.AreEqual(a + b, b + a);
+				(new(), new(), new()),
+				(new(1), new(1), new(2)),
+				(new(i:1), new(i:1), new(i:2)),
+				(new(j:1), new(j:1), new(j:2)),
+				(new(k:1), new(k:1), new(k:2)),
+				(new(1), new(i:1), new(1, 1, 0, 0)),
+				(new(1), new(j:1), new(1, 0, 1, 0)),
+				(new(1), new(k:1), new(1, 0, 0, 1)),
+				(new(i:1), new(j:1), new(0, 1, 1, 0)),
+				(new(i:1), new(k:1), new(0, 1, 0, 1)),
+				(new(j:1), new(k:1), new(0, 0, 1, 1)),
+				(new(1, -2, 3, -5), new(-7, 11, -13, 17), new(-6, 9, -10, 12))
+			};
+
+			foreach (var sample in samples)
+			{
+				(var a, var b, var sum) = sample;
+				Assert.AreEqual(sum, a + b);
+				Assert.AreEqual(sum, b + a);
 			}
+
+			QuaternionTestHelper.ForEachQuaternion(q =>
+			{
+				ComplexTestHelper.ForEachComplex(c =>
+				{
+					Assert.AreEqual(q + (Quaternion)c, q + c);
+					Assert.AreEqual(q + (Quaternion)c, c + q);
+				});
+
+				ComplexTestHelper.ForEachFloat(f =>
+				{
+					Assert.AreEqual(q + (Quaternion)f, q + f);
+					Assert.AreEqual(q + (Quaternion)f, f + q);
+				});
+			});
 		}
+
 
 		[TestMethod]
 		public void Sub()
 		{
-			Quaternion zero = new Quaternion(0, 0, 0, 0);
-			Quaternion ones = new Quaternion(1, 1, 1, 1);
-			Assert.AreEqual(ones - zero, ones);
-			Assert.AreEqual(ones - ones, zero);
-
-			for (int i = 0; i < 10; i++)
+			QuaternionTestHelper.ForEachPairOfQuaternion((q1, q2) =>
 			{
-				Quaternion a = getQuaternion();
-				Quaternion b = getQuaternion();
-				Quaternion c = a + b;
+				var sum = q1 + q2;
+				Assert.AreEqual(q1, sum - q2);
+			});
 
-				Assert.AreEqual(c - a, b);
-				Assert.AreEqual(c - b, a);
-			}
+			QuaternionTestHelper.ForEachQuaternion(q =>
+			{
+				ComplexTestHelper.ForEachComplex(c =>
+				{
+					Assert.AreEqual(q - (Quaternion)c, q - c);
+					Assert.AreEqual((Quaternion)c - q, c - q);
+				});
+
+				ComplexTestHelper.ForEachFloat(f =>
+				{
+					Assert.AreEqual(q - (Quaternion)f, q - f);
+					Assert.AreEqual((Quaternion)f - q, f - q);
+				});
+			});
 		}
+
 
 		[TestMethod]
 		public void Mul()
 		{
-			Quaternion zero = new Quaternion();
-			Quaternion one = new Quaternion(1);
-			Quaternion negativeOne = new Quaternion(-1);
-			Quaternion random = getQuaternion();
-			_AreApproximatelyEqual(zero * random, zero);
-			Assert.AreEqual(one * random, random);
-			Assert.AreEqual(zero - random, negativeOne * random);
+			// Works as simple float when all i, j, k are zero
+			ComplexTestHelper.ForEachTwoFloats((f1, f2) =>
+			{
+				Assert.AreEqual((Quaternion)(f1 * f2), (Quaternion)f1 * (Quaternion)f2);
+				Assert.AreEqual((Quaternion)(f1 * f2), (Quaternion)f2 * (Quaternion)f1);
+			});
 
+			Quaternion zero = new();
+			Quaternion two = new(2);
+			Quaternion r = new(1);
+			Quaternion nr = new(-1);
+			Quaternion i = new(i: 1);
+			Quaternion ni = new(i: -1);
+			Quaternion j = new(j: 1);
+			Quaternion nj = new(j: -1);
+			Quaternion k = new(k: 1);
+			Quaternion nk = new(k: -1);
 
-			Quaternion i = new Quaternion(0, 1, 0, 0);
-			Quaternion j = new Quaternion(0, 0, 1, 0);
-			Quaternion k = new Quaternion(0, 0, 0, 1);
-			Assert.AreEqual(i * i, negativeOne);
-			Assert.AreEqual(j * j, negativeOne);
-			Assert.AreEqual(k * k, negativeOne);
-			Assert.AreEqual(i * j * k, negativeOne);
+			QuaternionTestHelper.ForEachQuaternion(q =>
+			{
+				Assert.AreEqual(zero, q * zero);
+				Assert.AreEqual(zero, zero * q);
+				Assert.AreEqual(q, q * r);
+				Assert.AreEqual(q, r * q);
+				Assert.AreEqual(zero - q, q * nr);
+				Assert.AreEqual(zero - q, nr * q);
+				Assert.AreEqual(q + q, two * q);
+			});
+
+			Assert.AreEqual(nr, i * i);
+			Assert.AreEqual(r, ni * i);
+			Assert.AreEqual(r, i * ni);
+
+			Assert.AreEqual(nr, j * j);
+			Assert.AreEqual(r, nj * j);
+			Assert.AreEqual(r, j * nj);
+
+			Assert.AreEqual(nr, k * k);
+			Assert.AreEqual(r, nk * k);
+			Assert.AreEqual(r, k * nk);
+
+			Assert.AreEqual(nr, i * j * k);
+			Assert.AreEqual(r, ni * j * k);
+			Assert.AreEqual(r, i * nj * k);
+			Assert.AreEqual(r, i * j * nk);
 
 			Assert.AreEqual(k, i * j);
-			_AreApproximatelyEqual(negativeOne * k, j * i);
+			Assert.AreEqual(nk, j * i);
+			Assert.AreEqual(nj, i * k);
+			Assert.AreEqual(j, k * i);
+			Assert.AreEqual(i, j * k);
+			Assert.AreEqual(ni, k * j);
+
+			QuaternionTestHelper.ForEachQuaternion(q =>
+			{
+				ComplexTestHelper.ForEachComplex(c =>
+				{
+					Assert.AreEqual(q * (Quaternion)c, q * c);
+					Assert.AreEqual((Quaternion)c * q, c * q);
+				});
+
+				ComplexTestHelper.ForEachFloat(f =>
+				{
+					Assert.AreEqual(q * (Quaternion)f, q * f);
+					Assert.AreEqual((Quaternion)f * q, f * q);
+				});
+			});
 		}
+
+
+		[TestMethod]
+		public void UnaryMinus()
+		{
+			QuaternionTestHelper.ForEachQuaternion(q =>
+			{
+				Assert.AreEqual(q * -1, -q);
+				Assert.AreEqual(-1 * q, -q);
+			});
+		}
+
 
 		[TestMethod]
 		public void Abs()
 		{
-			Assert.AreEqual(new Quaternion().Abs, 0);
+			(Quaternion, double)[] samples =
+			{
+				(new(), 0),
+				(new(1, 0, 0, 0), 1),
+				(new(0, 2, 0, 0), 2),
+				(new(0, 0, 3, 0), 3),
+				(new(0, 0, 0, 4), 4),
 
-			Quaternion one = new Quaternion(1);
-			Assert.AreEqual(one.Abs, 1);
+				(new(3, 4, 0, 0), 5),
+				(new(-4, 3, 0, 0), 5),
+				(new(-3, 0, 4, 0), 5),
+				(new(3, 0, 0, 4), 5),
+				(new(0, 3, -4, 0), 5),
+				(new(0, -3, 0, -4), 5),
+				(new(0, 0, 3, 4), 5)
+			};
 
-			Quaternion negativeOne = new Quaternion(1, 0);
-			Assert.AreEqual(negativeOne.Abs, 1);
-
-			Quaternion imaginaryOne = new Quaternion(0, 1);
-			Assert.AreEqual(imaginaryOne.Abs, 1);
-
-			Quaternion negativeImaginaryOne = new Quaternion(0, 1);
-			Assert.AreEqual(negativeImaginaryOne.Abs, 1);
-
-			Quaternion c = new Quaternion(-3, 4);
-			Assert.AreEqual(c.Abs, 5);
+			foreach (var sample in samples)
+			{
+				(var q, var magnitude) = sample;
+				Assert.AreEqual(magnitude, q.Abs);
+			}
 		}
+
 
 		[TestMethod]
 		public void Div()
 		{
-			Quaternion two = new Quaternion(2);
-			Quaternion four = new Quaternion(4);
-			Assert.AreEqual(four / two, two);
-
-			for (int i = 0; i < 1000000; i++)
+			QuaternionTestHelper.ForEachPairOfQuaternion((q1, q2) =>
 			{
-				Quaternion _a = getQuaternionWithNotNullAbs();
-				Quaternion _b = getQuaternionWithNotNullAbs();
-				Quaternion _c = _a * _b;
-				_AreApproximatelyEqual(_c / _b, _a);
-			}
-		}
+				if (q2.Abs == 0)
+				{
+					return;
+				}
 
-		private Quaternion getQuaternionWithNotNullAbs()
-		{
-			Quaternion a;
-			do
+				var m = q1 * q2;
+				QuaternionTestHelper.AssertApproximatelyEqual(q1, m / q2);
+			});
+
+			QuaternionTestHelper.ForEachQuaternion(q =>
 			{
-				a = getQuaternion();
-			} while (a.Abs == 0);
-			return a;
-		}
-		private Quaternion getQuaternion()
-		{
-			const int amplitude = 200;
-			const double half = amplitude / -2.0;
+				ComplexTestHelper.ForEachFloat(f =>
+				{
+					if (f != 0)
+					{
+						QuaternionTestHelper.AssertApproximatelyEqual(q / (Quaternion)f, q / f);
+					}
+					if (q.AbsQuad != 0)
+					{
+						QuaternionTestHelper.AssertApproximatelyEqual((Quaternion)f / q, f / q);
+					}
+				});
 
-			return new Quaternion(
-				_rnd.Next(amplitude) - half,
-				_rnd.Next(amplitude) - half,
-				_rnd.Next(amplitude) - half,
-				_rnd.Next(amplitude) - half
-			);
-		}
-
-		
-
-		private void _AreApproximatelyEqual (Quaternion actual, Quaternion expected)
-		{
-			try
-			{
-				_AreApproximatelyEqual(actual.R, expected.R);
-				_AreApproximatelyEqual(actual.I, expected.I);
-				_AreApproximatelyEqual(actual.J, expected.J);
-				_AreApproximatelyEqual(actual.K, expected.K);
-			}
-			catch
-			{
-				Assert.AreEqual(actual, expected);
-			}
-		}
-
-		private void _AreApproximatelyEqual(double actual, double expected)
-		{
-			if (actual == expected)
-			{
-				return;
-			}
-
-			const double relatedError = 1E-15;
-			const double k = 1.0 + relatedError;
-			double min = Math.Min(actual, expected);
-			double max = Math.Max(actual, expected);
-
-			Assert.IsTrue((min <= max) && ((min * k) >= max));
+				ComplexTestHelper.ForEachComplex(c =>
+				{
+					if (c.AbsQuad() != 0)
+					{
+						QuaternionTestHelper.AssertApproximatelyEqual(q / (Quaternion)c, q / c);
+					}
+					if (q.AbsQuad != 0)
+					{
+						QuaternionTestHelper.AssertApproximatelyEqual((Quaternion)c / q, c / q);
+					}
+				});
+			});
 		}
 	}
 }

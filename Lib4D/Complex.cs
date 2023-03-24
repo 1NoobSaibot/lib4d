@@ -155,6 +155,14 @@ namespace Lib4D
 		}
 
 
+		public static Complex Exp(Complex number)
+		{
+			double realExp = Math.Exp(number.R);
+			Complex c = new(Math.Cos(number.I), Math.Sin(number.I));
+			return realExp * c;
+		}
+
+
 		public static implicit operator Complex(double n)
 		{
       return new Complex(n, 0);

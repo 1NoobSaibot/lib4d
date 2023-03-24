@@ -1,4 +1,5 @@
 ﻿using Lib4D;
+using Lib4D_Tests.Helpers;
 
 namespace Lib4D_Tests
 {
@@ -49,7 +50,9 @@ namespace Lib4D_Tests
 		{
 			for (double i = -10; i < 10; i += 0.1)
 			{
-				Assert.AreEqual(new Complex(i), (Complex)i);
+				Complex c = (Complex)i;
+				Assert.AreEqual(c.R, i);
+				Assert.AreEqual(c.I, 0);
 			}
 		}
 
@@ -72,7 +75,7 @@ namespace Lib4D_Tests
 				Assert.AreEqual(c, b + a);
 			}
 
-			ForEachComplex(complex =>
+			ComplexTestHelper.ForEachComplex(complex =>
 			{
 				for (int floatNum = -5; floatNum < 5; floatNum++)
 				{
@@ -87,14 +90,14 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void Sub()
 		{
-			ForEachPairOfComplex((a, b) =>
+			ComplexTestHelper.ForEachPairOfComplex((a, b) =>
 			{
 				Complex sum = a + b;
 				Assert.AreEqual(a, sum - b);
 				Assert.AreEqual(b, sum - a);
 			});
 
-			ForEachComplex(complex =>
+			ComplexTestHelper.ForEachComplex(complex =>
 			{
 				for (int floatNum = -5; floatNum < 5; floatNum++)
 				{
@@ -109,12 +112,12 @@ namespace Lib4D_Tests
 		public void Mul()
 		{
 			// Is commutative
-			ForEachPairOfComplex((a, b) =>
+			ComplexTestHelper.ForEachPairOfComplex((a, b) =>
 			{
 				Assert.AreEqual(a * b, b * a);
 			});
 
-			ForEachComplex(complex =>
+			ComplexTestHelper.ForEachComplex(complex =>
 			{
 				for (double floatNum = -5; floatNum < 5; floatNum += 0.25)
 				{
@@ -125,13 +128,13 @@ namespace Lib4D_Tests
 			});
 
 			Complex zero = new();
-			ForEachComplex(complex =>
+			ComplexTestHelper.ForEachComplex(complex =>
 			{
 				Assert.AreEqual(zero, complex * zero);
 			});
 
 			Complex one = new(1);
-			ForEachComplex(complex =>
+			ComplexTestHelper.ForEachComplex(complex =>
 			{
 				Assert.AreEqual(complex, complex * one);
 			});
@@ -146,7 +149,7 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void UnaryMinus()
 		{
-			ForEachComplex(complex =>
+			ComplexTestHelper.ForEachComplex(complex =>
 			{
 				Assert.AreEqual(complex * -1, -complex);
 			});
@@ -178,7 +181,7 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void Div()
 		{
-			ForEachPairOfComplex((a, b) =>
+			ComplexTestHelper.ForEachPairOfComplex((a, b) =>
 			{
 				if (b.Magnitude == 0)
 				{
@@ -186,10 +189,10 @@ namespace Lib4D_Tests
 				}
 
 				var res = a / b;
-				AssertApproximatelyEqual(a, res * b);
+				ComplexTestHelper.AssertApproximatelyEqual(a, res * b);
 			});
 
-			ForEachComplex(complex =>
+			ComplexTestHelper.ForEachComplex(complex =>
 			{
 				for (double i = -5; i < 5; i += 0.125)
 				{
@@ -209,12 +212,12 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void Sqrt()
 		{
-			ForEachComplex(complex =>
+			ComplexTestHelper.ForEachComplex(complex =>
 			{
 				var root = Complex.Sqrt(complex);
 				try
 				{
-					AssertApproximatelyEqual(complex, root * root);
+					ComplexTestHelper.AssertApproximatelyEqual(complex, root * root);
 				}
 				catch (AssertFailedException)
 				{
@@ -238,59 +241,21 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void AbsQuad()
 		{
-			ForEachComplex(complex => {
-				AssertApproximatelyEqual(complex.Abs() * complex.Abs(), complex.AbsQuad());
+			ComplexTestHelper.ForEachComplex(complex => {
+				ComplexTestHelper.AssertApproximatelyEqual(complex.Abs() * complex.Abs(), complex.AbsQuad());
 			});
 		}
 
 
 
-		private static void ForEachComplex(Action<Complex> action)
+		[TestMethod]
+		public void Exp()
 		{
-			for (double r = -5; r < 5; r += 0.125)
-			{
-				for (double i = -5; i < 5; i += 0.125)
-				{
-					action(new Complex(r, i));
-				}
-			}
-		}
+			ComplexTestHelper.AssertApproximatelyEqual(new Complex(1, 0), Complex.Exp(new Complex()));
+			ComplexTestHelper.AssertApproximatelyEqual(new Complex(Math.E, 0), Complex.Exp(new Complex(1, 0)));
 
-
-		private static void ForEachPairOfComplex(Action<Complex, Complex> action)
-		{
-			ForEachComplex(a =>
-			{
-				ForEachComplex(b =>
-				{
-					action(a, b);
-				});
-			});
-		}
-
-
-		private static void AssertApproximatelyEqual(Complex a, Complex b)
-		{
-			try
-			{
-				AssertApproximatelyEqual(a.R, b.R);
-				AssertApproximatelyEqual(a.I, b.I);
-			}
-			catch (AssertFailedException)
-			{
-				throw new AssertFailedException($"Two complex numbers {a} and {b} are not enough equal");
-			}
-		}
-
-
-		private static void AssertApproximatelyEqual(double a, double b)
-		{
-			const double epsilon = 0.0000000000001;
-			double delta = Math.Abs(a - b);
-			if (delta > epsilon)
-			{
-				throw new AssertFailedException();
-			}
+			// e^(i * pi) + 1 = 0   =>   e^(i * pi) = -1
+			ComplexTestHelper.AssertApproximatelyEqual(new Complex(-1, 0), Complex.Exp(new Complex(0, Math.PI)));
 		}
 	}
 }
