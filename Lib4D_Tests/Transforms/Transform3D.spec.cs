@@ -113,6 +113,8 @@ namespace Lib4D_Tests
 				});
 			}
 
+
+			private static readonly TNumber PI = Math<TNumber>.PI;
 			public void RotateAroundAxis()
 			{
 				// Around OX

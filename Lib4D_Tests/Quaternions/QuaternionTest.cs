@@ -2,7 +2,7 @@
 using Lib4D_Tests.Helpers;
 using System.Numerics;
 
-namespace LibFOURD_Tests.Quaternions
+namespace Lib4D_Tests.Quaternions
 {
 	public abstract class QuaternionTest<TNumber>
 		: NumberSet<TNumber>
@@ -137,10 +137,10 @@ namespace LibFOURD_Tests.Quaternions
 		[TestMethod]
 		public void Sub()
 		{
-			_qth.ForEachPairOfQuaternion((qONE, qTWO) =>
+			_qth.ForEachPairOfQuaternion((q1, q2) =>
 			{
-				var sum = qONE + qTWO;
-				Assert.AreEqual(qONE, sum - qTWO);
+				var sum = q1 + q2;
+				Assert.AreEqual(q1, sum - q2);
 			});
 
 			_qth.ForEachQuaternion(q =>
@@ -164,10 +164,10 @@ namespace LibFOURD_Tests.Quaternions
 		public void Mul()
 		{
 			// Works as simple float when all i, j, k are zero
-			_qth.ForEachTwoFloats((fONE, fTWO) =>
+			_qth.ForEachTwoFloats((f1, f2) =>
 			{
-				Assert.AreEqual((Quaternion<TNumber>)(fONE * fTWO), (Quaternion<TNumber>)fONE * (Quaternion<TNumber>)fTWO);
-				Assert.AreEqual((Quaternion<TNumber>)(fONE * fTWO), (Quaternion<TNumber>)fTWO * (Quaternion<TNumber>)fONE);
+				Assert.AreEqual((Quaternion<TNumber>)(f1 * f2), (Quaternion<TNumber>)f1 * (Quaternion<TNumber>)f2);
+				Assert.AreEqual((Quaternion<TNumber>)(f1 * f2), (Quaternion<TNumber>)f2 * (Quaternion<TNumber>)f1);
 			});
 
 			Quaternion<TNumber> zero = new();
@@ -275,15 +275,15 @@ namespace LibFOURD_Tests.Quaternions
 		[TestMethod]
 		public void Div()
 		{
-			_qth.ForEachPairOfQuaternion((qONE, qTWO) =>
+			_qth.ForEachPairOfQuaternion((q1, q2) =>
 			{
-				if (qTWO.AbsQuad == c0)
+				if (q2.AbsQuad == c0)
 				{
 					return;
 				}
 
-				var m = qONE * qTWO;
-				_qth.AssertApproximatelyEqual(qONE, m / qTWO);
+				var m = q1 * q2;
+				_qth.AssertApproximatelyEqual(q1, m / q2);
 			});
 
 			_qth.ForEachQuaternion(q =>

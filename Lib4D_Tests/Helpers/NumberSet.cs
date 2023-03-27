@@ -7,8 +7,6 @@ namespace Lib4D_Tests.Helpers
 		public const float EPSILON_FLOAT = 0.0000025f;
 		public const double EPSILON_DOUBLE = 0.00000000000001;
 
-		public TNumber E { get; private set; } = TNumber.Zero;
-		public TNumber PI { get; private set; } = TNumber.Zero;
 		/// <summary>
 		/// It uses as a maximum absolute error in comparing two numbers approximately
 		/// </summary>
@@ -34,15 +32,11 @@ namespace Lib4D_Tests.Helpers
 			if (typeof(TNumber) == typeof(float))
 			{
 				var _this = (this as NumberSet<float>)!;
-				_this.E = MathF.E;
-				_this.PI = MathF.PI;
 				_this.EPSILON = EPSILON_FLOAT;
 			}
 			else if (typeof(TNumber) == typeof(double))
 			{
 				var _this = (this as NumberSet<double>)!;
-				_this.E = System.Math.E;
-				_this.PI = System.Math.PI;
 				_this.EPSILON = EPSILON_DOUBLE;
 			}
 			else
