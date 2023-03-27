@@ -10,14 +10,10 @@ namespace Lib4D_Tests
 	{
 		private readonly ITestStand[] _stands = {
 			new Transform3DTestStand<float>(
-				Vector3D<float>.Abs,
-				Transform3D<float>.GetRotate,
-				Vector3D<float>.Normalize
+				Transform3D<float>.GetRotate
 			),
 			new Transform3DTestStand<double>(
-				Vector3D<double>.Abs,
-				Transform3D<double>.GetRotate,
-				Vector3D<float>.Normalize
+				Transform3D<double>.GetRotate
 			)
 		};
 
@@ -71,20 +67,14 @@ namespace Lib4D_Tests
 			where TNumber : INumber<TNumber>
 		{
 			private readonly TNumber[] _numbers;
-			private readonly Func<Vector3D<TNumber>, TNumber> _getAbsV;
 			private readonly Func<Vector3D<TNumber>, TNumber, Transform3D<TNumber>> _getRotateT;
-			private readonly Func<Vector3D<TNumber>, Vector3D<TNumber>> _normalize;
 
 			public Transform3DTestStand(
-				Func<Vector3D<TNumber>, TNumber> getAbsV,
-				Func<Vector3D<TNumber>, TNumber, Transform3D<TNumber>> getRotateT,
-				Func<Vector3D<TNumber>, Vector3D<TNumber>> normalize
+				Func<Vector3D<TNumber>, TNumber, Transform3D<TNumber>> getRotateT
 			)
 			{
 				_numbers = GetNums();
-				_getAbsV = getAbsV;
 				_getRotateT = getRotateT;
-				_normalize = normalize;
 			}
 
 			public void TranslatingVectorWithIdentityTransform()
@@ -158,7 +148,10 @@ namespace Lib4D_Tests
 					transform * new Vector3D<TNumber>(c1, c1, c0)
 				);
 
-				transform = _getRotateT(_normalize(new Vector3D<TNumber>(c1, c1, c1)), PI * c2 / c3);
+				transform = _getRotateT(
+					new Vector3D<TNumber>(c1, c1, c1).GetNormalized(),
+					PI * c2 / c3
+				);
 				_AreApproximatelyEqual(
 					new Vector3D<TNumber>(c3, c1, c2),
 					transform * new Vector3D<TNumber>(c1, c2, c3)
@@ -175,7 +168,7 @@ namespace Lib4D_Tests
 				TNumber[] angles = { -c3 * PI, -c2 * PI, -PI, c0, PI, c2 * PI, c3 * PI };
 
 				ForEachVector(axis => {
-					axis = _normalize(axis);
+					axis = axis.GetNormalized();
 					foreach (var angle in angles)
 					{
 						var q = Quaternion<TNumber>.ByAxisAndAngle(axis, angle);

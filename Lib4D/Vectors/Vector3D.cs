@@ -1,4 +1,5 @@
-﻿using Lib4D.Mathematic.Matrix;
+﻿using Lib4D.Mathematic;
+using Lib4D.Mathematic.Matrix;
 using System.Numerics;
 
 namespace Lib4D
@@ -21,26 +22,37 @@ namespace Lib4D
 			Z = z;
 		}
 
-		public static double Abs(Vector3D<double> v)
+
+		public TNumber Abs => Math<TNumber>.Sqrt!(AbsQuad);
+
+
+		public void Normalize()
 		{
-			return System.Math.Sqrt(v.AbsQuad);
+			var absQuad = AbsQuad;
+			if (absQuad == TNumber.Zero)
+			{
+				X = TNumber.One;
+			}
+
+			var abs = Math<TNumber>.Sqrt!(AbsQuad);
+			var k = TNumber.One / abs;
+			X *= k;
+			Y *= k;
+			Z *= k;
 		}
 
-		public static float Abs(Vector3D<float> v)
-		{
-			return MathF.Sqrt(v.AbsQuad);
-		}
 
-		public static Vector3D<double> Normalize(Vector3D<double> v)
+		public Vector3D<TNumber> GetNormalized()
 		{
-			var k = 1f / Abs(v);
-			return new(k * v.X, k * v.Y, k * v.Z);
-		}
+			var absQuad = AbsQuad;
+			if (absQuad == TNumber.Zero)
+			{
+				return new(TNumber.One, TNumber.Zero, TNumber.Zero);
+			}
 
-		public static Vector3D<float> Normalize(Vector3D<float> v)
-		{
-			var k = 1f / Abs(v);
-			return new(k * v.X, k * v.Y, k * v.Z);
+			var abs = Math<TNumber>.Sqrt!(AbsQuad);
+			var k = TNumber.One / abs;
+			return new(k * X, k * Y, k * Z);
 		}
 
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using Lib4D.Mathematic;
 
 namespace HyperCube
 {
@@ -14,6 +10,9 @@ namespace HyperCube
 		[STAThread]
 		static void Main()
 		{
+			Math<float>.InitInstance(new MathFloat());
+			Math<double>.InitInstance(new MathDouble());
+
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new Form1());

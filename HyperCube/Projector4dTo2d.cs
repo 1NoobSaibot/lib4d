@@ -16,8 +16,8 @@ namespace HyperCube
 			var to = new Vector3D<float>(0, 0, 2000);
 			var up = new Vector3D<float>(0, height * 0.5f, 0);
 
-			var C = Vector3D<float>.Normalize(to - from);
-			var A = Vector3D<float>.Normalize(up * C);
+			var C = (to - from).GetNormalized();
+			var A = (up * C).GetNormalized();
 			var B = C * A;
 
 			_projectionMatrix = new float[3, 3]
@@ -27,7 +27,7 @@ namespace HyperCube
 				{ C.X, C.Y, C.Z }
 			};
 
-			_tan = Vector3D<float>.Abs(up) / Vector3D<float>.Abs(from - to);
+			_tan = up.Abs / (from - to).Abs;
 		}
 
 
