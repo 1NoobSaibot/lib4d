@@ -21,6 +21,10 @@ namespace Lib4D.Mathematic
 		protected abstract Func<TNumber, TNumber> GetCosFn();
 
 
+		public static Func<double, TNumber>? Double2Number { get; private set; }
+		protected abstract Func<double, TNumber> GetDouble2NumberFn();
+
+
 		public static Func<TNumber, TNumber>? Exp { get; private set; }
 		protected abstract Func<TNumber, TNumber>? GetExpFn();
 
@@ -43,6 +47,7 @@ namespace Lib4D.Mathematic
 			PI = math.GetPi();
 			Abs = math.GetAbsFn();
 			Cos = math.GetCosFn();
+			Double2Number = math.GetDouble2NumberFn();
 			Exp = math.GetExpFn();
 			Int2Number = math.GetInt2NumberFn();
 			Sin = math.GetSinFn();

@@ -1,4 +1,5 @@
 ﻿using Lib4D;
+using Lib4D.Mathematic;
 using Lib4D_Tests.Helpers;
 using System.Numerics;
 
@@ -10,17 +11,13 @@ namespace Lib4D_Tests
 		private readonly ITestStand[] _stands = {
 			new Transform3DTestStand<float>(
 				Vector3D<float>.Abs,
-				MathF.Abs,
 				Transform3D<float>.GetRotate,
-				Vector3D<float>.Normalize,
-				Quaternion<float>.ByAxisAndAngle
+				Vector3D<float>.Normalize
 			),
 			new Transform3DTestStand<double>(
 				Vector3D<double>.Abs,
-				Math.Abs,
 				Transform3D<double>.GetRotate,
-				Vector3D<float>.Normalize,
-				Quaternion<float>.ByAxisAndAngle
+				Vector3D<float>.Normalize
 			)
 		};
 
@@ -75,25 +72,19 @@ namespace Lib4D_Tests
 		{
 			private readonly TNumber[] _numbers;
 			private readonly Func<Vector3D<TNumber>, TNumber> _getAbsV;
-			private readonly Func<TNumber, TNumber> _getAbsF;
 			private readonly Func<Vector3D<TNumber>, TNumber, Transform3D<TNumber>> _getRotateT;
 			private readonly Func<Vector3D<TNumber>, Vector3D<TNumber>> _normalize;
-			private readonly Func<Vector3D<TNumber>, TNumber, Quaternion<TNumber>> _getQ;
 
 			public Transform3DTestStand(
 				Func<Vector3D<TNumber>, TNumber> getAbsV,
-				Func<TNumber, TNumber> getAbsF,
 				Func<Vector3D<TNumber>, TNumber, Transform3D<TNumber>> getRotateT,
-				Func<Vector3D<TNumber>, Vector3D<TNumber>> normalize,
-				Func<Vector3D<TNumber>, TNumber, Quaternion<TNumber>> getQ
+				Func<Vector3D<TNumber>, Vector3D<TNumber>> normalize
 			)
 			{
 				_numbers = GetNums();
 				_getAbsV = getAbsV;
-				_getAbsF = getAbsF;
 				_getRotateT = getRotateT;
 				_normalize = normalize;
-				_getQ = getQ;
 			}
 
 			public void TranslatingVectorWithIdentityTransform()
@@ -187,7 +178,7 @@ namespace Lib4D_Tests
 					axis = _normalize(axis);
 					foreach (var angle in angles)
 					{
-						var q = _getQ(axis, angle);
+						var q = Quaternion<TNumber>.ByAxisAndAngle(axis, angle);
 
 						var transformAxisAngle = _getRotateT(axis, angle);
 						var transformQuaternion = Transform3D<TNumber>.GetRotate(q);
@@ -228,7 +219,7 @@ namespace Lib4D_Tests
 				}
 
 				TNumber allowableError = EPSILON;
-				Assert.IsTrue(_getAbsF(expected - actual) < allowableError);
+				Assert.IsTrue(Math<TNumber>.Abs!(expected - actual) < allowableError);
 			}
 
 

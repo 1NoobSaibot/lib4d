@@ -7,7 +7,6 @@ namespace LibFOURD_Tests.Quaternions
 	public class QuaternionDoubleTest : QuaternionTest<double>
 	{
 		public QuaternionDoubleTest()
-			: base(Quaternion<double>.Abs)
 		{ }
 
 		protected override void InitMath()

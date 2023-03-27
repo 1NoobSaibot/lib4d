@@ -9,15 +9,11 @@ namespace LibFOURD_Tests.Quaternions
 		where TNumber : INumber<TNumber> 
 	{
 		private readonly QuaternionTestHelper<TNumber> _qth;
-		private readonly Func<Quaternion<TNumber>, TNumber> _absQ;
 
-		public QuaternionTest(
-			Func<Quaternion<TNumber>, TNumber> absQ
-		)
+		public QuaternionTest()
 		{
 			InitMath();
 			_qth = new QuaternionTestHelper<TNumber>();
-			_absQ = absQ;
 		}
 
 
@@ -271,7 +267,7 @@ namespace LibFOURD_Tests.Quaternions
 			foreach (var sample in samples)
 			{
 				(var q, var magnitude) = sample;
-				Assert.AreEqual(magnitude, _absQ(q));
+				Assert.AreEqual(magnitude, q.Abs);
 			}
 		}
 

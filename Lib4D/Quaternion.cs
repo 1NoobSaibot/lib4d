@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using Lib4D.Mathematic;
+using System.Numerics;
 
 namespace Lib4D
 {
@@ -37,17 +38,8 @@ namespace Lib4D
 		}
 
 		public TNumber AbsQuad => R*R + I*I + J*J + K*K;
+		public TNumber Abs => Math<TNumber>.Sqrt!(AbsQuad);
 
-
-		public static float Abs(Quaternion<float> q)
-		{
-			return MathF.Sqrt(q.AbsQuad);
-		}
-
-		public static double Abs(Quaternion<double> q)
-		{
-			return System.Math.Sqrt(q.AbsQuad);
-		}
 
 		public Quaternion<TNumber> ConjugateQuaternion => new(R, -I, -J, -K);
 		#endregion
@@ -84,23 +76,12 @@ namespace Lib4D
 		}
 
 
-		public static Quaternion<float> ByAxisAndAngle(Vector3D<float> u, float alpha) {
-			var sinHalfA = MathF.Sin(alpha * 0.5f);
+		private static readonly TNumber c0_5 = Math<TNumber>.Double2Number!(0.5);
+		public static Quaternion<TNumber> ByAxisAndAngle(Vector3D<TNumber> u, TNumber alpha) {
+			var sinHalfA = Math<TNumber>.Sin!(alpha * c0_5);
 
-			return new Quaternion<float>(
-				MathF.Cos(alpha * 0.5f),
-				u.X * sinHalfA,
-				u.Y * sinHalfA,
-				u.Z * sinHalfA
-			);
-		}
-
-		public static Quaternion<double> ByAxisAndAngle(Vector3D<double> u, double alpha)
-		{
-			var sinHalfA = System.Math.Sin(alpha * 0.5);
-
-			return new Quaternion<double>(
-				System.Math.Cos(alpha * 0.5),
+			return new Quaternion<TNumber>(
+				Math<TNumber>.Cos!(alpha * c0_5),
 				u.X * sinHalfA,
 				u.Y * sinHalfA,
 				u.Z * sinHalfA

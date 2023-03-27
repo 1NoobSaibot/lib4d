@@ -4,6 +4,7 @@
 	{
 		protected override Func<double, double> GetAbsFn() => Math.Abs;
 		protected override Func<double, double> GetCosFn() => Math.Cos;
+		protected override Func<double, double> GetDouble2NumberFn() => (d) => d;
 		protected override double GetE() => double.E;
 		protected override Func<double, double>? GetExpFn() => Math.Exp;
 		protected override Func<int, double> GetInt2NumberFn() => (_int) => (double)_int;
