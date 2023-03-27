@@ -1,4 +1,5 @@
-﻿using Lib4D.Mathematic.Matrix;
+﻿using Lib4D.Mathematic;
+using Lib4D.Mathematic.Matrix;
 using System.Numerics;
 
 namespace Lib4D
@@ -99,27 +100,16 @@ namespace Lib4D
 		}
 
 
-		public static Transform3D<float> GetRotate(Vector3D<float> axis, float angle)
+		public static Transform3D<TNumber> GetRotate(Vector3D<TNumber> axis, TNumber angle)
 		{
 			return GetRotate(axis.X, axis.Y, axis.Z, angle);
 		}
 
-		public static Transform3D<double> GetRotate(Vector3D<double> axis, double angle)
-		{
-			return GetRotate(axis.X, axis.Y, axis.Z, angle);
-		}
 
-		public static Transform3D<float> GetRotate(float x, float y, float z, float angle)
+		public static Transform3D<TNumber> GetRotate(TNumber x, TNumber y, TNumber z, TNumber angle)
 		{
-			var t = new Transform3D<float>();
-			Rotate(t, x, y, z, angle);
-			return t;
-		}
-
-		public static Transform3D<double> GetRotate(double x, double y, double z, double angle)
-		{
-			var t = new Transform3D<double>();
-			Transform3D<double>.Rotate(t, x, y, z, angle);
+			var t = new Transform3D<TNumber>();
+			t.Rotate(x, y, z, angle);
 			return t;
 		}
 
@@ -133,35 +123,9 @@ namespace Lib4D
 		#endregion
 
 
-
-		public static void Rotate(Transform3D<float> t, float x, float y, float z, float angle)
+		public void Rotate(Vector3D<TNumber> axis, TNumber angle)
 		{
-			var cos = MathF.Cos(angle);
-			var sin = MathF.Sin(angle);
-			Transform3D<float>.Rotate(t, x, y, z, sin, cos);
-		}
-
-		public static void Rotate(Transform3D<double> t, double x, double y, double z, double angle)
-		{
-			var cos = System.Math.Cos(angle);
-			var sin = System.Math.Sin(angle);
-			Transform3D<double>.Rotate(t, x, y, z, sin, cos);
-		}
-
-
-		public static void Rotate(Transform3D<float> t, Vector3D<float> axis, float angle)
-		{
-			var cos = MathF.Cos(angle);
-			var sin = MathF.Sin(angle);
-			Transform3D<float>.Rotate(t, axis.X, axis.Y, axis.Z, sin, cos);
-		}
-
-
-		public static void Rotate(Transform3D<double> t, Vector3D<double> axis, double angle)
-		{
-			var cos = System.Math.Cos(angle);
-			var sin = System.Math.Sin(angle);
-			Transform3D<double>.Rotate(t, axis.X, axis.Y, axis.Z, sin, cos);
+			Rotate(axis.X, axis.Y, axis.Z, angle);
 		}
 
 
@@ -200,8 +164,10 @@ namespace Lib4D
 		}
 
 
-		private static void Rotate(Transform3D<TNumber> t, TNumber x, TNumber y, TNumber z, TNumber sin, TNumber cos)
+		public void Rotate(TNumber x, TNumber y, TNumber z, TNumber angle)
 		{
+			var cos = Math<TNumber>.Cos!(angle);
+			var sin = Math<TNumber>.Sin!(angle);
 			TNumber oneMinusCos = TNumber.One - cos;
 			TNumber oneMinusCosXY = oneMinusCos * x * y;
 			TNumber oneMinusCosYZ = oneMinusCos * y * z;
@@ -218,8 +184,7 @@ namespace Lib4D
 				{ TNumber.Zero             , TNumber.Zero             , TNumber.Zero             , TNumber.One  }
 			};
 
-			t._matrix = MatrixMath.Mul(t._matrix, rotateMatrix);
+			_matrix = MatrixMath.Mul(_matrix, rotateMatrix);
 		}
-
 	}
 }

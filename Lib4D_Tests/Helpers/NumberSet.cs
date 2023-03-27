@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using Lib4D.Mathematic;
+using System.Numerics;
 
 namespace Lib4D_Tests.Helpers
 {
@@ -63,5 +64,9 @@ namespace Lib4D_Tests.Helpers
 		{
 			return new TNumber[] { -c7, -c1, c0, c1, c7 };
 		}
+
+
+		public TNumber this[int v] => Math<TNumber>.Int2Number!(v);
+		public TNumber this[double v] => Math<TNumber>.Double2Number!(v);
 	}
 }

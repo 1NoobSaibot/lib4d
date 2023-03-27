@@ -1,4 +1,5 @@
-﻿using Lib4D.Mathematic.Matrix;
+﻿using Lib4D.Mathematic;
+using Lib4D.Mathematic.Matrix;
 using System.Numerics;
 
 namespace Lib4D
@@ -26,17 +27,10 @@ namespace Lib4D
 		}
 
 
-		public static Transform2D<float> GetRotate(float alpha)
+		public static Transform2D<TNumber> GetRotate(TNumber alpha)
 		{
-			var t = new Transform2D<float>();
-			Rotate(t, alpha);
-			return t;
-		}
-
-		public static Transform2D<double> GetRotate(double alpha)
-		{
-			var t = new Transform2D<double>();
-			Rotate(t, alpha);
+			var t = new Transform2D<TNumber>();
+			t.Rotate(alpha);
 			return t;
 		}
 
@@ -62,10 +56,10 @@ namespace Lib4D
 		}
 
 
-		public void Rotate(float alpha, Func<float, TNumber> cast)
+		public void Rotate(TNumber alpha)
 		{
-			TNumber c = cast(MathF.Cos(alpha));
-			TNumber s = cast(MathF.Sin(alpha));
+			var c = Math<TNumber>.Cos!(alpha);
+			var s = Math<TNumber>.Sin!(alpha);
 			TNumber[,] rotateMatrix = new TNumber[3, 3]
 			{
 				{            c,            s, TNumber.Zero },
@@ -75,38 +69,6 @@ namespace Lib4D
 
 			_matrix = MatrixMath.Mul(_matrix, rotateMatrix);
 		}
-
-
-		public static void Rotate(Transform2D<float> t, float alpha)
-		{
-			var c = MathF.Cos(alpha);
-			var s = MathF.Sin(alpha);
-			var rotateMatrix = new float[3, 3]
-			{
-				{  c, s, 0 },
-				{ -s, c, 0 },
-				{  0, 0, 1 }
-			};
-
-			t._matrix = MatrixMath.Mul(t._matrix, rotateMatrix);
-		}
-
-
-		public static void Rotate(Transform2D<double> t, double alpha)
-		{
-			var c = System.Math.Cos(alpha);
-			var s = System.Math.Sin(alpha);
-			var rotateMatrix = new double[3, 3]
-			{
-				{  c, s, 0 },
-				{ -s, c, 0 },
-				{  0, 0, 1 }
-			};
-
-			t._matrix = MatrixMath.Mul(t._matrix, rotateMatrix);
-		}
-
-
 
 
 		// TODO: It can be optimized, because it's only diagonal matrix
