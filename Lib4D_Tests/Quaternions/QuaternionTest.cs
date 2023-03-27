@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace LibFOURD_Tests.Quaternions
 {
-	public class QuaternionTest<TNumber>
+	public abstract class QuaternionTest<TNumber>
 		: NumberSet<TNumber>
 		where TNumber : INumber<TNumber> 
 	{
@@ -12,13 +12,16 @@ namespace LibFOURD_Tests.Quaternions
 		private readonly Func<Quaternion<TNumber>, TNumber> _absQ;
 
 		public QuaternionTest(
-			Func<TNumber, TNumber> absF,
 			Func<Quaternion<TNumber>, TNumber> absQ
 		)
 		{
-			_qth = new QuaternionTestHelper<TNumber>(absF);
+			InitMath();
+			_qth = new QuaternionTestHelper<TNumber>();
 			_absQ = absQ;
 		}
+
+
+		protected abstract void InitMath();
 
 
 		[TestMethod]

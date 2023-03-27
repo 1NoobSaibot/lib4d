@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using Lib4D.Mathematic;
+using System.Numerics;
 
 namespace Lib4D
 {
@@ -51,14 +52,9 @@ namespace Lib4D
 		}
 
 
-		public static double Abs(Complex<double> c)
+		public TNumber Abs()
 		{
-			return System.Math.Sqrt(c.AbsQuad());
-		}
-
-		public static float Abs(Complex<float> c)
-		{
-			return System.MathF.Sqrt(c.AbsQuad());
+			return Math<TNumber>.Sqrt!(AbsQuad());
 		}
 
 
@@ -139,58 +135,34 @@ namespace Lib4D
 			return value * -TNumber.One;
 		}
 
-		public static Complex<float> Sqrt(float value)
+
+		public static Complex<TNumber> Sqrt(TNumber value)
 		{
-			if (value < 0)
+			if (value < TNumber.Zero)
 			{
-				return new(0, MathF.Sqrt(-value));
+				return new(TNumber.Zero, Math<TNumber>.Sqrt!(-value));
 			}
 
-			return new(MathF.Sqrt(value), 0);
+			return new(Math<TNumber>.Sqrt!(value), TNumber.Zero);
 		}
 
-		public static Complex<double> Sqrt(double value)
+
+		private static TNumber c2 = Math<TNumber>.Int2Number!(2);
+		public Complex<TNumber> Sqrt()
 		{
-			if (value < 0)
-			{
-				return new(0, System.Math.Sqrt(-value));
-			}
-
-			return new(System.Math.Sqrt(value), 0);
-		}
-
-		public static Complex<float> Sqrt(Complex<float> v)
-		{
-			var magnitude = Complex<float>.Abs(v);
-			var real = MathF.Sqrt((magnitude + v.R) / 2);
-			var imaginary = MathF.Sqrt((magnitude - v.R) / 2)
-				* (v.I < 0 ? -1.0f : 1.0f);
-
-			return new(real, imaginary);
-		}
-
-		public static Complex<double> Sqrt(Complex<double> v)
-		{
-			var magnitude = Complex<double>.Abs(v);
-			var real = System.Math.Sqrt((magnitude + v.R) / 2);
-			var imaginary = System.Math.Sqrt((magnitude - v.R) / 2)
-				* (v.I < 0 ? -1.0f : 1.0f);
+			var magnitude = Abs();
+			var real = Math<TNumber>.Sqrt!((magnitude + R) / c2);
+			var imaginary = Math<TNumber>.Sqrt!((magnitude - R) / c2)
+				* (I < TNumber.Zero ? -TNumber.One : TNumber.One);
 
 			return new(real, imaginary);
 		}
 
 
-		public static Complex<float> Exp(Complex<float> number)
+		public static Complex<TNumber> Exp(Complex<TNumber> number)
 		{
-			var realExp = MathF.Exp(number.R);
-			Complex<float> c = new(MathF.Cos(number.I), MathF.Sin(number.I));
-			return realExp * c;
-		}
-
-		public static Complex<double> Exp(Complex<double> number)
-		{
-			var realExp = System.Math.Exp(number.R);
-			Complex<double> c = new(System.Math.Cos(number.I), System.Math.Sin(number.I));
+			var realExp = Math<TNumber>.Exp!(number.R);
+			Complex<TNumber> c = new(Math<TNumber>.Cos!(number.I), Math<TNumber>.Sin!(number.I));
 			return realExp * c;
 		}
 

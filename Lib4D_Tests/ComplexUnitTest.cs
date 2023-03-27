@@ -1,4 +1,5 @@
 ﻿using Lib4D;
+using Lib4D.Mathematic;
 using Lib4D_Tests.Helpers;
 using System.Numerics;
 
@@ -9,25 +10,18 @@ namespace Lib4D_Tests
 	{
 		private readonly IReadOnlyList<IComplexTest> _tests = new IComplexTest[]
 		{
-			new TypedComplexTest<float>(
-				MathF.E,
-				MathF.PI,
-				Complex<float>.Abs,
-				MathF.Abs,
-				Complex<float>.Sqrt,
-				Complex<float>.Sqrt,
-				Complex<float>.Exp
-			),
-			new TypedComplexTest<double>(
-				Math.E,
-				Math.PI,
-				Complex<double>.Abs,
-				Math.Abs,
-				Complex<double>.Sqrt,
-				Complex<double>.Sqrt,
-				Complex<double>.Exp
-			)
+			new TypedComplexTest<float>(),
+			new TypedComplexTest<double>()
 		};
+
+
+		[TestInitialize]
+		public void InitializeMath()
+		{
+			Math<float>.InitInstance(new MathFloat());
+			Math<double>.InitInstance(new MathDouble());
+		}
+
 
 		[TestMethod]
 		public void Equals()
@@ -111,60 +105,19 @@ namespace Lib4D_Tests
 			foreach (var test in _tests)
 			{
 				action(test);
-				/*try
-				{
-					
-				}
-				catch (Exception ex)
-				{
-					throw new AssertFailedException($"{test.GetType()}: {ex.Message}", ex);
-				}*/
 			}
 		}
 
 
-		private class TypedComplexTest<TNumber> : IComplexTest
+		private class TypedComplexTest<TNumber>
+			: NumberSet<TNumber>, IComplexTest
 			where TNumber : INumber<TNumber>
 		{
 			private readonly ComplexTestHelper<TNumber> _cth;
-			private readonly Func<Complex<TNumber>, TNumber> _getAbs;
-			private readonly Func<Complex<TNumber>, Complex<TNumber>> _getSqrtC;
-			private readonly Func<TNumber, Complex<TNumber>> _getSqrtF;
-			private readonly Func<Complex<TNumber>, Complex<TNumber>> _getExp;
-			private readonly TNumber ZERO = TNumber.Zero;
-			private readonly TNumber ONE = TNumber.One;
-			private readonly TNumber TWO;
-			private readonly TNumber THREE;
-			private readonly TNumber FOUR;
-			private readonly TNumber FIVE;
-			private readonly TNumber SEVEN;
-			private readonly TNumber TWELVE;
-			private readonly TNumber E;
-			private readonly TNumber PI;
 
-			public TypedComplexTest(
-				TNumber E,
-				TNumber PI,
-				Func<Complex<TNumber>, TNumber> getAbsC,
-				Func<TNumber, TNumber> getAbsF,
-				Func<Complex<TNumber>, Complex<TNumber>> getSqrtC,
-				Func<TNumber, Complex<TNumber>> getSqrtF,
-				Func<Complex<TNumber>, Complex<TNumber>> getExp
-			)
+			public TypedComplexTest()
 			{
-				this.E = E;
-				this.PI = PI;
-				TWO = ONE + ONE;
-				THREE = TWO + ONE;
-				FOUR = THREE + ONE;
-				FIVE = TWO + THREE;
-				SEVEN = TWO + FIVE;
-				TWELVE = SEVEN + FIVE;
-				_cth = new ComplexTestHelper<TNumber>(getAbsF);
-				_getAbs = getAbsC;
-				_getSqrtC = getSqrtC;
-				_getSqrtF = getSqrtF;
-				_getExp = getExp;
+				_cth = new ComplexTestHelper<TNumber>();
 			}
 
 
@@ -173,13 +126,13 @@ namespace Lib4D_Tests
 				(Complex<TNumber>, Complex<TNumber>, bool)[] samples =
 				{
 				(new(), new(), true),
-				(new(ONE), new(ONE), true),
-				(new(ZERO, TWO), new(ZERO, TWO), true),
-				(new(-SEVEN, TWO), new(-SEVEN, TWO), true),
+				(new(c1), new(c1), true),
+				(new(c0, c2), new(c0, c2), true),
+				(new(-c7, c2), new(-c7, c2), true),
 
-				(new(ZERO, TWO), new(-SEVEN, TWO), false),
-				(new(-SEVEN), new(-SEVEN, TWO), false),
-				(new(ZERO), new(-SEVEN, TWO), false),
+				(new(c0, c2), new(-c7, c2), false),
+				(new(-c7), new(-c7, c2), false),
+				(new(c0), new(-c7, c2), false),
 			};
 
 
@@ -212,7 +165,7 @@ namespace Lib4D_Tests
 				{
 					Complex<TNumber> c = (Complex<TNumber>)i;
 					Assert.AreEqual(c.R, i);
-					Assert.AreEqual(c.I, ZERO);
+					Assert.AreEqual(c.I, c0);
 				});
 			}
 
@@ -222,9 +175,9 @@ namespace Lib4D_Tests
 				(Complex<TNumber>, Complex<TNumber>, Complex<TNumber>)[] samples =
 				{
 				(new(), new(), new()),
-				(new(ONE), new(TWO), new(THREE)),
-				(new(ZERO, ONE), new(ZERO, TWO), new(ZERO, THREE)),
-				(new(ONE, FIVE), new(TWO, SEVEN), new(THREE, TWELVE))
+				(new(c1), new(c2), new(c3)),
+				(new(c0, c1), new(c0, c2), new(c0, c3)),
+				(new(c1, c5), new(c2, c7), new(c3, c12))
 			};
 
 				for (int i = 0; i < samples.Length; i++)
@@ -290,16 +243,16 @@ namespace Lib4D_Tests
 					Assert.AreEqual(zero, complex * zero);
 				});
 
-				Complex<TNumber> one = new(ONE);
+				Complex<TNumber> one = new(c1);
 				_cth.ForEachComplex(complex =>
 				{
 					Assert.AreEqual(complex, complex * one);
 				});
 
-				Complex<TNumber> i = new(ZERO, ONE);
-				Assert.AreEqual((Complex<TNumber>)(-ONE), i * i);
-				Assert.AreEqual(new Complex<TNumber>(ZERO, -ONE), i * -ONE);
-				Assert.AreEqual(one, i * new Complex<TNumber>(ZERO, -ONE));
+				Complex<TNumber> i = new(c0, c1);
+				Assert.AreEqual((Complex<TNumber>)(-c1), i * i);
+				Assert.AreEqual(new Complex<TNumber>(c0, -c1), i * -c1);
+				Assert.AreEqual(one, i * new Complex<TNumber>(c0, -c1));
 			}
 
 
@@ -307,29 +260,29 @@ namespace Lib4D_Tests
 			{
 				_cth.ForEachComplex(complex =>
 				{
-					Assert.AreEqual(complex * -ONE, -complex);
+					Assert.AreEqual(complex * -c1, -complex);
 				});
 			}
 
 
 			public void Magnitude()
 			{
-				Assert.AreEqual(ZERO, _getAbs(new Complex<TNumber>()));
+				Assert.AreEqual(c0, new Complex<TNumber>().Abs());
 
-				Complex<TNumber> one = new(ONE);
-				Assert.AreEqual(ONE, _getAbs(one));
+				Complex<TNumber> one = new(c1);
+				Assert.AreEqual(c1, one.Abs());
 
-				Complex<TNumber> negativeOne = new(ONE);
-				Assert.AreEqual(ONE, _getAbs(negativeOne));
+				Complex<TNumber> negativeOne = new(c1);
+				Assert.AreEqual(c1, negativeOne.Abs());
 
-				Complex<TNumber> imaginaryOne = new(ZERO, ONE);
-				Assert.AreEqual(ONE, _getAbs(imaginaryOne));
+				Complex<TNumber> imaginaryOne = new(c0, c1);
+				Assert.AreEqual(c1, imaginaryOne.Abs());
 
-				Complex<TNumber> negativeImaginaryOne = new(ZERO, ONE);
-				Assert.AreEqual(ONE, _getAbs(negativeImaginaryOne));
+				Complex<TNumber> negativeImaginaryOne = new(c0, c1);
+				Assert.AreEqual(c1, negativeImaginaryOne.Abs());
 
-				Complex<TNumber> c = new(-THREE, FOUR);
-				Assert.AreEqual(FIVE, _getAbs(c));
+				Complex<TNumber> c = new(-c3, c4);
+				Assert.AreEqual(c5, c.Abs());
 			}
 
 
@@ -337,7 +290,7 @@ namespace Lib4D_Tests
 			{
 				_cth.ForEachPairOfComplex((a, b) =>
 				{
-					if (_getAbs(b) == ZERO)
+					if (b.Abs() == c0)
 					{
 						return;
 					}
@@ -349,11 +302,11 @@ namespace Lib4D_Tests
 				_cth.ForEachComplex(complex =>
 				{
 					_cth.ForEachFloat(i => {
-						if (i != ZERO)
+						if (i != c0)
 						{
 							Assert.AreEqual(complex / (Complex<TNumber>)i, complex / i);
 						}
-						if (_getAbs(complex) != ZERO)
+						if (complex.Abs() != c0)
 						{
 							Assert.AreEqual((Complex<TNumber>)i / complex, i / complex);
 						}
@@ -366,7 +319,7 @@ namespace Lib4D_Tests
 			{
 				_cth.ForEachComplex(complex =>
 				{
-					var root = _getSqrtC(complex);
+					var root = complex.Sqrt();
 					try
 					{
 						_cth.AssertApproximatelyEqual(complex, root * root);
@@ -383,8 +336,8 @@ namespace Lib4D_Tests
 				_cth.ForEachFloat(floatNum =>
 				{
 					Assert.AreEqual(
-						_getSqrtC((Complex<TNumber>)floatNum),
-						_getSqrtF(floatNum)
+						((Complex<TNumber>)floatNum).Sqrt(),
+						Complex<TNumber>.Sqrt(floatNum)
 					);
 				});
 			}
@@ -393,7 +346,7 @@ namespace Lib4D_Tests
 			public void AbsQuad()
 			{
 				_cth.ForEachComplex(complex => {
-					TNumber expected = _getAbs(complex);
+					TNumber expected = complex.Abs();
 					expected *= expected;
 					_cth.AssertApproximatelyEqual(expected, complex.AbsQuad());
 				});
@@ -403,18 +356,18 @@ namespace Lib4D_Tests
 			public void Exp()
 			{
 				_cth.AssertApproximatelyEqual(
-					new Complex<TNumber>(ONE, ZERO),
-					_getExp(new())
+					new Complex<TNumber>(c1, c0),
+					Complex<TNumber>.Exp(new())
 				);
 				_cth.AssertApproximatelyEqual(
-					new Complex<TNumber>(E, ZERO),
-					_getExp(new Complex<TNumber>(ONE, ZERO))
+					new Complex<TNumber>(Math<TNumber>.E, c0),
+					Complex<TNumber>.Exp(new Complex<TNumber>(c1, c0))
 				);
 
 				// e^(i * pi) + 1 = 0   =>   e^(i * pi) = -1
 				_cth.AssertApproximatelyEqual(
-					new Complex<TNumber>(-ONE, ZERO),
-					_getExp(new Complex<TNumber>(ZERO, PI))
+					new Complex<TNumber>(-c1, c0),
+					Complex<TNumber>.Exp(new Complex<TNumber>(c0, Math<TNumber>.PI))
 				);
 			}
 		}

@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Lib4D.Math.Matrix
+namespace Lib4D.Mathematic.Matrix
 {
 	public static class MatrixMath {
 		public static TNumber[,] Add<TNumber>(TNumber[,] a, TNumber[,] b)

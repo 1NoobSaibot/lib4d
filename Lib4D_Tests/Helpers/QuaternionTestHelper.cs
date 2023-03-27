@@ -7,8 +7,7 @@ namespace Lib4D_Tests.Helpers
 		: ComplexTestHelper<TNumber>
 		where TNumber : INumber<TNumber>
 	{
-		public QuaternionTestHelper(Func<TNumber, TNumber> absF)
-			: base(absF)
+		public QuaternionTestHelper()
 		{ }
 
 

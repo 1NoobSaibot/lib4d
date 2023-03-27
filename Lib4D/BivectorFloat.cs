@@ -1,4 +1,4 @@
-﻿using Lib4D.Math.Matrix;
+﻿using Lib4D.Mathematic.Matrix;
 
 namespace Lib4D
 {

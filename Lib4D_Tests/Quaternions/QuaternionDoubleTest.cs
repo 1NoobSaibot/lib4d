@@ -1,4 +1,5 @@
 ﻿using Lib4D;
+using Lib4D.Mathematic;
 
 namespace LibFOURD_Tests.Quaternions
 {
@@ -6,7 +7,12 @@ namespace LibFOURD_Tests.Quaternions
 	public class QuaternionDoubleTest : QuaternionTest<double>
 	{
 		public QuaternionDoubleTest()
-			: base(Math.Abs, Quaternion<double>.Abs)
+			: base(Quaternion<double>.Abs)
 		{ }
+
+		protected override void InitMath()
+		{
+			Math<double>.InitInstance(new MathDouble());
+		}
 	}
 }

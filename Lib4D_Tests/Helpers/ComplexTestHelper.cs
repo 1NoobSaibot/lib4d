@@ -1,4 +1,5 @@
 ﻿using Lib4D;
+using Lib4D.Mathematic;
 using System.Numerics;
 
 namespace Lib4D_Tests.Helpers
@@ -8,13 +9,11 @@ namespace Lib4D_Tests.Helpers
 		where TNumber : INumber<TNumber>
 	{
 		private readonly IReadOnlyList<TNumber> _values;
-		private readonly Func<TNumber, TNumber> _abs;
 
 
-		public ComplexTestHelper(Func<TNumber, TNumber> abs)
+		public ComplexTestHelper()
 		{
 			_values = GetNums();
-			_abs = abs;
 		}
 
 
@@ -34,7 +33,7 @@ namespace Lib4D_Tests.Helpers
 
 		public void AssertApproximatelyEqual(TNumber a, TNumber b)
 		{
-			var delta = _abs(a - b);
+			var delta = Math<TNumber>.Abs!(a - b);
 			if (delta > EPSILON)
 			{
 				throw new AssertFailedException();
