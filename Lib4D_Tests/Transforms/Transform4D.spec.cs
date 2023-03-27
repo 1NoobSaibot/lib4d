@@ -12,7 +12,7 @@ namespace Lib4D_Tests
 		public void TranslatingVectorWithIdentityTransform()
 		{
 			// Identity transform doesn't change Vectors
-			Transform4DDouble identityTransform = new();
+			Transform4D<double> identityTransform = new();
 			Vector4D<double> v = GetRandomVector();
 
 			Assert.AreEqual(v, identityTransform * v);
@@ -22,7 +22,7 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void Translate()
 		{
-			Transform4DDouble transform = Transform4DDouble.GetTranslate(5, -4, 3, -7);
+			Transform4D<double> transform = Transform4D<double>.GetTranslate(5, -4, 3, -7);
 			Assert.AreEqual(
 				new Vector4D<double>(5, -4, 3, -7),
 				transform * new Vector4D<double>()
@@ -37,7 +37,7 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void Scale()
 		{
-			Transform4DDouble transform = Transform4DDouble.GetScale(2, 4, -6, 7);
+			Transform4D<double> transform = Transform4D<double>.GetScale(2, 4, -6, 7);
 			Assert.AreEqual(
 				new Vector4D<double>(2, 4, -6, 7),
 				transform * new Vector4D<double>(1, 1, 1, 1)
@@ -55,7 +55,7 @@ namespace Lib4D_Tests
 
 			// Axis ZQ, X => Y
 			Bivector4D<double> surface = new(z, q);
-			Transform4DDouble t = new();
+			Transform4D<double> t = new();
 			t.Rotate(surface, Math.PI / 2);
 			AreApproximatelyEqual(y, t * x);
 

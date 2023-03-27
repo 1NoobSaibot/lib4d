@@ -4,7 +4,7 @@ namespace HyperCube
 {
 	internal class Graphics4D
 	{
-		private Transform4DFloat _transform = new();
+		private Transform4D<float> _transform = new();
 		private readonly Pen _pen = new(Color.White);
 		private readonly Graphics _canvas;
 		private readonly Graphics _buffer;
@@ -12,7 +12,7 @@ namespace HyperCube
 
 		private readonly Projector4dTo2d _4d_to_2D;
 
-		public Transform4DFloat Transform => _transform;
+		public Transform4D<float> Transform => _transform;
 
 		public Graphics4D (Image canvas)
 		{
@@ -25,7 +25,7 @@ namespace HyperCube
 		}
 
 
-		public void SetTransform(Transform4DFloat t)
+		public void SetTransform(Transform4D<float> t)
 		{
 			_transform = t;
 		}
