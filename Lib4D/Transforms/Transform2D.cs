@@ -1,101 +1,141 @@
-﻿using System;
+﻿using Lib4D.Math.Matrix;
+using System.Numerics;
 
 namespace Lib4D
 {
-	public class Transform2D
+	public class Transform2D<TNumber> where TNumber : INumber<TNumber>
 	{
-		private double[,] _matrix = new double[3, 3];
+		private TNumber[,] _matrix = new TNumber[3, 3];
 
 
 		#region Constructors
 		public Transform2D()
 		{
-			_matrix = new double[3, 3];
-			_matrix[0, 0] = 1;
-			_matrix[1, 1] = 1;
-			_matrix[2, 2] = 1;
+			_matrix = new TNumber[3, 3];
+			_matrix[0, 0] = TNumber.One;
+			_matrix[1, 1] = TNumber.One;
+			_matrix[2, 2] = TNumber.One;
 		}
 
 		
-		public static Transform2D GetScale(double kx, double ky)
+		public static Transform2D<TNumber> GetScale(TNumber kx, TNumber ky)
 		{
-			Transform2D t = new Transform2D();
+			var t = new Transform2D<TNumber>();
 			t.Scale(kx, ky);
 			return t;
 		}
 
 
-		public static Transform2D GetRotate(double alpha)
+		public static Transform2D<float> GetRotate(float alpha)
 		{
-			Transform2D t = new Transform2D();
-			t.Rotate(alpha);
+			var t = new Transform2D<float>();
+			Rotate(t, alpha);
+			return t;
+		}
+
+		public static Transform2D<double> GetRotate(double alpha)
+		{
+			var t = new Transform2D<double>();
+			Rotate(t, alpha);
 			return t;
 		}
 
 
-		public static Transform2D GetTranslate(double tx, double ty)
+		public static Transform2D<TNumber> GetTranslate(TNumber tx, TNumber ty)
 		{
-			Transform2D t = new Transform2D();
+			var t = new Transform2D<TNumber>();
 			t.Translate(tx, ty);
 			return t;
 		}
 		#endregion
 
 
-		public void Translate(double tx, double ty)
+		public void Translate(TNumber tx, TNumber ty)
 		{
-			double[,] translateMatrix = new double[3, 3]
+			TNumber[,] translateMatrix = new TNumber[3, 3]
 			{
-				{  1,  0,  0 },
-				{  0,  1,  0 },
-				{ tx, ty,  1 }
+				{ TNumber.One , TNumber.Zero, TNumber.Zero },
+				{ TNumber.Zero, TNumber.One , TNumber.One  },
+				{ tx          , ty          , TNumber.One  }
 			};
 			_matrix = MatrixMath.Mul(_matrix, translateMatrix);
 		}
 
 
-		public void Rotate(double alpha)
+		public void Rotate(float alpha, Func<float, TNumber> cast)
 		{
-			double c = Math.Cos(alpha);
-			double s = Math.Sin(alpha);
-			double[,] rotateMatrix = new double[3, 3]
+			TNumber c = cast(MathF.Cos(alpha));
+			TNumber s = cast(MathF.Sin(alpha));
+			TNumber[,] rotateMatrix = new TNumber[3, 3]
 			{
-				{  c,  s,  0 },
-				{ -s,  c,  0 },
-				{  0,  0,  1 }
+				{            c,            s, TNumber.Zero },
+				{           -s,            c, TNumber.Zero },
+				{ TNumber.Zero, TNumber.Zero, TNumber.One  }
 			};
 
 			_matrix = MatrixMath.Mul(_matrix, rotateMatrix);
 		}
 
 
-		// TODO: It can be optimized, because it's only diagonal matrix
-		public void Scale(double kx, double ky)
+		public static void Rotate(Transform2D<float> t, float alpha)
 		{
-			double[,] scaleMatrix = new double[3, 3] {
-				{ kx,  0,  0 },
-				{  0, ky,  0 },
-				{  0,  0,  1 }
+			var c = MathF.Cos(alpha);
+			var s = MathF.Sin(alpha);
+			var rotateMatrix = new float[3, 3]
+			{
+				{  c, s, 0 },
+				{ -s, c, 0 },
+				{  0, 0, 1 }
+			};
+
+			t._matrix = MatrixMath.Mul(t._matrix, rotateMatrix);
+		}
+
+
+		public static void Rotate(Transform2D<double> t, double alpha)
+		{
+			var c = System.Math.Cos(alpha);
+			var s = System.Math.Sin(alpha);
+			var rotateMatrix = new double[3, 3]
+			{
+				{  c, s, 0 },
+				{ -s, c, 0 },
+				{  0, 0, 1 }
+			};
+
+			t._matrix = MatrixMath.Mul(t._matrix, rotateMatrix);
+		}
+
+
+
+
+		// TODO: It can be optimized, because it's only diagonal matrix
+		public void Scale(TNumber kx, TNumber ky)
+		{
+			TNumber[,] scaleMatrix = new TNumber[3, 3] {
+				{           kx, TNumber.Zero, TNumber.Zero },
+				{ TNumber.Zero,           ky, TNumber.Zero },
+				{ TNumber.Zero, TNumber.Zero, TNumber.One  }
 			};
 			_matrix = MatrixMath.Mul(_matrix, scaleMatrix);
 		}
 
 
-		public static Vector2D operator *(Transform2D t, Vector2D v) {
-			double[,] column = new double[1, 3];
+		public static Vector2D<TNumber> operator *(Transform2D<TNumber> t, Vector2D<TNumber> v) {
+			TNumber[,] column = new TNumber[1, 3];
 			column[0, 0] = v.X;
 			column[0, 1] = v.Y;
-			column[0, 2] = 1;
+			column[0, 2] = TNumber.One;
 
 			column = MatrixMath.Mul(t._matrix, column);
 
-			return new Vector2D(column[0, 0], column[0, 1]);
+			return new Vector2D<TNumber>(column[0, 0], column[0, 1]);
 		}
 
 
-		public static Transform2D operator *(Transform2D a, Transform2D b)
+		public static Transform2D<TNumber> operator *(Transform2D<TNumber> a, Transform2D<TNumber> b)
 		{
-			return new Transform2D()
+			return new()
 			{
 				_matrix = MatrixMath.Mul(a._matrix, b._matrix)
 			};

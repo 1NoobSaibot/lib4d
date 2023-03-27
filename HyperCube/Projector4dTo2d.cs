@@ -5,20 +5,20 @@ namespace HyperCube
 	internal class Projector4dTo2d
 	{
 		private Projector4dTo3d _4dTo3d;
-		private float[,] _projectionMatrix;
-		private float _tan;
+		private readonly float[,] _projectionMatrix;
+		private readonly float _tan;
 
 		public Projector4dTo2d(int width, int height, int frustumDepth = 2000)
 		{
 			_4dTo3d = new Projector4dTo3d(width, height, frustumDepth);
 
-			Vector3DFloat from = new Vector3DFloat(0, 0, 0);
-			Vector3DFloat to = new Vector3DFloat(0, 0, 2000);
-			Vector3DFloat up = new Vector3DFloat(0, height * 0.5f, 0);
+			var from = new Vector3D<float>(0, 0, 0);
+			var to = new Vector3D<float>(0, 0, 2000);
+			var up = new Vector3D<float>(0, height * 0.5f, 0);
 
-			Vector3DFloat C = (to - from).Normalize();
-			Vector3DFloat A = (up * C).Normalize();
-			Vector3DFloat B = C * A;
+			var C = Vector3D<float>.Normalize(to - from);
+			var A = Vector3D<float>.Normalize(up * C);
+			var B = C * A;
 
 			_projectionMatrix = new float[3, 3]
 			{
@@ -27,15 +27,15 @@ namespace HyperCube
 				{ C.X, C.Y, C.Z }
 			};
 
-			_tan = up.Abs / (from - to).Abs;
+			_tan = Vector3D<float>.Abs(up) / Vector3D<float>.Abs(from - to);
 		}
 
 
 
-		public Vector3DFloat Project(Vector4DFloat input)
+		public Vector3D<float> Project(Vector4DFloat input)
 		{
-			Vector3DFloat p = _4dTo3d.Project(input);
-			Vector3DFloat P2 = (p/* - from*/) * _projectionMatrix;
+			Vector3D<float> p = _4dTo3d.Project(input);
+			Vector3D<float> P2 = (p/* - from*/) * _projectionMatrix;
 			P2.X = P2.X / (P2.Z * _tan);
 			P2.Y = P2.Y / (P2.Z * _tan);
 

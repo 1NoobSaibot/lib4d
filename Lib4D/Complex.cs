@@ -5,14 +5,15 @@ namespace Lib4D
   /// <summary>
   /// Complex number c = a + ib,  where i = sqrt(-1); i*i = -1
   /// </summary>
-  public struct Complex :
-    IAdditionOperators<Complex, Complex, Complex>,
-		ISubtractionOperators<Complex, Complex, Complex>,
-    IMultiplyOperators<Complex, Complex, Complex>,
-		IDivisionOperators<Complex, Complex, Complex>,
-    IUnaryNegationOperators<Complex, Complex>,
-		IEquatable<Complex>,
-		IEqualityOperators<Complex, Complex, bool>
+  public struct Complex<TNumber> :
+    IAdditionOperators<Complex<TNumber>, Complex<TNumber>, Complex<TNumber>>,
+		ISubtractionOperators<Complex<TNumber>, Complex<TNumber>, Complex<TNumber>>,
+    IMultiplyOperators<Complex<TNumber>, Complex<TNumber>, Complex<TNumber>>,
+		IDivisionOperators<Complex<TNumber>, Complex<TNumber>, Complex<TNumber>>,
+    IUnaryNegationOperators<Complex<TNumber>, Complex<TNumber>>,
+		IEquatable<Complex<TNumber>>,
+		IEqualityOperators<Complex<TNumber>, Complex<TNumber>, bool>
+		where TNumber : INumber<TNumber>
 
 	  // IAdditiveIdentity<Complex, Complex>,
 	  // IDecrementOperators<Complex>,
@@ -25,147 +26,178 @@ namespace Lib4D
     /// <summary>
     /// Real number
     /// </summary>
-    public double R;
+    public TNumber R;
     /// <summary>
     /// Imaginary number
     /// </summary>
-    public double I;
+    public TNumber I;
 
-		public double Magnitude => Abs();
-
-		public Complex(double real, double imaginary)
+		public Complex(TNumber real, TNumber imaginary)
     {
       R = real;
       I = imaginary;
     }
 
-		public Complex(double real)
+		public Complex(TNumber real)
 		{
 			R = real;
-			I = 0;
+			I = TNumber.Zero;
 		}
 
 
-		public double AbsQuad()
+		public TNumber AbsQuad()
     {
       return R * R + I * I;
 		}
 
-    public double Abs()
-	  {
-      return Math.Sqrt(AbsQuad());
-	  }
+
+		public static double Abs(Complex<double> c)
+		{
+			return System.Math.Sqrt(c.AbsQuad());
+		}
+
+		public static float Abs(Complex<float> c)
+		{
+			return System.MathF.Sqrt(c.AbsQuad());
+		}
 
 
-		public static bool operator ==(Complex a, Complex b)
+		public static bool operator ==(Complex<TNumber> a, Complex<TNumber> b)
 	  {
       return a.R == b.R && a.I == b.I;
 	  }
-    public static bool operator !=(Complex a, Complex b)
+    public static bool operator !=(Complex<TNumber> a, Complex<TNumber> b)
 	  {
       return a.R != b.R || a.I != b.I;
 	  }
 
 
-    public static Complex operator +(Complex a, Complex b)
+    public static Complex<TNumber> operator +(Complex<TNumber> a, Complex<TNumber> b)
     {
-      return new Complex(a.R + b.R, a.I + b.I);
+      return new Complex<TNumber>(a.R + b.R, a.I + b.I);
     }
-		public static Complex operator +(Complex a, double b)
+		public static Complex<TNumber> operator +(Complex<TNumber> a, TNumber b)
 		{
-			return new Complex(a.R + b, a.I);
+			return new Complex<TNumber>(a.R + b, a.I);
 		}
-		public static Complex operator +(double a, Complex b)
+		public static Complex<TNumber> operator +(TNumber a, Complex<TNumber> b)
 		{
-			return new Complex(a + b.R, b.I);
+			return new Complex<TNumber>(a + b.R, b.I);
 		}
 
 
-		public static Complex operator -(Complex a, Complex b)
+		public static Complex<TNumber> operator -(Complex<TNumber> a, Complex<TNumber> b)
     {
-      return new Complex(a.R - b.R, a.I - b.I);
+      return new Complex<TNumber>(a.R - b.R, a.I - b.I);
     }
-		public static Complex operator -(Complex a, double b)
+		public static Complex<TNumber> operator -(Complex<TNumber> a, TNumber b)
 		{
-			return new Complex(a.R - b, a.I);
+			return new Complex<TNumber>(a.R - b, a.I);
 		}
-		public static Complex operator -(double a, Complex b)
+		public static Complex<TNumber> operator -(TNumber a, Complex<TNumber> b)
 		{
-			return new Complex(a - b.R, -b.I);
+			return new Complex<TNumber>(a - b.R, -b.I);
 		}
 
 
-		public static Complex operator *(Complex a, Complex b) {
-      double real = a.R * b.R - a.I * b.I;
-      double imaginary = a.R * b.I + a.I * b.R;
-      return new Complex(real, imaginary);
+		public static Complex<TNumber> operator *(Complex<TNumber> a, Complex<TNumber> b) {
+      TNumber real = a.R * b.R - a.I * b.I;
+      TNumber imaginary = a.R * b.I + a.I * b.R;
+      return new Complex<TNumber>(real, imaginary);
     }
-		public static Complex operator *(Complex a, double b)
+		public static Complex<TNumber> operator *(Complex<TNumber> a, TNumber b)
 		{
 			return new(a.R * b, a.I * b);
 		}
-		public static Complex operator *(double a, Complex b)
+		public static Complex<TNumber> operator *(TNumber a, Complex<TNumber> b)
 		{
 			return new(a * b.R, a * b.I);
 		}
 
 
-		public static Complex operator /(Complex a, Complex b)
+		public static Complex<TNumber> operator /(Complex<TNumber> a, Complex<TNumber> b)
 	  {
-      double denominator = b.AbsQuad();
-      double realNumerator = (a.R * b.R) + (a.I * b.I);
-      double imaginaryNumerator = (a.I * b.R) - (a.R * b.I);
-      return new Complex(realNumerator / denominator, imaginaryNumerator / denominator);
+      TNumber denominator = b.AbsQuad();
+      TNumber realNumerator = (a.R * b.R) + (a.I * b.I);
+      TNumber imaginaryNumerator = (a.I * b.R) - (a.R * b.I);
+      return new Complex<TNumber>(realNumerator / denominator, imaginaryNumerator / denominator);
 	  }
-		public static Complex operator /(Complex a, double b)
+		public static Complex<TNumber> operator /(Complex<TNumber> a, TNumber b)
 		{
 			return new(a.R / b, a.I / b);
 		}
-		public static Complex operator /(double a, Complex b)
+		public static Complex<TNumber> operator /(TNumber a, Complex<TNumber> b)
 		{
-			double denominator = b.AbsQuad();
-			double realNumerator = a * b.R;
-			double imaginaryNumerator = -(a * b.I);
-			return new Complex(realNumerator / denominator, imaginaryNumerator / denominator);
+			TNumber denominator = b.AbsQuad();
+			TNumber realNumerator = a * b.R;
+			TNumber imaginaryNumerator = -(a * b.I);
+			return new(realNumerator / denominator, imaginaryNumerator / denominator);
 		}
 
-		public static Complex operator -(Complex value)
+		public static Complex<TNumber> operator -(Complex<TNumber> value)
 		{
-			return value * -1;
+			return value * -TNumber.One;
 		}
 
-		public static Complex Sqrt(double value)
+		public static Complex<float> Sqrt(float value)
 		{
 			if (value < 0)
 			{
-				return new(0, Math.Sqrt(-value));
+				return new(0, MathF.Sqrt(-value));
 			}
 
-			return new(Math.Sqrt(value), 0);
+			return new(MathF.Sqrt(value), 0);
 		}
 
-		public static Complex Sqrt(Complex v)
+		public static Complex<double> Sqrt(double value)
 		{
-			double magnitude = v.Magnitude;
-			double real = Math.Sqrt((magnitude + v.R) / 2);
-			double imaginary = Math.Sqrt((magnitude - v.R) / 2)
-				* (v.I < 0 ? -1.0 : 1.0);
+			if (value < 0)
+			{
+				return new(0, System.Math.Sqrt(-value));
+			}
+
+			return new(System.Math.Sqrt(value), 0);
+		}
+
+		public static Complex<float> Sqrt(Complex<float> v)
+		{
+			var magnitude = Complex<float>.Abs(v);
+			var real = MathF.Sqrt((magnitude + v.R) / 2);
+			var imaginary = MathF.Sqrt((magnitude - v.R) / 2)
+				* (v.I < 0 ? -1.0f : 1.0f);
+
+			return new(real, imaginary);
+		}
+
+		public static Complex<double> Sqrt(Complex<double> v)
+		{
+			var magnitude = Complex<double>.Abs(v);
+			var real = System.Math.Sqrt((magnitude + v.R) / 2);
+			var imaginary = System.Math.Sqrt((magnitude - v.R) / 2)
+				* (v.I < 0 ? -1.0f : 1.0f);
 
 			return new(real, imaginary);
 		}
 
 
-		public static Complex Exp(Complex number)
+		public static Complex<float> Exp(Complex<float> number)
 		{
-			double realExp = Math.Exp(number.R);
-			Complex c = new(Math.Cos(number.I), Math.Sin(number.I));
+			var realExp = MathF.Exp(number.R);
+			Complex<float> c = new(MathF.Cos(number.I), MathF.Sin(number.I));
+			return realExp * c;
+		}
+
+		public static Complex<double> Exp(Complex<double> number)
+		{
+			var realExp = System.Math.Exp(number.R);
+			Complex<double> c = new(System.Math.Cos(number.I), System.Math.Sin(number.I));
 			return realExp * c;
 		}
 
 
-		public static implicit operator Complex(double n)
+		public static implicit operator Complex<TNumber>(TNumber n)
 		{
-      return new Complex(n, 0);
+      return new(n, TNumber.Zero);
 		}
 
 
@@ -174,7 +206,7 @@ namespace Lib4D
 			return "(" + R + " + " + I + "i)";
 		}
 
-		public bool Equals(Complex other)
+		public bool Equals(Complex<TNumber> other)
 		{
 			return this == other;
 		}
@@ -183,7 +215,7 @@ namespace Lib4D
 		public override bool Equals(object? obj)
 		{
 			return obj != null
-				&& obj is Complex complex
+				&& obj is Complex<TNumber> complex
 				&& this == complex;
 		}
 

@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Lib4D
+namespace Lib4D.Math.Matrix
 {
 	public static class MatrixMath {
 		public static TNumber[,] Add<TNumber>(TNumber[,] a, TNumber[,] b)
@@ -120,7 +120,7 @@ namespace Lib4D
 		{
 			// Ширина матрицы A равна высоте B
 			if (a.GetWidth() != b.GetHeight()) {
-				throw new Exception("Cannot execute multiplication of matrixes, because their sizes are not suitable");
+				throw new Exception($"Cannot execute multiplication of matrixes, because their sizes are not suitable: a.Width={a.GetWidth()}, b.Height={b.GetHeight()}");
 			}
 
 			int commonWidth = a.GetWidth();

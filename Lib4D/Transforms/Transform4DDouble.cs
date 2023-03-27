@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lib4D.Math.Matrix;
+using System;
 
 namespace Lib4D
 {
@@ -60,8 +61,8 @@ namespace Lib4D
 
 		public void Rotate(Bivector4DDouble b, double angle)
 		{
-			double c = Math.Cos(angle);
-			double s = Math.Sin(angle);
+			double c = System.Math.Cos(angle);
+			double s = System.Math.Sin(angle);
 			double xy = b.XY;
 			double xz = b.XZ;
 			double xq = b.XQ;

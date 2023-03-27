@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lib4D.Math.Matrix;
+using System;
 
 namespace Lib4D
 {
@@ -13,7 +14,7 @@ namespace Lib4D
 		}
 
 
-		public float Abs => (float)Math.Sqrt(AbsQuad);
+		public float Abs => (float)System.Math.Sqrt(AbsQuad);
 
 
 		public Vector4DFloat (float x = 0, float y = 0, float z = 0, float q = 0)

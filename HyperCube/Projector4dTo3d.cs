@@ -1,4 +1,5 @@
 ﻿using Lib4D;
+using Lib4D.Math.Matrix;
 
 namespace HyperCube
 {
@@ -30,17 +31,17 @@ namespace HyperCube
 
 
 
-		public Vector3DFloat Project(Vector4DFloat input)
+		public Vector3D<float> Project(Vector4DFloat input)
 		{
 			Vector4DFloat p = (input /* - from*/) * _projectionMatrix;
 
 			
-			Vector3DFloat res;
+			Vector3D<float> res;
 			res.X = p.X / (input.Q * _tan);
 			res.Y = p.Y / (input.Q * _tan);
 			res.Z = p.Z / (input.Q * _tan);
 
-			return new Vector3DFloat(input.X, input.Y, input.Z);
+			return new Vector3D<float>(input.X, input.Y, input.Z);
 		}
 
 

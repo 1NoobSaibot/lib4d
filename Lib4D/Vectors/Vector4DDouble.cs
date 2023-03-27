@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Lib4D
+﻿namespace Lib4D
 {
 	public struct Vector4DDouble
 	{
@@ -13,7 +11,7 @@ namespace Lib4D
 		}
 
 
-		public double Abs => Math.Sqrt(AbsQuad);
+		public double Abs => System.Math.Sqrt(AbsQuad);
 
 
 		public Vector4DDouble (double x = 0, double y = 0, double z = 0, double q = 0)

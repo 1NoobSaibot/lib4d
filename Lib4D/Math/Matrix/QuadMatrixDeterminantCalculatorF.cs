@@ -1,15 +1,13 @@
-﻿using System.Numerics;
-
-namespace Lib4D
+﻿namespace Lib4D.Math.Matrix
 {
-	internal class QuadMatrixDeterminantCalculator<TNumber> where TNumber : INumber<TNumber>
+	internal class QuadMatrixDeterminantCalculatorF
 	{
-		private readonly TNumber[,] _matrix;
-		private readonly bool[] _usedColumns;
-		public readonly TNumber Determinant;
+		private float[,] _matrix;
+		private bool[] _usedColumns;
+		public readonly float Determinant;
 
 
-		public QuadMatrixDeterminantCalculator(TNumber[,] matrix) {
+		public QuadMatrixDeterminantCalculatorF(float[,] matrix) {
 			int width = matrix.GetWidth();
 			if (width != matrix.GetHeight()) {
 				throw new Exception("This matrix is not a QuadMatrix");
@@ -21,16 +19,16 @@ namespace Lib4D
 			_matrix = matrix;
 			_usedColumns = new bool[width];
 
-			Determinant = GetLocalDeterminant(0);
+			Determinant = _GetLocalDeterminant(0);
 		}
 
 
-		private TNumber GetLocalDeterminant(int row) {
+		private float _GetLocalDeterminant(int row) {
 			if (row == _matrix.GetHeight()) {
-				return TNumber.One;
+				return 1;
 			}
 
-			TNumber dt = TNumber.Zero;
+			float dt = 0;
 			int width = _usedColumns.Length;
 
 			int localIndex = 0;
@@ -39,9 +37,9 @@ namespace Lib4D
 					continue;
 				}
 
-				TNumber sign = ((localIndex & 1) == 0) ? +TNumber.One : -TNumber.One;
+				float sign = ((localIndex & 1) == 0) ? +1 : -1;
 				_usedColumns[absoluteIndex] = true;
-				dt += sign * _matrix[absoluteIndex, row] * GetLocalDeterminant(row + 1);
+				dt += sign * _matrix[absoluteIndex, row] * _GetLocalDeterminant(row + 1);
 				_usedColumns[absoluteIndex] = false;
 
 				localIndex++;

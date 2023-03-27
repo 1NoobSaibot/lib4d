@@ -1,4 +1,6 @@
-﻿namespace Lib4D
+﻿using Lib4D.Math.Matrix;
+
+namespace Lib4D
 {
 	public class Bivector4DDouble
 	{

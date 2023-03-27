@@ -1,15 +1,23 @@
 ﻿using Lib4D;
+using System.Numerics;
 
 namespace Lib4D_Tests.Helpers
 {
-	internal static class QuaternionTestHelper
+	internal class QuaternionTestHelper<TNumber>
+		: ComplexTestHelper<TNumber>
+		where TNumber : INumber<TNumber>
 	{
-		public static void AssertApproximatelyEqual(Quaternion a, Quaternion b)
+		public QuaternionTestHelper(Func<TNumber, TNumber> absF)
+			: base(absF)
+		{ }
+
+
+		public void AssertApproximatelyEqual(Quaternion<TNumber> a, Quaternion<TNumber> b)
 		{
 			try
 			{
-				ComplexTestHelper.AssertApproximatelyEqual(a.ri, b.ri);
-				ComplexTestHelper.AssertApproximatelyEqual(a.jk, b.jk);
+				base.AssertApproximatelyEqual(a.ri, b.ri);
+				base.AssertApproximatelyEqual(a.jk, b.jk);
 			}
 			catch (AssertFailedException)
 			{
@@ -18,16 +26,16 @@ namespace Lib4D_Tests.Helpers
 		}
 
 
-		public static void ForEachQuaternion(Action<Quaternion> action)
+		public void ForEachQuaternion(Action<Quaternion<TNumber>> action)
 		{
-			ComplexTestHelper.ForEachPairOfComplex((ri, jk) =>
+			ForEachPairOfComplex((ri, jk) =>
 			{
-				action(new Quaternion(ri, jk));
+				action(new(ri, jk));
 			});
 		}
 
 
-		public static void ForEachPairOfQuaternion(Action<Quaternion, Quaternion> action)
+		public void ForEachPairOfQuaternion(Action<Quaternion<TNumber>, Quaternion<TNumber>> action)
 		{
 			ForEachQuaternion(a =>
 			{

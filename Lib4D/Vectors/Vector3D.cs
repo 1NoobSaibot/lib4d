@@ -1,87 +1,70 @@
-﻿using System;
+﻿using Lib4D.Math.Matrix;
+using System.Numerics;
 
 namespace Lib4D
 {
-	public struct Vector3DFloat
+	public struct Vector3D<TNumber> where TNumber : INumber<TNumber>
 	{
-		public float X, Y, Z;
+		public TNumber X, Y, Z;
 
 
-		public float AbsQuad
+		public TNumber AbsQuad
 		{
 			get => X * X + Y * Y + Z * Z;
 		}
 
 
-		public float Abs => (float)Math.Sqrt(AbsQuad);
-
-
-		public Vector3DFloat (float x, float y, float z)
+		public Vector3D (TNumber x, TNumber y, TNumber z)
 		{
 			X = x;
 			Y = y;
 			Z = z;
 		}
 
-
-		public Vector3DFloat Normalize()
+		public static double Abs(Vector3D<double> v)
 		{
-			float k = 1 / Abs;
-			return this * k;
+			return System.Math.Sqrt(v.AbsQuad);
+		}
+
+		public static float Abs(Vector3D<float> v)
+		{
+			return MathF.Sqrt(v.AbsQuad);
+		}
+
+		public static Vector3D<double> Normalize(Vector3D<double> v)
+		{
+			var k = 1f / Abs(v);
+			return new(k * v.X, k * v.Y, k * v.Z);
+		}
+
+		public static Vector3D<float> Normalize(Vector3D<float> v)
+		{
+			var k = 1f / Abs(v);
+			return new(k * v.X, k * v.Y, k * v.Z);
 		}
 
 
-		public float[,] ToMatrixRow()
+		public static Vector3D<TNumber> operator +(Vector3D<TNumber> a, Vector3D<TNumber> b)
 		{
-			float[,] res = new float[3, 1];
-			res[0, 0] = X;
-			res[1, 0] = Y;
-			res[2, 0] = Z;
-			return res;
+			return new(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
 		}
 
 
-		public static Vector3DFloat operator +(Vector3DFloat a, Vector3DFloat b)
+		public static Vector3D<TNumber> operator -(Vector3D<TNumber> a, Vector3D<TNumber> b)
 		{
-			return new Vector3DFloat (a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+			return new(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
 		}
 
 
-		public static Vector3DFloat operator -(Vector3DFloat a, Vector3DFloat b)
+		public static Vector3D<TNumber> operator *(Vector3D<TNumber> a, TNumber b)
 		{
-			return new Vector3DFloat(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+			return new Vector3D<TNumber>(a.X * b, a.Y * b, a.Z * b);
 		}
 
 
-		public override string ToString()
+		public static Vector3D<TNumber> operator *(Vector3D<TNumber> a, Vector3D<TNumber> b)
 		{
-			return "(" + X + "; " + Y + "; " + Z + ")";
-		}
-
-
-		public static Vector3DFloat operator *(Vector3DFloat a, float b)
-		{
-			return new Vector3DFloat(
-				a.X * b,
-				a.Y * b,
-				a.Z * b
-			);
-		}
-
-
-		public static Vector3DFloat operator *(float l, Vector3DFloat r)
-		{
-			return new Vector3DFloat(
-				r.X * l,
-				r.Y * l,
-				r.Z * l
-			);
-		}
-
-
-		public static Vector3DFloat operator *(Vector3DFloat a, Vector3DFloat b)
-		{
-			return new Vector3DFloat(
+			return new Vector3D<TNumber>(
 				a.Y * b.Z - a.Z * b.Y,
 				a.Z * b.X - a.X * b.Z,
 				a.X * b.Y - a.Y * b.X
@@ -89,11 +72,29 @@ namespace Lib4D
 		}
 
 
-		public static Vector3DFloat operator *(Vector3DFloat v, float[,] m)
+		public static Vector3D<TNumber> operator *(TNumber[,] m, Vector3D<TNumber> v)
 		{
-			float[,] row = v.ToMatrixRow();
-			row = MatrixMath.Mul(row, m);
-			return new Vector3DFloat(row[0, 0], row[1, 0], row[2, 0]);
+			TNumber[,] column = new TNumber[1, 3]
+			{
+				{ v.X, v.Y, v.Z },
+			};
+			TNumber[,] r = MatrixMath.Mul(m, column);
+			return new Vector3D<TNumber>(r[0, 0], r[0, 1], r[0, 3]);
+		}
+		public static Vector3D<TNumber> operator *(Vector3D<TNumber> a, TNumber[,] b)
+		{
+			TNumber[,] row = new TNumber[3, 1]
+			{
+				{ a.X }, { a.Y }, { a.Z }
+			};
+			TNumber[,] r = MatrixMath.Mul(row, b);
+			return new Vector3D<TNumber>(r[0, 0], r[1, 0], r[2, 0]);
+		}
+
+
+		public override string ToString()
+		{
+			return $"({X}; {Y}; {Z})";
 		}
 	}
 }

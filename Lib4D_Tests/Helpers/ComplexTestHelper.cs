@@ -1,14 +1,24 @@
 ﻿using Lib4D;
+using System.Numerics;
 
 namespace Lib4D_Tests.Helpers
 {
-	internal static class ComplexTestHelper
+	internal class ComplexTestHelper<TNumber>
+		: NumberSet<TNumber>
+		where TNumber : INumber<TNumber>
 	{
-		private static readonly IReadOnlyList<double> _values
-			= new double [] { -7, -1, 0, 1, 7 };
+		private readonly IReadOnlyList<TNumber> _values;
+		private readonly Func<TNumber, TNumber> _abs;
 
 
-		public static void AssertApproximatelyEqual(Complex a, Complex b)
+		public ComplexTestHelper(Func<TNumber, TNumber> abs)
+		{
+			_values = GetNums();
+			_abs = abs;
+		}
+
+
+		public void AssertApproximatelyEqual(Complex<TNumber> a, Complex<TNumber> b)
 		{
 			try
 			{
@@ -22,30 +32,29 @@ namespace Lib4D_Tests.Helpers
 		}
 
 
-		public static void AssertApproximatelyEqual(double a, double b)
+		public void AssertApproximatelyEqual(TNumber a, TNumber b)
 		{
-			const double epsilon = 0.0000000000001;
-			double delta = Math.Abs(a - b);
-			if (delta > epsilon)
+			var delta = _abs(a - b);
+			if (delta > EPSILON)
 			{
 				throw new AssertFailedException();
 			}
 		}
 
 
-		public static void ForEachComplex(Action<Complex> action)
+		public void ForEachComplex(Action<Complex<TNumber>> action)
 		{
-			for (int r = 0; r < _values.Count; r++)
+			foreach (var r in _values)
 			{
-				for (int i = 0; i < _values.Count; i++)
+				foreach (var i in _values)
 				{
-					action(new Complex(r, i));
+					action(new(r, i));
 				}
 			}
 		}
 
 
-		public static void ForEachPairOfComplex(Action<Complex, Complex> action)
+		public void ForEachPairOfComplex(Action<Complex<TNumber>, Complex<TNumber>> action)
 		{
 			ForEachComplex(a =>
 			{
@@ -56,20 +65,20 @@ namespace Lib4D_Tests.Helpers
 			});
 		}
 
-		public static void ForEachFloat(Action<double> action)
+		public void ForEachFloat(Action<TNumber> action)
 		{
-			for (int i = 0; i < _values.Count; i++)
+			foreach (var i in _values)
 			{
 				action(i);
 			}
 		}
 
 
-		public static void ForEachTwoFloats(Action<double, double> action)
+		public void ForEachTwoFloats(Action<TNumber, TNumber> action)
 		{
-			for (int i = 0; i < _values.Count; i++)
+			foreach (var i in _values)
 			{
-				for (int j = 0; j < _values.Count; j++)
+				foreach (var j in _values)
 				{
 					action(i, j);
 				}

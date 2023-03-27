@@ -1,6 +1,5 @@
 ﻿using Lib4D;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+using Lib4D_Tests.Helpers;
 
 namespace Lib4D_Tests
 {
@@ -10,16 +9,16 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void Calculate()
 		{
-			Transform2D identityTransform = new Transform2D();
-			Vector2D v = new Vector2D(7, 4);
+			var identityTransform = new Transform2D<float>();
+			Vector2D<float> v = new Vector2D<float>(7, 4);
 
 			Assert.AreEqual(v, identityTransform * v);
 
-			Transform2D scaleTransform = new Transform2D();
+			Transform2D<float> scaleTransform = new Transform2D<float>();
 			scaleTransform.Scale(2, 3);
 
 			Assert.AreEqual(
-				new Vector2D(14, 12),
+				new Vector2D<float>(14, 12),
 				scaleTransform * v
 			);
 		}
@@ -28,14 +27,14 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void Translate()
 		{
-			Transform2D transform = Transform2D.GetTranslate(5, -4);
+			Transform2D<float> transform = Transform2D<float>.GetTranslate(5, -4);
 			Assert.AreEqual(
-				new Vector2D(5, -4),
-				transform * new Vector2D(0, 0)
+				new Vector2D<float>(5, -4),
+				transform * new Vector2D<float>(0, 0)
 			);
 			Assert.AreEqual(
-				new Vector2D(6, -2),
-				transform * new Vector2D(1, 2)
+				new Vector2D<float>(6, -2),
+				transform * new Vector2D<float>(1, 2)
 			);
 		}
 
@@ -43,10 +42,10 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void Scale()
 		{
-			Transform2D transform = Transform2D.GetScale(2, 4);
+			Transform2D<float> transform = Transform2D<float>.GetScale(2, 4);
 			Assert.AreEqual(
-				new Vector2D(2, 4),
-				transform * new Vector2D(1, 1)
+				new Vector2D<float>(2, 4),
+				transform * new Vector2D<float>(1, 1)
 			);
 		}
 
@@ -54,14 +53,14 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void Rotate()
 		{
-			Transform2D transform = Transform2D.GetRotate(Math.PI / 2);
+			Transform2D<float> transform = Transform2D<float>.GetRotate(MathF.PI / 2f);
 			_AreApproximatelyEqual(
-				new Vector2D(0, 1),
-				transform * new Vector2D(1, 0)
+				new Vector2D<float>(0, 1),
+				transform * new Vector2D<float>(1, 0)
 			);
 			_AreApproximatelyEqual(
-				new Vector2D(-1, 1),
-				transform * new Vector2D(1, 1)
+				new Vector2D<float>(-1, 1),
+				transform * new Vector2D<float>(1, 1)
 			);
 		}
 
@@ -69,21 +68,21 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void RotateAndTranslate()
 		{
-			Transform2D t = Transform2D.GetRotate(Math.PI / 2);
+			Transform2D<float> t = Transform2D<float>.GetRotate(MathF.PI / 2f);
 			t.Translate(2, 3);
 
 			_AreApproximatelyEqual(
-				new Vector2D(-3, 2),
-				t * new Vector2D(0, 0)
+				new Vector2D<float>(-3, 2),
+				t * new Vector2D<float>(0, 0)
 			);
 			_AreApproximatelyEqual(
-				new Vector2D(-4, 3),
-				t * new Vector2D(1, 1)
+				new Vector2D<float>(-4, 3),
+				t * new Vector2D<float>(1, 1)
 			);
 		}
 
 
-		private void _AreApproximatelyEqual(Vector2D expected, Vector2D actual)
+		private void _AreApproximatelyEqual(Vector2D<float> expected, Vector2D<float> actual)
 		{
 			try
 			{
@@ -98,18 +97,19 @@ namespace Lib4D_Tests
 
 		private void _AreApproximatelyEqual(double expected, double actual)
 		{
+			const float epsilon = NumberSet<float>.EPSILON_FLOAT;
 			if (actual == expected)
 			{
 				return;
 			}
 
-			if (Math.Abs(expected - actual) < 1E-16)
+			if (Math.Abs(expected - actual) < epsilon)
 			{
 				return;
 			}
 
 
-			Assert.IsTrue(Math.Abs(expected - actual) < 1E-15);
+			Assert.IsTrue(Math.Abs(expected - actual) < epsilon);
 		}
 	}
 }
