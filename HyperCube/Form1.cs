@@ -45,7 +45,7 @@ namespace HyperCube
 			graphics.DrawLine(_penZ, zero, _axisZ);
 			graphics.DrawLine(_penQ, zero, _axisQ);
 
-			Bivector4DFloat b = axisPicker.GetAxis();
+			Bivector4D<float> b = axisPicker.GetAxis();
 			DateTime currentTime = DateTime.Now;
 			float angle = (float)((currentTime - _prevTime).TotalMilliseconds * 0.0001);
 			angle *= axisPicker.GetAngle();

@@ -58,7 +58,7 @@ namespace Lib4D
 		}
 
 
-		public void Rotate(Bivector4DFloat b, float angle)
+		public void Rotate(Bivector4D<float> b, float angle)
 		{
 			float c = MathF.Cos(angle);
 			float s = MathF.Sin(angle);

@@ -59,7 +59,7 @@ namespace Lib4D
 		}
 
 
-		public void Rotate(Bivector4DDouble b, double angle)
+		public void Rotate(Bivector4D<double> b, double angle)
 		{
 			double c = System.Math.Cos(angle);
 			double s = System.Math.Sin(angle);

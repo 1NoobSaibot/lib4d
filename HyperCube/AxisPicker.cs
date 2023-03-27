@@ -10,11 +10,11 @@ namespace HyperCube
 		}
 
 
-		public Bivector4DFloat GetAxis()
+		public Bivector4D<float> GetAxis()
 		{
 			var a = aVectorPicker.GetVector();
 			var b = bVectorPicker.GetVector();
-			return new Bivector4DFloat(a, b);
+			return new(a, b);
 		}
 
 

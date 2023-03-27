@@ -54,7 +54,7 @@ namespace Lib4D_Tests
 			Vector4D<double> y = new(0, 1, 0, 0);
 
 			// Axis ZQ, X => Y
-			Bivector4DDouble surface = new(z, q);
+			Bivector4D<double> surface = new(z, q);
 			Transform4DDouble t = new();
 			t.Rotate(surface, Math.PI / 2);
 			AreApproximatelyEqual(y, t * x);
