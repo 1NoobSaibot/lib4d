@@ -4,7 +4,7 @@ namespace HyperCube
 {
 	internal class Projector4dTo2d
 	{
-		private Projector4dTo3d _4dTo3d;
+		private readonly Projector4dTo3d _4dTo3d;
 		private readonly float[,] _projectionMatrix;
 		private readonly float _tan;
 
@@ -32,12 +32,12 @@ namespace HyperCube
 
 
 
-		public Vector3D<float> Project(Vector4DFloat input)
+		public Vector3D<float> Project(Vector4D<float> input)
 		{
 			Vector3D<float> p = _4dTo3d.Project(input);
 			Vector3D<float> P2 = (p/* - from*/) * _projectionMatrix;
-			P2.X = P2.X / (P2.Z * _tan);
-			P2.Y = P2.Y / (P2.Z * _tan);
+			P2.X /= (P2.Z * _tan);
+			P2.Y /= (P2.Z * _tan);
 
 			return P2;
 		}

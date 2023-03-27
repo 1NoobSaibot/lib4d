@@ -1,21 +1,19 @@
 ﻿using Lib4D;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace Lib4D_Tests
 {
 	[TestClass]
 	public class Transform4DUnitTest
 	{
-		private Random _rnd = new Random();
+		private readonly Random _rnd = new();
 
 
 		[TestMethod]
 		public void TranslatingVectorWithIdentityTransform()
 		{
 			// Identity transform doesn't change Vectors
-			Transform4DDouble identityTransform = new Transform4DDouble();
-			Vector4DDouble v = GetRandomVector();
+			Transform4DDouble identityTransform = new();
+			Vector4D<double> v = GetRandomVector();
 
 			Assert.AreEqual(v, identityTransform * v);
 		}
@@ -26,12 +24,12 @@ namespace Lib4D_Tests
 		{
 			Transform4DDouble transform = Transform4DDouble.GetTranslate(5, -4, 3, -7);
 			Assert.AreEqual(
-				new Vector4DDouble(5, -4, 3, -7),
-				transform * new Vector4DDouble()
+				new Vector4D<double>(5, -4, 3, -7),
+				transform * new Vector4D<double>()
 			);
 			Assert.AreEqual(
-				new Vector4DDouble(6, -2, -5, 6),
-				transform * new Vector4DDouble(1, 2, -8, 13)
+				new Vector4D<double>(6, -2, -5, 6),
+				transform * new Vector4D<double>(1, 2, -8, 13)
 			);
 		}
 
@@ -41,8 +39,8 @@ namespace Lib4D_Tests
 		{
 			Transform4DDouble transform = Transform4DDouble.GetScale(2, 4, -6, 7);
 			Assert.AreEqual(
-				new Vector4DDouble(2, 4, -6, 7),
-				transform * new Vector4DDouble(1, 1, 1, 1)
+				new Vector4D<double>(2, 4, -6, 7),
+				transform * new Vector4D<double>(1, 1, 1, 1)
 			);
 		}
 
@@ -50,69 +48,69 @@ namespace Lib4D_Tests
 		[TestMethod]
 		public void Rotate()
 		{
-			Vector4DDouble z = new Vector4DDouble(0, 0, 1, 0);
-			Vector4DDouble q = new Vector4DDouble(0, 0, 0, 1);
-			Vector4DDouble x = new Vector4DDouble(1, 0, 0, 0);
-			Vector4DDouble y = new Vector4DDouble(0, 1, 0, 0);
+			Vector4D<double> z = new(0, 0, 1, 0);
+			Vector4D<double> q = new(0, 0, 0, 1);
+			Vector4D<double> x = new(1, 0, 0, 0);
+			Vector4D<double> y = new(0, 1, 0, 0);
 
 			// Axis ZQ, X => Y
-			Bivector4DDouble surface = new Bivector4DDouble(z, q);
-			Transform4DDouble t = new Transform4DDouble();
+			Bivector4DDouble surface = new(z, q);
+			Transform4DDouble t = new();
 			t.Rotate(surface, Math.PI / 2);
-			_AreApproximatelyEqual(y, t * x);
+			AreApproximatelyEqual(y, t * x);
 
 			// Axis YQ, Z => X
-			surface = new Bivector4DDouble(y, q);
-			t = new Transform4DDouble();
+			surface = new(y, q);
+			t = new();
 			t.Rotate(surface, Math.PI / 2);
-			_AreApproximatelyEqual(x, t * z);
+			AreApproximatelyEqual(x, t * z);
 
 			// Axis YZ, Q => X
-			surface = new Bivector4DDouble(y, z);
-			t = new Transform4DDouble();
+			surface = new(y, z);
+			t = new();
 			t.Rotate(surface, Math.PI / 2);
-			_AreApproximatelyEqual(x, t * q);
+			AreApproximatelyEqual(x, t * q);
 
 			// Axis XQ, Y => Z
-			surface = new Bivector4DDouble(x, q);
-			t = new Transform4DDouble();
+			surface = new(x, q);
+			t = new();
 			t.Rotate(surface, Math.PI / 2);
-			_AreApproximatelyEqual(z, t * y);
+			AreApproximatelyEqual(z, t * y);
 
 			// Axis XZ, Q => Y
-			surface = new Bivector4DDouble(x, z);
-			t = new Transform4DDouble();
+			surface = new(x, z);
+			t = new();
 			t.Rotate(surface, Math.PI / 2);
-			_AreApproximatelyEqual(y, t * q);
+			AreApproximatelyEqual(y, t * q);
 
 			// Axis XY, Z => Q
-			surface = new Bivector4DDouble(x, y);
-			t = new Transform4DDouble();
+			surface = new(x, y);
+			t = new();
 			t.Rotate(surface, Math.PI / 2);
-			_AreApproximatelyEqual(q, t * z);
+			AreApproximatelyEqual(q, t * z);
 
 
 			// Axis ZQ 180, X => -X
-			t = new Transform4DDouble();
-			surface = new Bivector4DDouble(z, q);
+			t = new();
+			surface = new(z, q);
 			t.Rotate(surface, Math.PI);
-			_AreApproximatelyEqual(x * -1, t * x);
-			_AreApproximatelyEqual(y * -1, t * y);
+			AreApproximatelyEqual(x * -1, t * x);
+			AreApproximatelyEqual(y * -1, t * y);
 
-			t = new Transform4DDouble();
-			surface = new Bivector4DDouble(new Vector4DDouble(1, 1, 1).Normalize(), q);
+			t = new();
+			surface = new(new Vector4D<double>(1, 1, 1).GetNormalized(), q);
 			t.Rotate(surface, Math.PI / 3 * 2);
-			_AreApproximatelyEqual(y, t * x);
-			_AreApproximatelyEqual(z, t * y);
-			_AreApproximatelyEqual(x, t * z);
+			AreApproximatelyEqual(y, t * x);
+			AreApproximatelyEqual(z, t * y);
+			AreApproximatelyEqual(x, t * z);
 		}
 
 
-		private Vector4DDouble GetRandomVector()
+		private Vector4D<double> GetRandomVector()
 		{
 			const double amplitude = 1;
 
-			return new Vector4DDouble(
+			return new Vector4D<double>(
 				_rnd.NextDouble() * 2 * amplitude - amplitude,	
 				_rnd.NextDouble() * 2 * amplitude - amplitude,	
 				_rnd.NextDouble() * 2 * amplitude - amplitude,
@@ -121,14 +119,14 @@ namespace Lib4D_Tests
 		}
 
 
-		private void _AreApproximatelyEqual(Vector4DDouble expected, Vector4DDouble actual)
+		private static void AreApproximatelyEqual(Vector4D<double> expected, Vector4D<double> actual)
 		{
 			try
 			{
-				_AreApproximatelyEqual(expected.X, actual.X);
-				_AreApproximatelyEqual(expected.Y, actual.Y);
-				_AreApproximatelyEqual(expected.Z, actual.Z);
-				_AreApproximatelyEqual(expected.Q, actual.Q);
+				AreApproximatelyEqual(expected.X, actual.X);
+				AreApproximatelyEqual(expected.Y, actual.Y);
+				AreApproximatelyEqual(expected.Z, actual.Z);
+				AreApproximatelyEqual(expected.Q, actual.Q);
 			}
 			catch
 			{
@@ -137,7 +135,7 @@ namespace Lib4D_Tests
 		}
 
 
-		private void _AreApproximatelyEqual(double expected, double actual)
+		private static void AreApproximatelyEqual(double expected, double actual)
 		{
 			if (actual == expected)
 			{

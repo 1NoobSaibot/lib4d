@@ -1,6 +1,4 @@
 ﻿using Lib4D;
-using System;
-using System.Windows.Forms;
 
 namespace HyperCube
 {
@@ -14,8 +12,8 @@ namespace HyperCube
 
 		public Bivector4DFloat GetAxis()
 		{
-			Vector4DFloat a = aVectorPicker.GetVector();
-			Vector4DFloat b = bVectorPicker.GetVector();
+			var a = aVectorPicker.GetVector();
+			var b = bVectorPicker.GetVector();
 			return new Bivector4DFloat(a, b);
 		}
 

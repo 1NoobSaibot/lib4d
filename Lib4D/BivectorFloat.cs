@@ -21,7 +21,7 @@ namespace Lib4D
 		}
 
 
-		public Bivector4DFloat(Vector4DFloat a1, Vector4DFloat a2)
+		public Bivector4DFloat(Vector4D<float> a1, Vector4D<float> a2)
 		{
 			_matrix = new float[4, 4];
 			for (int i = 0; i < 4; i++)
@@ -81,6 +81,26 @@ namespace Lib4D
 			{
 				_matrix = MatrixMath.Add(a._matrix, b._matrix)
 			};
+		}
+
+		public override bool Equals(object? obj)
+		{
+			if (ReferenceEquals(this, obj))
+			{
+				return true;
+			}
+
+			if (obj is null)
+			{
+				return false;
+			}
+
+			return obj is Bivector4DFloat bv && this == bv;
+		}
+
+		public override int GetHashCode()
+		{
+			return _matrix.GetHashCode();
 		}
 	}
 }

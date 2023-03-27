@@ -48,7 +48,7 @@
 			// looper
 			// 
 			this.looper.Interval = 5;
-			this.looper.Tick += new System.EventHandler(this.looper_Tick);
+			this.looper.Tick += new System.EventHandler(this.Looper_Tick);
 			// 
 			// shapePicker
 			// 

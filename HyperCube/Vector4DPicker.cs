@@ -11,15 +11,16 @@ namespace HyperCube
 		}
 
 
-		internal Vector4DFloat GetVector()
+		internal Vector4D<float> GetVector()
 		{
-			Vector4DFloat res = new Vector4DFloat(xPicker.Value, yPicker.Value, qPicker.Value, zPicker.Value);
+			Vector4D<float> res = new Vector4D<float>(xPicker.Value, yPicker.Value, qPicker.Value, zPicker.Value);
 			if (res.AbsQuad == 0)
 			{
 				res.X = 1;
 			}
 
-			return res.Normalize();
+			res.Normalize();
+			return res;
 		}
 	}
 }

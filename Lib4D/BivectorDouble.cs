@@ -21,7 +21,7 @@ namespace Lib4D
 		}
 
 
-		public Bivector4DDouble(Vector4DDouble a1, Vector4DDouble a2)
+		public Bivector4DDouble(Vector4D<double> a1, Vector4D<double> a2)
 		{
 			_matrix = new double[4, 4];
 			for (int i = 0; i < 4; i++)
@@ -66,7 +66,7 @@ namespace Lib4D
 
 		public static Bivector4DDouble operator *(double a, Bivector4DDouble b)
 		{
-			Bivector4DDouble res = new Bivector4DDouble()
+			Bivector4DDouble res = new()
 			{
 				_matrix = b._matrix.Mul(a),
 			};
@@ -81,6 +81,26 @@ namespace Lib4D
 			{
 				_matrix = MatrixMath.Add(a._matrix, b._matrix)
 			};
+		}
+
+		public override bool Equals(object? obj)
+		{
+			if (ReferenceEquals(this, obj))
+			{
+				return true;
+			}
+
+			if (obj is null)
+			{
+				return false;
+			}
+
+			throw new NotImplementedException();
+		}
+
+		public override int GetHashCode()
+		{
+			return _matrix.GetHashCode();
 		}
 	}
 }

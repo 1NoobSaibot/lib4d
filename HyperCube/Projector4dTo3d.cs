@@ -10,15 +10,15 @@ namespace HyperCube
 
 		public Projector4dTo3d(int width, int height, int frustumDepth = 2000)
 		{
-			Vector4DFloat from = new(0, 0, 0, 0);
-			Vector4DFloat to = new(0, 0, frustumDepth, 0);
-			Vector4DFloat up = new(0, height * 0.5f, 0, 0);
-			Vector4DFloat over = new(width * 0.5f, 0, 0, 0);
+			Vector4D<float> from = new(0, 0, 0, 0);
+			Vector4D<float> to = new(0, 0, frustumDepth, 0);
+			Vector4D<float> up = new(0, height * 0.5f, 0, 0);
+			Vector4D<float> over = new(width * 0.5f, 0, 0, 0);
 
-			Vector4DFloat D = (to - from).Normalize();
-			Vector4DFloat A = Cross4(up, over, D).Normalize();
-			Vector4DFloat B = Cross4(over, D, A).Normalize();
-			Vector4DFloat C = Cross4(D, A, B);
+			Vector4D<float> D = (to - from).GetNormalized();
+			Vector4D<float> A = Cross4(up, over, D).GetNormalized();
+			Vector4D<float> B = Cross4(over, D, A).GetNormalized();
+			Vector4D<float> C = Cross4(D, A, B);
 
 			_projectionMatrix = new float[4, 4] {
 				{ A.X, A.Y, A.Z, A.Q },
@@ -31,9 +31,9 @@ namespace HyperCube
 
 
 
-		public Vector3D<float> Project(Vector4DFloat input)
+		public Vector3D<float> Project(Vector4D<float> input)
 		{
-			Vector4DFloat p = (input /* - from*/) * _projectionMatrix;
+			Vector4D<float> p = (input /* - from*/) * _projectionMatrix;
 
 			
 			Vector3D<float> res;
@@ -46,9 +46,9 @@ namespace HyperCube
 
 
 
-		private static Vector4DFloat Cross4(Vector4DFloat a, Vector4DFloat b, Vector4DFloat c)
+		private static Vector4D<float> Cross4(Vector4D<float> a, Vector4D<float> b, Vector4D<float> c)
 		{
-			Vector4DFloat res = new()
+			Vector4D<float> res = new()
 			{
 				X = MatrixMath.GetDeterminant(new float[3, 3]
 				{

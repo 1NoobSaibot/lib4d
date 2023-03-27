@@ -79,7 +79,7 @@ namespace Lib4D
 
 		public static Transform3D<TNumber> GetTranslate(TNumber tx, TNumber ty, TNumber tz)
 		{
-			Transform3D<TNumber> t = new Transform3D<TNumber>();
+			Transform3D<TNumber> t = new();
 			t.Translate(tx, ty, tz);
 			return t;
 		}
@@ -93,7 +93,7 @@ namespace Lib4D
 
 		public static Transform3D<TNumber> GetScale(TNumber kx, TNumber ky, TNumber kz)
 		{
-			Transform3D<TNumber> t = new Transform3D<TNumber>();
+			Transform3D<TNumber> t = new();
 			t.Scale(kx, ky, kz);
 			return t;
 		}

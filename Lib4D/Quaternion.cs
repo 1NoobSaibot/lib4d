@@ -250,5 +250,15 @@ namespace Lib4D
 		{
 			return this == other;
 		}
+
+		public override bool Equals(object? obj)
+		{
+			return obj is Quaternion<TNumber> q && Equals(q);
+		}
+
+		public override int GetHashCode()
+		{
+			return ri.GetHashCode() ^ jk.GetHashCode();
+		}
 	}
 }

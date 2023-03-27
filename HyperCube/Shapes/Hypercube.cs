@@ -1,16 +1,15 @@
 ﻿using Lib4D;
-using System.Collections.Generic;
 
 namespace HyperCube.Shapes
 {
 	internal class Hypercube : Shape4D
 	{
-		private Vector4DFloat[,] _lines;
-		private Vector4DFloat[] _vertecies;
+		private readonly Vector4D<float>[,] _lines;
+		private readonly Vector4D<float>[] _vertecies;
 
 		public Hypercube(float scale)
 		{
-			List<Vector4DFloat> verticies = new List<Vector4DFloat>(16);
+			List<Vector4D<float>> verticies = new(16);
 			for (int x = -1; x < 2; x += 2)
 			{
 				for (int y = -1; y < 2; y += 2)
@@ -19,21 +18,21 @@ namespace HyperCube.Shapes
 					{
 						for (int q = -1; q < 2; q += 2)
 						{
-							verticies.Add(new Vector4DFloat(x, y, z, q));
+							verticies.Add(new Vector4D<float>(x, y, z, q));
 						}
 					}
 				}
 			}
 			_vertecies = verticies.ToArray();
 
-			List<(Vector4DFloat a, Vector4DFloat b)> lines = new List<(Vector4DFloat a, Vector4DFloat b)>();
+			List<(Vector4D<float> a, Vector4D<float> b)> lines = new();
 			for (int x = -1; x < 2; x += 2)
 			{
 				for (int y = -1; y < 2; y += 2)
 				{
 					for (int z = -1; z < 2; z += 2)
 					{
-						lines.Add((new Vector4DFloat(x, y, z, -1), new Vector4DFloat(x, y, z, 1)));
+						lines.Add((new(x, y, z, -1), new(x, y, z, 1)));
 					}
 				}
 			}
@@ -44,7 +43,7 @@ namespace HyperCube.Shapes
 				{
 					for (int q = -1; q < 2; q += 2)
 					{
-						lines.Add((new Vector4DFloat(x, y, -1, q), new Vector4DFloat(x, y, 1, q)));
+						lines.Add((new Vector4D<float>(x, y, -1, q), new Vector4D<float>(x, y, 1, q)));
 					}
 				}
 			}
@@ -55,7 +54,7 @@ namespace HyperCube.Shapes
 				{
 					for (int q = -1; q < 2; q += 2)
 					{
-						lines.Add((new Vector4DFloat(x, -1, z, q), new Vector4DFloat(x, 1, z, q)));
+						lines.Add((new Vector4D<float>(x, -1, z, q), new Vector4D<float>(x, 1, z, q)));
 					}
 				}
 			}
@@ -66,12 +65,12 @@ namespace HyperCube.Shapes
 				{
 					for (int q = -1; q < 2; q += 2)
 					{
-						lines.Add((new Vector4DFloat(-1, y, z, q), new Vector4DFloat(1, y, z, q)));
+						lines.Add((new Vector4D<float>(-1, y, z, q), new Vector4D<float>(1, y, z, q)));
 					}
 				}
 			}
 
-			_lines = new Vector4DFloat[lines.Count, 2];
+			_lines = new Vector4D<float>[lines.Count, 2];
 			for (int i = 0; i < lines.Count; i++)
 			{
 				_lines[i, 0] = lines[i].a * scale;

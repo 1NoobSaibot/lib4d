@@ -1,19 +1,17 @@
 ﻿using Lib4D;
-using System;
-using System.Collections.Generic;
 
 namespace HyperCube.Shapes
 {
 	internal class Dodecaplex : Shape4D
 	{
-		private Vector4DFloat[,] _lines;
-		private Vector4DFloat[] _vertecies;
+		private readonly Vector4D<float>[,] _lines;
+		private readonly Vector4D<float>[] _vertecies;
 		private static readonly float sqrt5 = (float)Math.Sqrt(5);
 		private static readonly float F = (1 + sqrt5) / 2;
 
 		public Dodecaplex(float scale)
 		{
-			List<Vector4DFloat> verteces = new List<Vector4DFloat>(600);
+			List<Vector4D<float>> verteces = new(600);
 
 			// 24 vertexes are (0, 0, +-2, +-2) all combinations;
 			for (int c1 = 0; c1 < 3; c1++)
@@ -24,7 +22,7 @@ namespace HyperCube.Shapes
 					{
 						for (int v2 = -2; v2 < 3; v2 += 4)
 						{
-							Vector4DFloat a = new Vector4DFloat();
+							Vector4D<float> a = new();
 							a[c1] = v1;
 							a[c2] = v2;
 							verteces.Add(a);
@@ -44,7 +42,7 @@ namespace HyperCube.Shapes
 						{
 							for (int q = -1; q < 2; q += 2)
 							{
-								Vector4DFloat a = new Vector4DFloat(x, y, z, q);
+								Vector4D<float> a = new(x, y, z, q);
 								a[cs] = sqrt5 * a[cs];
 								verteces.Add(a);
 							}
@@ -64,7 +62,7 @@ namespace HyperCube.Shapes
 						{
 							for (int q = -1; q < 2; q += 2)
 							{
-								Vector4DFloat a = new Vector4DFloat(x, y, z, q);
+								Vector4D<float> a = new(x, y, z, q);
 								for (int i = 0; i < 4; i++)
 								{
 									if (i == cs)
@@ -94,7 +92,7 @@ namespace HyperCube.Shapes
 						{
 							for (int q = -1; q < 2; q += 2)
 							{
-								Vector4DFloat a = new Vector4DFloat(x, y, z, q);
+								Vector4D<float> a = new(x, y, z, q);
 								for (int i = 0; i < 4; i++)
 								{
 									if (i == cs)
@@ -143,7 +141,7 @@ namespace HyperCube.Shapes
 							combination[one] = 3;
 							combination[fQuad] = 4;
 
-							if (!isEven(combination))
+							if (!IsEven(combination))
 							{
 								continue;
 							}
@@ -154,7 +152,7 @@ namespace HyperCube.Shapes
 								{
 									for (int fQuadSign = -1; fQuadSign < 2; fQuadSign += 2)
 									{
-										Vector4DFloat v = new Vector4DFloat();
+										Vector4D<float> v = new();
 										v[fMinus2] = 1 / (F * F) * fMinus2Sign;
 										v[one] = oneSign;
 										v[fQuad] = F * F * fQuadSign;
@@ -197,7 +195,7 @@ namespace HyperCube.Shapes
 							combination[fPos] = 3;
 							combination[sqrt5Pos] = 4;
 
-							if (!isEven(combination))
+							if (!IsEven(combination))
 							{
 								continue;
 							}
@@ -208,7 +206,7 @@ namespace HyperCube.Shapes
 								{
 									for (int sqrt5Sign = -1; sqrt5Sign < 2; sqrt5Sign += 2)
 									{
-										Vector4DFloat v = new Vector4DFloat();
+										Vector4D<float> v = new();
 										v[fMinus1] = 1 / F * fMinus1Sign;
 										v[fPos] = F * fSign;
 										v[sqrt5Pos] = sqrt5 * sqrt5Sign;
@@ -251,7 +249,7 @@ namespace HyperCube.Shapes
 							combination[fPos] = 3;
 							combination[twoPos] = 4;
 
-							if (!isEven(combination))
+							if (!IsEven(combination))
 							{
 								continue;
 							}
@@ -264,7 +262,7 @@ namespace HyperCube.Shapes
 									{
 										for (int twoSign = -1; twoSign < 2; twoSign += 2)
 										{
-											Vector4DFloat v = new Vector4DFloat();
+											Vector4D<float> v = new();
 											v[fMinus1Pos] = fMinus1Sign / F;
 											v[onePos] = oneSign;
 											v[fPos] = fSign * F;
@@ -285,8 +283,8 @@ namespace HyperCube.Shapes
 				verteces[i] *= scale;
 			}
 			_vertecies = verteces.ToArray();
-			float lineLengthQuad = findSmallestDistanceQuadBetween(verteces);
-			List<(Vector4DFloat a, Vector4DFloat b)> lines = new List<(Vector4DFloat a, Vector4DFloat b)>(1200);
+			float lineLengthQuad = FindSmallestDistanceQuadBetween(verteces);
+			List<(Vector4D<float> a, Vector4D<float> b)> lines = new(1200);
 			
 			for (int i = 0; i < verteces.Count - 1; i++)
 			{
@@ -311,7 +309,7 @@ namespace HyperCube.Shapes
 				throw new Exception("Dodecaplex should be built with 1200 edges, but found " + lines.Count);
 			}
 
-			_lines = new Vector4DFloat[lines.Count, 2];
+			_lines = new Vector4D<float>[lines.Count, 2];
 			for (int i = 0; i < lines.Count; i++)
 			{
 				_lines[i, 0] = lines[i].a;
@@ -320,7 +318,7 @@ namespace HyperCube.Shapes
 		}
 
 
-		private float findSmallestDistanceQuadBetween(List<Vector4DFloat> verteces)
+		private static float FindSmallestDistanceQuadBetween(List<Vector4D<float>> verteces)
 		{
 			float min = 10000;
 			for (int i = 0; i < verteces.Count - 1; i++)
@@ -338,7 +336,7 @@ namespace HyperCube.Shapes
 		}
 
 
-		private bool isEven(int[] combination)
+		private static bool IsEven(int[] combination)
 		{
 			int inversions = 0;
 			for (int i = 0; i < combination.Length - 1; i++)

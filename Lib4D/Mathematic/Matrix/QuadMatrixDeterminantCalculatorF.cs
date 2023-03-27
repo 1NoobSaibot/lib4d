@@ -2,8 +2,8 @@
 {
 	internal class QuadMatrixDeterminantCalculatorF
 	{
-		private float[,] _matrix;
-		private bool[] _usedColumns;
+		private readonly float[,] _matrix;
+		private readonly bool[] _usedColumns;
 		public readonly float Determinant;
 
 
@@ -19,11 +19,11 @@
 			_matrix = matrix;
 			_usedColumns = new bool[width];
 
-			Determinant = _GetLocalDeterminant(0);
+			Determinant = GetLocalDeterminant(0);
 		}
 
 
-		private float _GetLocalDeterminant(int row) {
+		private float GetLocalDeterminant(int row) {
 			if (row == _matrix.GetHeight()) {
 				return 1;
 			}
@@ -39,7 +39,7 @@
 
 				float sign = ((localIndex & 1) == 0) ? +1 : -1;
 				_usedColumns[absoluteIndex] = true;
-				dt += sign * _matrix[absoluteIndex, row] * _GetLocalDeterminant(row + 1);
+				dt += sign * _matrix[absoluteIndex, row] * GetLocalDeterminant(row + 1);
 				_usedColumns[absoluteIndex] = false;
 
 				localIndex++;

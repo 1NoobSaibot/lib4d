@@ -147,7 +147,7 @@ namespace Lib4D
 		}
 
 
-		private static TNumber c2 = Math<TNumber>.Int2Number!(2);
+		private static readonly TNumber c2 = Math<TNumber>.Int2Number!(2);
 		public Complex<TNumber> Sqrt()
 		{
 			var magnitude = Abs();

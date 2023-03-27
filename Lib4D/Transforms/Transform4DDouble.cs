@@ -19,10 +19,10 @@ namespace Lib4D
 
 		public Transform4DDouble ()
 		{
-			_matrix = _CreateIdentityMatrix();
+			_matrix = CreateIdentityMatrix();
 		}
 
-		public void Translate (Vector4DDouble t)
+		public void Translate (Vector4D<double> t)
 		{
 			Translate(t.X, t.Y, t.Z, t.Q);
 		}
@@ -30,7 +30,7 @@ namespace Lib4D
 
 		public void Translate(double tx, double ty, double tz, double tq)
 		{
-			double[,] transformMatrix = _CreateIdentityMatrix();
+			double[,] transformMatrix = CreateIdentityMatrix();
 			transformMatrix[4, 0] = tx;
 			transformMatrix[4, 1] = ty;
 			transformMatrix[4, 2] = tz;
@@ -39,7 +39,7 @@ namespace Lib4D
 		}
 
 
-		public void Scale(Vector4DDouble k)
+		public void Scale(Vector4D<double> k)
 		{
 			Scale(k.X, k.Y, k.Z, k.Q);
 		}
@@ -90,7 +90,7 @@ namespace Lib4D
 
 		
 		#region Static Constructors
-		public static Transform4DDouble GetTranslate(Vector4DDouble t)
+		public static Transform4DDouble GetTranslate(Vector4D<double> t)
 		{
 			return GetTranslate(t.X, t.Y, t.Z, t.Q);
 		}
@@ -98,13 +98,13 @@ namespace Lib4D
 
 		public static Transform4DDouble GetTranslate(double tx, double ty, double tz, double tq)
 		{
-			Transform4DDouble t = new Transform4DDouble();
+			Transform4DDouble t = new();
 			t.Translate(tx, ty, tz, tq);
 			return t;
 		}
 
 
-		public static Transform4DDouble GetScale(Vector4DDouble k)
+		public static Transform4DDouble GetScale(Vector4D<double> k)
 		{
 			return GetScale(k.X, k.Y, k.Z, k.Q);
 		}
@@ -112,7 +112,7 @@ namespace Lib4D
 
 		public static Transform4DDouble GetScale(double kx, double ky, double kz, double kq)
 		{
-			Transform4DDouble t = new Transform4DDouble();
+			Transform4DDouble t = new();
 			t.Scale(kx, ky, kz, kq);
 			return t;
 		}
@@ -120,7 +120,7 @@ namespace Lib4D
 
 
 		#region Operators
-		public static Vector4DDouble operator *(Transform4DDouble t, Vector4DDouble v)
+		public static Vector4D<double> operator *(Transform4DDouble t, Vector4D<double> v)
 		{
 			double[,] column = new double[1, 5];
 			column[0, 0] = v.X;
@@ -131,7 +131,7 @@ namespace Lib4D
 
 			column = MatrixMath.Mul(t._matrix, column);
 
-			return new Vector4DDouble(column[0, 0], column[0, 1], column[0, 2], column[0, 3]);
+			return new Vector4D<double>(column[0, 0], column[0, 1], column[0, 2], column[0, 3]);
 		}
 
 
@@ -144,7 +144,7 @@ namespace Lib4D
 		}
 		#endregion
 
-		private static double[,] _CreateIdentityMatrix()
+		private static double[,] CreateIdentityMatrix()
 		{
 			return new double[5, 5]
 			{

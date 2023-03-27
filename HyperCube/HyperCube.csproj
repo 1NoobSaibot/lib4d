@@ -19,9 +19,7 @@
     <Compile Update="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Vector4DPicker.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Vector4DPicker.cs" />
   </ItemGroup>
 
 </Project>

@@ -117,33 +117,33 @@ namespace Lib4D_Tests
 			{
 				// Around OX
 				var transform = _getRotateT(new Vector3D<TNumber>(c1, c0, c0), PI / c2);
-				_AreApproximatelyEqual(
+				AreApproximatelyEqual(
 					new Vector3D<TNumber>(c0, c0, c1),
 					transform * new Vector3D<TNumber>(c0, c1, c0)
 				);
-				_AreApproximatelyEqual(
+				AreApproximatelyEqual(
 					new Vector3D<TNumber>(c0, -c1, c1),
 					transform * new Vector3D<TNumber>(c0, c1, c1)
 				);
 
 				// Around OY
 				transform = _getRotateT(new Vector3D<TNumber>(c0, c1, c0), PI / c2);
-				_AreApproximatelyEqual(
+				AreApproximatelyEqual(
 					new Vector3D<TNumber>(c1, c0, c0),
 					transform * new Vector3D<TNumber>(c0, c0, c1)
 				);
-				_AreApproximatelyEqual(
+				AreApproximatelyEqual(
 					new Vector3D<TNumber>(c1, c0, -c1),
 					transform * new Vector3D<TNumber>(c1, c0, c1)
 				);
 
 				// Around OZ
 				transform = _getRotateT(new Vector3D<TNumber>(c0, c0, c1), PI / c2);
-				_AreApproximatelyEqual(
+				AreApproximatelyEqual(
 					new Vector3D<TNumber>(c0, c1, c0),
 					transform * new Vector3D<TNumber>(c1, c0, c0)
 				);
-				_AreApproximatelyEqual(
+				AreApproximatelyEqual(
 					new Vector3D<TNumber>(-c1, c1, c0),
 					transform * new Vector3D<TNumber>(c1, c1, c0)
 				);
@@ -152,11 +152,11 @@ namespace Lib4D_Tests
 					new Vector3D<TNumber>(c1, c1, c1).GetNormalized(),
 					PI * c2 / c3
 				);
-				_AreApproximatelyEqual(
+				AreApproximatelyEqual(
 					new Vector3D<TNumber>(c3, c1, c2),
 					transform * new Vector3D<TNumber>(c1, c2, c3)
 				);
-				_AreApproximatelyEqual(
+				AreApproximatelyEqual(
 					new Vector3D<TNumber>(-c3, -c1, -c2),
 					transform * new Vector3D<TNumber>(-c1, -c2, -c3)
 				);
@@ -178,7 +178,7 @@ namespace Lib4D_Tests
 
 						ForEachVector(point =>
 						{
-							_AreApproximatelyEqual(
+							AreApproximatelyEqual(
 								transformAxisAngle * point,
 								transformQuaternion * point
 							);
@@ -189,13 +189,13 @@ namespace Lib4D_Tests
 			}
 
 
-			private void _AreApproximatelyEqual(Vector3D<TNumber> expected, Vector3D<TNumber> actual)
+			private void AreApproximatelyEqual(Vector3D<TNumber> expected, Vector3D<TNumber> actual)
 			{
 				try
 				{
-					_AreApproximatelyEqual(expected.X, actual.X);
-					_AreApproximatelyEqual(expected.Y, actual.Y);
-					_AreApproximatelyEqual(expected.Z, actual.Z);
+					AreApproximatelyEqual(expected.X, actual.X);
+					AreApproximatelyEqual(expected.Y, actual.Y);
+					AreApproximatelyEqual(expected.Z, actual.Z);
 				}
 				catch
 				{
@@ -204,7 +204,7 @@ namespace Lib4D_Tests
 			}
 
 
-			private void _AreApproximatelyEqual(TNumber expected, TNumber actual)
+			private void AreApproximatelyEqual(TNumber expected, TNumber actual)
 			{
 				if (actual == expected)
 				{

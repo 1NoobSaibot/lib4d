@@ -21,7 +21,7 @@ namespace Lib4D
 			_matrix = CreateIdentityMatrix();
 		}
 
-		public void Translate (Vector4DFloat t)
+		public void Translate (Vector4D<float> t)
 		{
 			Translate(t.X, t.Y, t.Z, t.Q);
 		}
@@ -38,7 +38,7 @@ namespace Lib4D
 		}
 
 
-		public void Scale(Vector4DFloat k)
+		public void Scale(Vector4D<float> k)
 		{
 			Scale(k.X, k.Y, k.Z, k.Q);
 		}
@@ -89,7 +89,7 @@ namespace Lib4D
 
 		
 		#region Static Constructors
-		public static Transform4DFloat GetTranslate(Vector4DFloat t)
+		public static Transform4DFloat GetTranslate(Vector4D<float> t)
 		{
 			return GetTranslate(t.X, t.Y, t.Z, t.Q);
 		}
@@ -103,7 +103,7 @@ namespace Lib4D
 		}
 
 
-		public static Transform4DFloat GetScale(Vector4DFloat k)
+		public static Transform4DFloat GetScale(Vector4D<float> k)
 		{
 			return GetScale(k.X, k.Y, k.Z, k.Q);
 		}
@@ -119,7 +119,7 @@ namespace Lib4D
 
 
 		#region Operators
-		public static Vector4DFloat operator *(Transform4DFloat t, Vector4DFloat v)
+		public static Vector4D<float> operator *(Transform4DFloat t, Vector4D<float> v)
 		{
 			float[,] column = new float[1, 5];
 			column[0, 0] = v.X;
@@ -130,7 +130,7 @@ namespace Lib4D
 
 			column = MatrixMath.Mul(t._matrix, column);
 
-			return new Vector4DFloat(column[0, 0], column[0, 1], column[0, 2], column[0, 3]);
+			return new Vector4D<float>(column[0, 0], column[0, 1], column[0, 2], column[0, 3]);
 		}
 
 
