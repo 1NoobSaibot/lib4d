@@ -6,17 +6,9 @@ using System.Numerics;
 namespace Lib4D_Tests.Transforms._2D
 {
 	public abstract class Transform2DTest<TNumber>
-		: NumberSet<TNumber>
+		: MathDependentTest<TNumber>
 		where TNumber : INumber<TNumber>
 	{
-		public Transform2DTest()
-		{
-			Math<TNumber>.InitInstance(GetMath());
-		}
-
-		protected abstract Math<TNumber> GetMath();
-
-
 		[TestMethod]
 		public void Calculate()
 		{

@@ -5,19 +5,15 @@ using System.Numerics;
 namespace Lib4D_Tests.Quaternions
 {
 	public abstract class QuaternionTest<TNumber>
-		: NumberSet<TNumber>
+		: MathDependentTest<TNumber>
 		where TNumber : INumber<TNumber> 
 	{
 		private readonly QuaternionTestHelper<TNumber> _qth;
 
 		public QuaternionTest()
 		{
-			InitMath();
 			_qth = new QuaternionTestHelper<TNumber>();
 		}
-
-
-		protected abstract void InitMath();
 
 
 		[TestMethod]

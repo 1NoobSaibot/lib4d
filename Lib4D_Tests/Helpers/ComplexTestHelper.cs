@@ -1,11 +1,10 @@
 ﻿using Lib4D;
-using Lib4D.Mathematic;
 using System.Numerics;
 
 namespace Lib4D_Tests.Helpers
 {
 	internal class ComplexTestHelper<TNumber>
-		: NumberSet<TNumber>
+		: FloatTestHelper<TNumber>
 		where TNumber : INumber<TNumber>
 	{
 		private readonly IReadOnlyList<TNumber> _values;
@@ -24,19 +23,12 @@ namespace Lib4D_Tests.Helpers
 				AssertApproximatelyEqual(a.R, b.R);
 				AssertApproximatelyEqual(a.I, b.I);
 			}
-			catch (AssertFailedException)
+			catch (AssertFailedException ex)
 			{
-				throw new AssertFailedException($"Two complex numbers {a} and {b} are not enough equal");
-			}
-		}
-
-
-		public void AssertApproximatelyEqual(TNumber a, TNumber b)
-		{
-			var delta = Math<TNumber>.Abs!(a - b);
-			if (delta > EPSILON)
-			{
-				throw new AssertFailedException();
+				throw new AssertFailedException(
+					$"{typeof(TNumber).Name}: Two complex numbers {a} and {b} are not enough equal",
+					ex
+				);
 			}
 		}
 
@@ -62,26 +54,6 @@ namespace Lib4D_Tests.Helpers
 					action(a, b);
 				});
 			});
-		}
-
-		public void ForEachFloat(Action<TNumber> action)
-		{
-			foreach (var i in _values)
-			{
-				action(i);
-			}
-		}
-
-
-		public void ForEachTwoFloats(Action<TNumber, TNumber> action)
-		{
-			foreach (var i in _values)
-			{
-				foreach (var j in _values)
-				{
-					action(i, j);
-				}
-			}
 		}
 	}
 }

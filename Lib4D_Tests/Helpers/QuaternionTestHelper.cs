@@ -18,9 +18,12 @@ namespace Lib4D_Tests.Helpers
 				base.AssertApproximatelyEqual(a.ri, b.ri);
 				base.AssertApproximatelyEqual(a.jk, b.jk);
 			}
-			catch (AssertFailedException)
+			catch (AssertFailedException ex)
 			{
-				throw new AssertFailedException($"Two quaternions {a} and {b} are not enough equal");
+				throw new AssertFailedException(
+					$"{typeof(TNumber).Name}: Two quaternions {a} and {b} are not enough equal",
+					ex
+				);
 			}
 		}
 

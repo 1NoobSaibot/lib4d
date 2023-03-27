@@ -6,7 +6,7 @@ using System.Numerics;
 namespace Lib4D_Tests.Transforms._3D
 {
 	public abstract class Transform3DTest<TNumber>
-		: NumberSet<TNumber>
+		: MathDependentTest<TNumber>
 		where TNumber : INumber<TNumber>
 	{
 		private readonly TNumber[] _numbers;
@@ -14,12 +14,8 @@ namespace Lib4D_Tests.Transforms._3D
 
 		public Transform3DTest()
 		{
-			Math<TNumber>.InitInstance(GetMath());
 			_numbers = GetNums();
 		}
-
-
-		protected abstract Math<TNumber> GetMath();
 
 
 		[TestMethod]
