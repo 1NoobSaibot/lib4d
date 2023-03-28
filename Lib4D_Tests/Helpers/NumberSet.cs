@@ -12,22 +12,7 @@ namespace Lib4D_Tests.Helpers
 		/// It uses as a maximum absolute error in comparing two numbers approximately
 		/// </summary>
 		public TNumber EPSILON { get; private set; } = TNumber.Zero;
-		public readonly TNumber c0 = TNumber.Zero;
-		public readonly TNumber c1 = TNumber.One;
-		public readonly TNumber c2 = TNumber.One + TNumber.One;
-		public readonly TNumber c3;
-		public readonly TNumber c4;
-		public readonly TNumber c5;
-		public readonly TNumber c6;
-		public readonly TNumber c7;
-		public readonly TNumber c8;
-		public readonly TNumber c9;
-		public readonly TNumber c10;
-		public readonly TNumber c11;
-		public readonly TNumber c12;
-		public readonly TNumber c13;
-		public readonly TNumber c17;
-
+		
 
 		public NumberSet() {
 			if (typeof(TNumber) == typeof(float))
@@ -44,29 +29,18 @@ namespace Lib4D_Tests.Helpers
 			{
 				throw new Exception("Exponent and PI cannot be defined when type is " +  typeof(TNumber));
 			}
-			
-			c3 = c2 + c1;
-			c4 = c3 + c1;
-			c5 = c4 + c1;
-			c6 = c5 + c1;
-			c7 = c6 + c1;
-			c8 = c7 + c1;
-			c9 = c8 + c1;
-			c10 = c9 + c1;
-			c11 = c10 + c1;
-			c12 = c11 + c1;
-			c13 = c12 + c1;
-			c17 = c13 + c4;
 		}
 
 
 		public TNumber[] GetNums()
 		{
-			return new TNumber[] { -c7, -c1, c0, c1, c7 };
+			return new TNumber[] {
+				Math<TNumber>.Int2Number!(-7),
+				Math<TNumber>.Int2Number!(-1),
+				Math<TNumber>.Int2Number!(0),
+				Math<TNumber>.Int2Number!(+1),
+				Math<TNumber>.Int2Number!(+7)
+			};
 		}
-
-
-		public TNumber this[int v] => Math<TNumber>.Int2Number!(v);
-		public TNumber this[double v] => Math<TNumber>.Double2Number!(v);
 	}
 }

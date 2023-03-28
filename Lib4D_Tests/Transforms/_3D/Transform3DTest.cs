@@ -62,50 +62,52 @@ namespace Lib4D_Tests.Transforms._3D
 		[TestMethod]
 		public void RotateAroundAxis()
 		{
+			TNumber c2 = Math<TNumber>.Double2Number!(2);
 			// Around OX
-			var transform = Transform3D<TNumber>.GetRotate(new Vector3D<TNumber>(c1, c0, c0), PI / c2);
+			var transform = Transform3D<TNumber>.GetRotate(new Vector3D<TNumber>(1, 0, 0), PI / c2);
 			AreApproximatelyEqual(
-				new Vector3D<TNumber>(c0, c0, c1),
-				transform * new Vector3D<TNumber>(c0, c1, c0)
+				new Vector3D<TNumber>(0, 0, 1),
+				transform * new Vector3D<TNumber>(0, 1, 0)
 			);
 			AreApproximatelyEqual(
-				new Vector3D<TNumber>(c0, -c1, c1),
-				transform * new Vector3D<TNumber>(c0, c1, c1)
+				new Vector3D<TNumber>(0, -1, 1),
+				transform * new Vector3D<TNumber>(0, 1, 1)
 			);
 
 			// Around OY
-			transform = Transform3D<TNumber>.GetRotate(new Vector3D<TNumber>(c0, c1, c0), PI / c2);
+			transform = Transform3D<TNumber>.GetRotate(new Vector3D<TNumber>(0, 1, 0), PI / c2);
 			AreApproximatelyEqual(
-				new Vector3D<TNumber>(c1, c0, c0),
-				transform * new Vector3D<TNumber>(c0, c0, c1)
+				new Vector3D<TNumber>(1, 0, 0),
+				transform * new Vector3D<TNumber>(0, 0, 1)
 			);
 			AreApproximatelyEqual(
-				new Vector3D<TNumber>(c1, c0, -c1),
-				transform * new Vector3D<TNumber>(c1, c0, c1)
+				new Vector3D<TNumber>(1, 0, -1),
+				transform * new Vector3D<TNumber>(1, 0, 1)
 			);
 
 			// Around OZ
-			transform = Transform3D<TNumber>.GetRotate(new Vector3D<TNumber>(c0, c0, c1), PI / c2);
+			transform = Transform3D<TNumber>.GetRotate(new Vector3D<TNumber>(0, 0, 1), PI / c2);
 			AreApproximatelyEqual(
-				new Vector3D<TNumber>(c0, c1, c0),
-				transform * new Vector3D<TNumber>(c1, c0, c0)
+				new Vector3D<TNumber>(0, 1, 0),
+				transform * new Vector3D<TNumber>(1, 0, 0)
 			);
 			AreApproximatelyEqual(
-				new Vector3D<TNumber>(-c1, c1, c0),
-				transform * new Vector3D<TNumber>(c1, c1, c0)
+				new Vector3D<TNumber>(-1, 1, 0),
+				transform * new Vector3D<TNumber>(1, 1, 0)
 			);
 
+			TNumber c3 = Math<TNumber>.Double2Number!(3);
 			transform = Transform3D<TNumber>.GetRotate(
-				new Vector3D<TNumber>(c1, c1, c1).GetNormalized(),
+				new Vector3D<TNumber>(1, 1, 1).GetNormalized(),
 				PI * c2 / c3
 			);
 			AreApproximatelyEqual(
-				new Vector3D<TNumber>(c3, c1, c2),
-				transform * new Vector3D<TNumber>(c1, c2, c3)
+				new Vector3D<TNumber>(3, 1, 2),
+				transform * new Vector3D<TNumber>(1, 2, 3)
 			);
 			AreApproximatelyEqual(
-				new Vector3D<TNumber>(-c3, -c1, -c2),
-				transform * new Vector3D<TNumber>(-c1, -c2, -c3)
+				new Vector3D<TNumber>(-3, -1, -2),
+				transform * new Vector3D<TNumber>(-1, -2, -3)
 			);
 		}
 
@@ -113,7 +115,16 @@ namespace Lib4D_Tests.Transforms._3D
 		[TestMethod]
 		public void RotateWithQuaternion()
 		{
-			TNumber[] angles = { -c3 * PI, -c2 * PI, -PI, c0, PI, c2 * PI, c3 * PI };
+			TNumber c0 = Math<TNumber>.Double2Number!(0);
+			TNumber c2 = Math<TNumber>.Double2Number!(2);
+			TNumber c3 = Math<TNumber>.Double2Number!(3);
+			TNumber[] angles = {
+				-c3 * PI,
+				-c2 * PI,
+				-PI, c0,
+				PI, c2 * PI,
+				c3 * PI
+			};
 
 			ForEachVector(axis => {
 				axis = axis.GetNormalized();

@@ -157,7 +157,7 @@ namespace Lib4D_Tests.Vectors
 		{
 			_vth.ForEachVector3D(v =>
 			{
-				_vth.ForEachFloat(f =>
+				_vth.ForEachTNum(f =>
 				{
 					var mul = v * f;
 					Assert.AreEqual(mul, f * v);

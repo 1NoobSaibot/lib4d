@@ -28,7 +28,6 @@ namespace Lib4D
 			Translate(t.X, t.Y, t.Z, t.Q);
 		}
 
-
 		public void Translate(TNumber tx, TNumber ty, TNumber tz, TNumber tq)
 		{
 			TNumber[,] transformMatrix = CreateIdentityMatrix();
@@ -39,12 +38,31 @@ namespace Lib4D
 			_matrix = MatrixMath.Mul(_matrix, transformMatrix);
 		}
 
+		public void Translate(double tx, double ty, double tz, double tq)
+		{
+			TNumber[,] transformMatrix = CreateIdentityMatrix();
+			transformMatrix[4, 0] = Math<TNumber>.Double2Number!(tx);
+			transformMatrix[4, 1] = Math<TNumber>.Double2Number!(ty);
+			transformMatrix[4, 2] = Math<TNumber>.Double2Number!(tz);
+			transformMatrix[4, 3] = Math<TNumber>.Double2Number!(tq);
+			_matrix = MatrixMath.Mul(_matrix, transformMatrix);
+		}
+
 
 		public void Scale(Vector4D<TNumber> k)
 		{
 			Scale(k.X, k.Y, k.Z, k.Q);
 		}
 
+		public void Scale(double kx, double ky, double kz, double kq)
+		{
+			Scale(
+				Math<TNumber>.Double2Number!(kx),
+				Math<TNumber>.Double2Number!(ky),
+				Math<TNumber>.Double2Number!(kz),
+				Math<TNumber>.Double2Number!(kq)
+			);
+		}
 
 		public void Scale(TNumber kx, TNumber ky, TNumber kz, TNumber kq)
 		{
@@ -57,6 +75,11 @@ namespace Lib4D
 			_matrix = MatrixMath.Mul(_matrix, scaleMatrix);
 		}
 
+
+		public void Rotate(Bivector4D<TNumber> b, double angle)
+		{
+			Rotate(b, Math<TNumber>.Double2Number!(angle));
+		}
 
 		public void Rotate(Bivector4D<TNumber> b, TNumber angle)
 		{
@@ -94,8 +117,14 @@ namespace Lib4D
 			return GetTranslate(t.X, t.Y, t.Z, t.Q);
 		}
 
-
 		public static Transform4D<TNumber> GetTranslate(TNumber tx, TNumber ty, TNumber tz, TNumber tq)
+		{
+			Transform4D<TNumber> t = new();
+			t.Translate(tx, ty, tz, tq);
+			return t;
+		}
+
+		public static Transform4D<TNumber> GetTranslate(double tx, double ty, double tz, double tq)
 		{
 			Transform4D<TNumber> t = new();
 			t.Translate(tx, ty, tz, tq);
@@ -108,6 +137,12 @@ namespace Lib4D
 			return GetScale(k.X, k.Y, k.Z, k.Q);
 		}
 
+		public static Transform4D<TNumber> GetScale(double kx, double ky, double kz, double kq)
+		{
+			Transform4D<TNumber> t = new();
+			t.Scale(kx, ky, kz, kq);
+			return t;
+		}
 
 		public static Transform4D<TNumber> GetScale(TNumber kx, TNumber ky, TNumber kz, TNumber kq)
 		{

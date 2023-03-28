@@ -5,7 +5,8 @@ namespace Lib4D
 {
 	public struct Vector2D<TNumber> where TNumber : INumber<TNumber>
 	{
-		public TNumber X, Y;
+		public TNumber X = TNumber.Zero;
+		public TNumber Y = TNumber.Zero;
 
 
 		#region Constructors

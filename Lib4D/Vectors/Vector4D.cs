@@ -17,6 +17,8 @@ namespace Lib4D
 
 		public TNumber Abs => Math<TNumber>.Sqrt!(AbsQuad);
 
+
+		#region Constructors
 		public Vector4D()
 		{
 			X = TNumber.Zero;
@@ -56,6 +58,40 @@ namespace Lib4D
 			Z = z;
 			Q = q;
 		}
+
+		public Vector4D(double x)
+		{
+			X = Math<TNumber>.Double2Number!(x);
+			Y = TNumber.Zero;
+			Z = TNumber.Zero;
+			Q = TNumber.Zero;
+		}
+
+		public Vector4D(double x, double y)
+		{
+			X = Math<TNumber>.Double2Number!(x);
+			Y = Math<TNumber>.Double2Number!(y);
+			Z = TNumber.Zero;
+			Q = TNumber.Zero;
+		}
+
+		public Vector4D(double x, double y, double z)
+		{
+			X = Math<TNumber>.Double2Number!(x);
+			Y = Math<TNumber>.Double2Number!(y);
+			Z = Math<TNumber>.Double2Number!(z);
+			Q = TNumber.Zero;
+		}
+
+		public Vector4D(double x, double y, double z, double q)
+		{
+			X = Math<TNumber>.Double2Number!(x);
+			Y = Math<TNumber>.Double2Number!(y);
+			Z = Math<TNumber>.Double2Number!(z);
+			Q = Math<TNumber>.Double2Number!(q);
+		}
+		#endregion
+
 
 		public void Normalize()
 		{

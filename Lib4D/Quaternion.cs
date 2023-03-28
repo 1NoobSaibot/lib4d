@@ -13,28 +13,28 @@ namespace Lib4D
 		IEqualityOperators<Quaternion<TNumber>, Quaternion<TNumber>, bool>
 		where TNumber : INumber<TNumber>
 	{
-		public Complex<TNumber> ri, jk;
+		public Complex<TNumber> RI, JK;
 
 		#region Getters
 		public TNumber R
 		{
-			get => ri.R;
-			set => ri.R = value;
+			get => RI.R;
+			set => RI.R = value;
 		}
 		public TNumber I
 		{
-			get => ri.I;
-			set => ri.I = value;
+			get => RI.I;
+			set => RI.I = value;
 		}
 		public TNumber J
 		{
-			get => jk.R;
-			set => jk.R = value;
+			get => JK.R;
+			set => JK.R = value;
 		}
 		public TNumber K
 		{
-			get => jk.I;
-			set => jk.I = value;
+			get => JK.I;
+			set => JK.I = value;
 		}
 
 		public TNumber AbsQuad => R*R + I*I + J*J + K*K;
@@ -44,40 +44,66 @@ namespace Lib4D
 		public Quaternion<TNumber> ConjugateQuaternion => new(R, -I, -J, -K);
 		#endregion
 
+
 		#region Constructors
 		public Quaternion(TNumber r)
 		{
-			this.ri = r;
+			RI = r;
 		}
 		public Quaternion(TNumber r, TNumber i)
 		{
-			this.ri = new Complex<TNumber>(r, i);
+			RI = new Complex<TNumber>(r, i);
 		}
 		public Quaternion(TNumber r, TNumber i, TNumber j)
 		{
-			this.ri = new Complex<TNumber>(r, i);
-			this.jk = new Complex<TNumber>(j, TNumber.Zero);
+			RI = new Complex<TNumber>(r, i);
+			JK = j;
 		}
 		public Quaternion(TNumber r, TNumber i, TNumber j, TNumber k)
 		{
-			this.ri = new Complex<TNumber>(r, i);
-			this.jk = new Complex<TNumber>(j, k);
+			RI = new Complex<TNumber>(r, i);
+			JK = new Complex<TNumber>(j, k);
+		}
+
+		public Quaternion(double r)
+		{
+			RI = r;
+		}
+		public Quaternion(double r, double i)
+		{
+			RI = new Complex<TNumber>(r, i);
+		}
+		public Quaternion(double r, double i, double j)
+		{
+			RI = new Complex<TNumber>(r, i);
+			JK = j;
+		}
+		public Quaternion(double r, double i, double j, double k)
+		{
+			RI = new Complex<TNumber>(r, i);
+			JK = new Complex<TNumber>(j, k);
 		}
 
 		public Quaternion(Complex<TNumber> ri)
 		{
-			this.ri = ri;
-			this.jk = new Complex<TNumber>();
+			RI = ri;
+			JK = new Complex<TNumber>();
 		}
 		public Quaternion(Complex<TNumber> ri, Complex<TNumber> jk)
 		{
-			this.ri = ri;
-			this.jk = jk;
+			RI = ri;
+			JK = jk;
 		}
 
 
-		private static readonly TNumber c0_5 = Math<TNumber>.Double2Number!(0.5);
-		public static Quaternion<TNumber> ByAxisAndAngle(Vector3D<TNumber> u, TNumber alpha) {
+		public static Quaternion<TNumber> ByAxisAndAngle(Vector3D<TNumber> u, double alpha)
+		{
+			return ByAxisAndAngle(u, Math<TNumber>.Double2Number!(alpha));
+		}
+
+		public static Quaternion<TNumber> ByAxisAndAngle(Vector3D<TNumber> u, TNumber alpha)
+		{
+			TNumber c0_5 = Math<TNumber>.Double2Number!(0.5);
 			var sinHalfA = Math<TNumber>.Sin!(alpha * c0_5);
 
 			return new Quaternion<TNumber>(
@@ -93,23 +119,23 @@ namespace Lib4D
 		#region Plus
 		public static Quaternion<TNumber> operator +(Quaternion<TNumber> a, Quaternion<TNumber> b)
 		{
-			return new Quaternion<TNumber>(a.ri + b.ri, a.jk + b.jk);
+			return new Quaternion<TNumber>(a.RI + b.RI, a.JK + b.JK);
 		}
 		public static Quaternion<TNumber> operator +(Quaternion<TNumber> a, Complex<TNumber> b)
 		{
-			return new Quaternion<TNumber>(a.ri + b, a.jk);
+			return new Quaternion<TNumber>(a.RI + b, a.JK);
 		}
 		public static Quaternion<TNumber> operator +(Complex<TNumber> a, Quaternion<TNumber> b)
 		{
-			return new Quaternion<TNumber>(a + b.ri, b.jk);
+			return new Quaternion<TNumber>(a + b.RI, b.JK);
 		}
 		public static Quaternion<TNumber> operator +(Quaternion<TNumber> a, TNumber b)
 		{
-			return new Quaternion<TNumber>(a.ri + b, a.jk);
+			return new Quaternion<TNumber>(a.RI + b, a.JK);
 		}
 		public static Quaternion<TNumber> operator +(TNumber a, Quaternion<TNumber> b)
 		{
-			return new Quaternion<TNumber>(a + b.ri, b.jk);
+			return new Quaternion<TNumber>(a + b.RI, b.JK);
 		}
 		#endregion
 
@@ -117,23 +143,23 @@ namespace Lib4D
 		#region Minus
 		public static Quaternion<TNumber> operator -(Quaternion<TNumber> a, Quaternion<TNumber> b)
 		{
-			return new Quaternion<TNumber>(a.ri - b.ri, a.jk - b.jk);
+			return new Quaternion<TNumber>(a.RI - b.RI, a.JK - b.JK);
 		}
 		public static Quaternion<TNumber> operator -(Quaternion<TNumber> a, Complex<TNumber> b)
 		{
-			return new Quaternion<TNumber>(a.ri - b, a.jk);
+			return new Quaternion<TNumber>(a.RI - b, a.JK);
 		}
 		public static Quaternion<TNumber> operator -(Quaternion<TNumber> a, TNumber b)
 		{
-			return new Quaternion<TNumber>(a.ri - b, a.jk);
+			return new Quaternion<TNumber>(a.RI - b, a.JK);
 		}
 		public static Quaternion<TNumber> operator -(Complex<TNumber> a, Quaternion<TNumber> b)
 		{
-			return new Quaternion<TNumber>(a - b.ri, -b.jk);
+			return new Quaternion<TNumber>(a - b.RI, -b.JK);
 		}
 		public static Quaternion<TNumber> operator -(TNumber a, Quaternion<TNumber> b)
 		{
-			return new Quaternion<TNumber>(a - b.ri, -b.jk);
+			return new Quaternion<TNumber>(a - b.RI, -b.JK);
 		}
 		#endregion
 
@@ -213,19 +239,19 @@ namespace Lib4D
 		#region Comparisons
 		public static bool operator ==(Quaternion<TNumber> a, Quaternion<TNumber> b)
 		{
-			return a.ri == b.ri && a.jk == b.jk;
+			return a.RI == b.RI && a.JK == b.JK;
 		}
 
 		public static bool operator !=(Quaternion<TNumber> a, Quaternion<TNumber> b)
 		{
-			return a.ri != b.ri || a.jk != b.jk;
+			return a.RI != b.RI || a.JK != b.JK;
 		}
 		#endregion
 
 
 		public static Quaternion<TNumber> operator -(Quaternion<TNumber> v)
 		{
-			return v * -TNumber.One;
+			return new(-v.R, -v.I, -v.J, -v.K);
 		}
 		
 
@@ -258,7 +284,7 @@ namespace Lib4D
 
 		public override int GetHashCode()
 		{
-			return ri.GetHashCode() ^ jk.GetHashCode();
+			return RI.GetHashCode() ^ JK.GetHashCode();
 		}
 	}
 }

@@ -33,17 +33,30 @@ namespace Lib4D
     /// </summary>
     public TNumber I;
 
-		public Complex(TNumber real, TNumber imaginary)
-    {
-      R = real;
-      I = imaginary;
-    }
 
+		#region Constructors
 		public Complex(TNumber real)
 		{
 			R = real;
 			I = TNumber.Zero;
 		}
+		public Complex(TNumber real, TNumber imaginary)
+    {
+      R = real;
+      I = imaginary;
+    }
+		public Complex(double real)
+		{
+			R = Math<TNumber>.Double2Number!(real);
+			I = TNumber.Zero;
+		}
+		public Complex(double real, double imaginary)
+		{
+			R = Math<TNumber>.Double2Number!(real);
+			I = Math<TNumber>.Double2Number!(imaginary);
+		}
+		#endregion
+
 
 
 		public TNumber AbsQuad()
@@ -170,6 +183,10 @@ namespace Lib4D
 		public static implicit operator Complex<TNumber>(TNumber n)
 		{
       return new(n, TNumber.Zero);
+		}
+		public static implicit operator Complex<TNumber>(double n)
+		{
+			return new(Math<TNumber>.Double2Number!(n), TNumber.Zero);
 		}
 
 

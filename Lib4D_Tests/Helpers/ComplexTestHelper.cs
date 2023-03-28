@@ -4,18 +4,9 @@ using System.Numerics;
 namespace Lib4D_Tests.Helpers
 {
 	internal class ComplexTestHelper<TNumber>
-		: FloatTestHelper<TNumber>
+		: TNumTestHelper<TNumber>
 		where TNumber : INumber<TNumber>
 	{
-		private readonly IReadOnlyList<TNumber> _values;
-
-
-		public ComplexTestHelper()
-		{
-			_values = GetNums();
-		}
-
-
 		public void AssertApproximatelyEqualC(Complex<TNumber> a, Complex<TNumber> b)
 		{
 			try
@@ -35,13 +26,7 @@ namespace Lib4D_Tests.Helpers
 
 		public void ForEachComplex(Action<Complex<TNumber>> action)
 		{
-			foreach (var r in _values)
-			{
-				foreach (var i in _values)
-				{
-					action(new(r, i));
-				}
-			}
+			ForEachTwoTNums((r, i) => action(new(r, i)));
 		}
 
 

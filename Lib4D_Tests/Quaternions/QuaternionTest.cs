@@ -1,9 +1,11 @@
 ﻿using Lib4D;
+using Lib4D.Mathematic;
 using Lib4D_Tests.Helpers;
 using System.Numerics;
 
 namespace Lib4D_Tests.Quaternions
 {
+	// TODO: No tests for ByAxisAndAngleTest
 	public abstract class QuaternionTest<TNumber>
 		: MathDependentTest<TNumber>
 		where TNumber : INumber<TNumber> 
@@ -22,39 +24,109 @@ namespace Lib4D_Tests.Quaternions
 			(Quaternion<TNumber>, Quaternion<TNumber>, bool)[] samples =
 			{
 				(new(), new(), true),
-				(new(c7), new(c7), true),
-				(new(c0, c7), new(c0, c7), true),
-				(new(c0, c0, c7), new(c0, c0, c7), true),
-				(new(c0, c0, c0, c7), new(c0, c0, c0, c7), true),
-				(new(c1, c2, c3, c4), new(c1, c2, c3, c4), true),
+				(new(7), new(7), true),
+				(new(0, 7), new(0, 7), true),
+				(new(0, 0, 7), new(0, 0, 7), true),
+				(new(0, 0, 0, 7), new(0, 0, 0, 7), true),
+				(new(1, 2, 3, 4), new(1, 2, 3, 4), true),
 
-				(new(), new(c1), false),
-				(new(), new(c0, c1), false),
-				(new(), new(c0, c0, c1), false),
-				(new(), new(c0, c0, c0, c1), false)
+				(new(), new(1), false),
+				(new(), new(0, 1), false),
+				(new(), new(0, 0, 1), false),
+				(new(), new(0, 0, 0, 1), false)
 			};
 
-			foreach (var sample in samples)
-			{
-				(var a, var b, var areEqual) = sample;
-				Assert.AreEqual(areEqual, a == b);
-				Assert.AreEqual(areEqual, a.Equals(b));
-				Assert.AreEqual(areEqual, b == a);
-				Assert.AreEqual(areEqual, b.Equals(a));
-
-				Assert.AreEqual(!areEqual, a != b);
-				Assert.AreEqual(!areEqual, b != a);
-
-				if (areEqual)
-				{
-					Assert.AreEqual(a, b);
-				}
-				else
-				{
-					Assert.AreNotEqual(a, b);
-				}
-			}
+			EqualityTestHelper<Quaternion<TNumber>>.TestEquality(samples);
 		}
+
+
+		[TestMethod]
+		public void ConstructorsAreAgreed()
+		{
+			var zeroQ = new Quaternion<TNumber>();
+			Assert.AreEqual(TNumber.Zero, zeroQ.R);
+			Assert.AreEqual(TNumber.Zero, zeroQ.I);
+			Assert.AreEqual(TNumber.Zero, zeroQ.J);
+			Assert.AreEqual(TNumber.Zero, zeroQ.K);
+
+			Assert.AreEqual(zeroQ, new Quaternion<TNumber>(0));
+			Assert.AreEqual(zeroQ, new Quaternion<TNumber>(0, 0));
+			Assert.AreEqual(zeroQ, new Quaternion<TNumber>(0, 0, 0));
+			Assert.AreEqual(zeroQ, new Quaternion<TNumber>(0, 0, 0, 0));
+			var z = TNumber.Zero;
+			Assert.AreEqual(zeroQ, new Quaternion<TNumber>(z));
+			Assert.AreEqual(zeroQ, new Quaternion<TNumber>(z, z));
+			Assert.AreEqual(zeroQ, new Quaternion<TNumber>(z, z, z));
+			Assert.AreEqual(zeroQ, new Quaternion<TNumber>(z, z, z, z));
+			var zeroC = new Complex<TNumber>();
+			Assert.AreEqual(zeroQ, new Quaternion<TNumber>(zeroC));
+			Assert.AreEqual(zeroQ, new Quaternion<TNumber>(zeroC, zeroC));
+
+			_qth.ForEachFloat(_d1 => {
+				var nD1 = Math<TNumber>.Double2Number!(_d1);
+				var q = new Quaternion<TNumber>(_d1);
+				Assert.AreEqual(nD1, q.R);
+				Assert.AreEqual(TNumber.Zero, q.I);
+				Assert.AreEqual(TNumber.Zero, q.J);
+				Assert.AreEqual(TNumber.Zero, q.K);
+
+				Assert.AreEqual(q, new Quaternion<TNumber>(nD1));
+				Assert.AreEqual(q, new Quaternion<TNumber>(_d1, 0));
+				Assert.AreEqual(q, new Quaternion<TNumber>(nD1, z));
+				Assert.AreEqual(q, new Quaternion<TNumber>(_d1, 0, 0));
+				Assert.AreEqual(q, new Quaternion<TNumber>(nD1, z, z));
+				Assert.AreEqual(q, new Quaternion<TNumber>(_d1, 0, 0, 0));
+				Assert.AreEqual(q, new Quaternion<TNumber>(nD1, z, z, z));
+				Assert.AreEqual(q, new Quaternion<TNumber>(new Complex<TNumber>(_d1)));
+				Assert.AreEqual(q, new Quaternion<TNumber>(new Complex<TNumber>(_d1), new()));
+
+				_qth.ForEachFloat(_d2 => {
+					var nD2 = Math<TNumber>.Double2Number(_d2);
+					q = new Quaternion<TNumber>(_d1, _d2);
+					Assert.AreEqual(nD1, q.R);
+					Assert.AreEqual(nD2, q.I);
+					Assert.AreEqual(TNumber.Zero, q.J);
+					Assert.AreEqual(TNumber.Zero, q.K);
+
+					Assert.AreEqual(q, new Quaternion<TNumber>(nD1, nD2));
+					Assert.AreEqual(q, new Quaternion<TNumber>(_d1, _d2, 0));
+					Assert.AreEqual(q, new Quaternion<TNumber>(nD1, nD2, z));
+					Assert.AreEqual(q, new Quaternion<TNumber>(_d1, _d2, 0, 0));
+					Assert.AreEqual(q, new Quaternion<TNumber>(nD1, nD2, z, z));
+					Assert.AreEqual(q, new Quaternion<TNumber>(new Complex<TNumber>(_d1, _d2)));
+					Assert.AreEqual(q, new Quaternion<TNumber>(new Complex<TNumber>(_d1, _d2), new()));
+
+					_qth.ForEachFloat(_d3 => {
+						var nD3 = Math<TNumber>.Double2Number(_d3);
+						q = new Quaternion<TNumber>(_d1, _d2, _d3);
+						Assert.AreEqual(nD1, q.R);
+						Assert.AreEqual(nD2, q.I);
+						Assert.AreEqual(nD3, q.J);
+						Assert.AreEqual(TNumber.Zero, q.K);
+
+						Assert.AreEqual(q, new Quaternion<TNumber>(nD1, nD2, nD3));
+						Assert.AreEqual(q, new Quaternion<TNumber>(_d1, _d2, _d3));
+						Assert.AreEqual(q, new Quaternion<TNumber>(_d1, _d2, _d3, 0));
+						Assert.AreEqual(q, new Quaternion<TNumber>(nD1, nD2, nD3, z));
+						Assert.AreEqual(q, new Quaternion<TNumber>(new Complex<TNumber>(_d1, _d2), new(_d3)));
+
+						_qth.ForEachFloat(_d4 => {
+							var nD4 = Math<TNumber>.Double2Number(_d4);
+							q = new Quaternion<TNumber>(_d1, _d2, _d3, _d4);
+							Assert.AreEqual(nD1, q.R);
+							Assert.AreEqual(nD2, q.I);
+							Assert.AreEqual(nD3, q.J);
+							Assert.AreEqual(nD4, q.K);
+
+							Assert.AreEqual(q, new Quaternion<TNumber>(_d1, _d2, _d3, _d4));
+							Assert.AreEqual(q, new Quaternion<TNumber>(nD1, nD2, nD3, nD4));
+							Assert.AreEqual(q, new Quaternion<TNumber>(new Complex<TNumber>(_d1, _d2), new(_d3, _d4)));
+						});
+					});
+				});
+			});
+		}
+
 
 
 		[TestMethod]
@@ -63,12 +135,12 @@ namespace Lib4D_Tests.Quaternions
 			_qth.ForEachComplex(c =>
 			{
 				Quaternion<TNumber> q = (Quaternion<TNumber>)c;
-				Assert.AreEqual(q.ri, c);
-				Assert.AreEqual(q.jk, new Complex<TNumber>());
+				Assert.AreEqual(q.RI, c);
+				Assert.AreEqual(q.JK, new Complex<TNumber>());
 				Assert.AreEqual(q.R, c.R);
 				Assert.AreEqual(q.I, c.I);
-				Assert.AreEqual(q.J, c0);
-				Assert.AreEqual(q.K, c0);
+				Assert.AreEqual(q.J, TNumber.Zero);
+				Assert.AreEqual(q.K, TNumber.Zero);
 			});
 		}
 
@@ -76,13 +148,13 @@ namespace Lib4D_Tests.Quaternions
 		[TestMethod]
 		public void CastFloatToQuaternion()
 		{
-			_qth.ForEachFloat(f =>
+			_qth.ForEachTNum(f =>
 			{
 				Quaternion<TNumber> q = (Quaternion<TNumber>)f;
 				Assert.AreEqual(q.R, f);
-				Assert.AreEqual(q.I, c0);
-				Assert.AreEqual(q.J, c0);
-				Assert.AreEqual(q.K, c0);
+				Assert.AreEqual(q.I, TNumber.Zero);
+				Assert.AreEqual(q.J, TNumber.Zero);
+				Assert.AreEqual(q.K, TNumber.Zero);
 			});
 		}
 
@@ -93,17 +165,17 @@ namespace Lib4D_Tests.Quaternions
 			(Quaternion<TNumber>, Quaternion<TNumber>, Quaternion<TNumber>)[] samples =
 			{
 				(new(), new(), new()),
-				(new(c1), new(c1), new(c2)),
-				(new(c0, c1), new(c0, c1), new(c0, c2)),
-				(new(c0, c0, c1), new(c0, c0, c1), new(c0, c0, c2)),
-				(new(c0, c0, c0, c1), new(c0, c0, c0, c1), new(c0, c0, c0, c2)),
-				(new(c1), new(c0, c1), new(c1, c1, c0, c0)),
-				(new(c1), new(c0, c0, c1), new(c1, c0, c1, c0)),
-				(new(c1), new(c0, c0, c0, c1), new(c1, c0, c0, c1)),
-				(new(c0, c1), new(c0, c0, c1), new(c0, c1, c1, c0)),
-				(new(c0, c1), new(c0, c0, c0, c1), new(c0, c1, c0, c1)),
-				(new(c0, c0, c1), new(c0, c0, c0, c1), new(c0, c0, c1, c1)),
-				(new(c1, -c2, c3, -c5), new(-c7, c11, -c13, c17), new(-c6, c9, -c10, c12))
+				(new(1), new(1), new(2)),
+				(new(0, 1), new(0, 1), new(0, 2)),
+				(new(0, 0, 1), new(0, 0, 1), new(0, 0, 2)),
+				(new(0, 0, 0, 1), new(0, 0, 0, 1), new(0, 0, 0, 2)),
+				(new(1), new(0, 1), new(1, 1, 0, 0)),
+				(new(1), new(0, 0, 1), new(1, 0, 1, 0)),
+				(new(1), new(0, 0, 0, 1), new(1, 0, 0, 1)),
+				(new(0, 1), new(0, 0, 1), new(0, 1, 1, 0)),
+				(new(0, 1), new(0, 0, 0, 1), new(0, 1, 0, 1)),
+				(new(0, 0, 1), new(0, 0, 0, 1), new(0, 0, 1, 1)),
+				(new(1, -2, 3, -5), new(-7, 11, -13, 17), new(-6, 9, -10, 12))
 			};
 
 			foreach (var sample in samples)
@@ -121,7 +193,7 @@ namespace Lib4D_Tests.Quaternions
 					Assert.AreEqual(q + (Quaternion<TNumber>)c, c + q);
 				});
 
-				_qth.ForEachFloat(f =>
+				_qth.ForEachTNum(f =>
 				{
 					Assert.AreEqual(q + (Quaternion<TNumber>)f, q + f);
 					Assert.AreEqual(q + (Quaternion<TNumber>)f, f + q);
@@ -147,7 +219,7 @@ namespace Lib4D_Tests.Quaternions
 					Assert.AreEqual((Quaternion<TNumber>)c - q, c - q);
 				});
 
-				_qth.ForEachFloat(f =>
+				_qth.ForEachTNum(f =>
 				{
 					Assert.AreEqual(q - (Quaternion<TNumber>)f, q - f);
 					Assert.AreEqual((Quaternion<TNumber>)f - q, f - q);
@@ -160,22 +232,22 @@ namespace Lib4D_Tests.Quaternions
 		public void Mul()
 		{
 			// Works as simple float when all i, j, k are zero
-			_qth.ForEachTwoFloats((f1, f2) =>
+			_qth.ForEachTwoTNums((f1, f2) =>
 			{
 				Assert.AreEqual((Quaternion<TNumber>)(f1 * f2), (Quaternion<TNumber>)f1 * (Quaternion<TNumber>)f2);
 				Assert.AreEqual((Quaternion<TNumber>)(f1 * f2), (Quaternion<TNumber>)f2 * (Quaternion<TNumber>)f1);
 			});
 
 			Quaternion<TNumber> zero = new();
-			Quaternion<TNumber> two = new(c2);
-			Quaternion<TNumber> r = new(c1);
-			Quaternion<TNumber> nr = new(-c1);
-			Quaternion<TNumber> i = new(c0, c1);
-			Quaternion<TNumber> ni = new(c0, -c1);
-			Quaternion<TNumber> j = new(c0, c0, c1);
-			Quaternion<TNumber> nj = new(c0, c0, -c1);
-			Quaternion<TNumber> k = new(c0, c0, c0, c1);
-			Quaternion<TNumber> nk = new(c0, c0, c0, -c1);
+			Quaternion<TNumber> two = new(2);
+			Quaternion<TNumber> r = new(1);
+			Quaternion<TNumber> nr = new(-1);
+			Quaternion<TNumber> i = new(0, 1);
+			Quaternion<TNumber> ni = new(0, -1);
+			Quaternion<TNumber> j = new(0, 0, 1);
+			Quaternion<TNumber> nj = new(0, 0, -1);
+			Quaternion<TNumber> k = new(0, 0, 0, 1);
+			Quaternion<TNumber> nk = new(0, 0, 0, -1);
 
 			_qth.ForEachQuaternion(q =>
 			{
@@ -220,7 +292,7 @@ namespace Lib4D_Tests.Quaternions
 					Assert.AreEqual((Quaternion<TNumber>)c * q, c * q);
 				});
 
-				_qth.ForEachFloat(f =>
+				_qth.ForEachTNum(f =>
 				{
 					Assert.AreEqual(q * (Quaternion<TNumber>)f, q * f);
 					Assert.AreEqual((Quaternion<TNumber>)f * q, f * q);
@@ -234,8 +306,8 @@ namespace Lib4D_Tests.Quaternions
 		{
 			_qth.ForEachQuaternion(q =>
 			{
-				Assert.AreEqual(q * -c1, -q);
-				Assert.AreEqual(-c1 * q, -q);
+				Assert.AreEqual(q * -1, -q);
+				Assert.AreEqual(-1 * q, -q);
 			});
 		}
 
@@ -243,26 +315,27 @@ namespace Lib4D_Tests.Quaternions
 		[TestMethod]
 		public void Abs()
 		{
-			(Quaternion<TNumber>, TNumber)[] samples =
+			(Quaternion<TNumber>, double)[] samples =
 			{
-				(new(), c0),
-				(new(c1, c0, c0, c0), c1),
-				(new(c0, c2, c0, c0), c2),
-				(new(c0, c0, c3, c0), c3),
-				(new(c0, c0, c0, c4), c4),
+				(new(), 0),
+				(new(1, 0, 0, 0), 1),
+				(new(0, 2, 0, 0), 2),
+				(new(0, 0, 3, 0), 3),
+				(new(0, 0, 0, 4), 4),
 
-				(new(c3, c4, c0, c0), c5),
-				(new(-c4, c3, c0, c0), c5),
-				(new(-c3, c0, c4, c0), c5),
-				(new(c3, c0, c0, c4), c5),
-				(new(c0, c3, -c4, c0), c5),
-				(new(c0, -c3, c0, -c4), c5),
-				(new(c0, c0, c3, c4), c5)
+				(new(3, 4, 0, 0), 5),
+				(new(-4, 3, 0, 0), 5),
+				(new(-3, 0, 4, 0), 5),
+				(new(3, 0, 0, 4), 5),
+				(new(0, 3, -4, 0), 5),
+				(new(0, -3, 0, -4), 5),
+				(new(0, 0, 3, 4), 5)
 			};
 
 			foreach (var sample in samples)
 			{
-				(var q, var magnitude) = sample;
+				var q = sample.Item1;
+				TNumber magnitude = Math<TNumber>.Double2Number!(sample.Item2);
 				Assert.AreEqual(magnitude, q.Abs);
 			}
 		}
@@ -273,7 +346,7 @@ namespace Lib4D_Tests.Quaternions
 		{
 			_qth.ForEachPairOfQuaternion((q1, q2) =>
 			{
-				if (q2.AbsQuad == c0)
+				if (q2.AbsQuad == TNumber.Zero)
 				{
 					return;
 				}
@@ -284,13 +357,13 @@ namespace Lib4D_Tests.Quaternions
 
 			_qth.ForEachQuaternion(q =>
 			{
-				_qth.ForEachFloat(f =>
+				_qth.ForEachTNum(f =>
 				{
-					if (f != c0)
+					if (f != TNumber.Zero)
 					{
 						_qth.AssertApproximatelyEqual(q / (Quaternion<TNumber>)f, q / f);
 					}
-					if (q.AbsQuad != c0)
+					if (q.AbsQuad != TNumber.Zero)
 					{
 						_qth.AssertApproximatelyEqual((Quaternion<TNumber>)f / q, f / q);
 					}
@@ -298,11 +371,11 @@ namespace Lib4D_Tests.Quaternions
 
 				_qth.ForEachComplex(c =>
 				{
-					if (c.AbsQuad() != c0)
+					if (c.AbsQuad() != TNumber.Zero)
 					{
 						_qth.AssertApproximatelyEqual(q / (Quaternion<TNumber>)c, q / c);
 					}
-					if (q.AbsQuad != c0)
+					if (q.AbsQuad != TNumber.Zero)
 					{
 						_qth.AssertApproximatelyEqual((Quaternion<TNumber>)c / q, c / q);
 					}

@@ -1,10 +1,18 @@
 ﻿using Lib4D;
+using Lib4D.Mathematic;
 
 namespace Lib4D_Tests
 {
 	[TestClass]
 	public class Bivector4DSpec
 	{
+		[TestInitialize] public void Init()
+		{
+			// TODO: The best way to fix this test is to make it generic
+			Math<double>.InitInstance(new MathDouble());	
+		}
+
+
 		[TestMethod]
 		public void ChangesSignWithSwapingArguments()
 		{

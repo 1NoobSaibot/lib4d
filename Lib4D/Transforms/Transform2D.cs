@@ -18,7 +18,14 @@ namespace Lib4D
 			_matrix[2, 2] = TNumber.One;
 		}
 
-		
+
+		public static Transform2D<TNumber> GetScale(double kx, double ky)
+		{
+			var t = new Transform2D<TNumber>();
+			t.Scale(kx, ky);
+			return t;
+		}
+
 		public static Transform2D<TNumber> GetScale(TNumber kx, TNumber ky)
 		{
 			var t = new Transform2D<TNumber>();
@@ -27,6 +34,11 @@ namespace Lib4D
 		}
 
 
+		public static Transform2D<TNumber> GetRotate(double alpha)
+		{
+			return GetRotate(Math<TNumber>.Double2Number!(alpha));
+		}
+
 		public static Transform2D<TNumber> GetRotate(TNumber alpha)
 		{
 			var t = new Transform2D<TNumber>();
@@ -34,6 +46,14 @@ namespace Lib4D
 			return t;
 		}
 
+
+		public static Transform2D<TNumber> GetTranslate(double tx, double ty)
+		{
+			return GetTranslate(
+				Math<TNumber>.Double2Number!(tx),
+				Math<TNumber>.Double2Number!(ty)
+			);
+		}
 
 		public static Transform2D<TNumber> GetTranslate(TNumber tx, TNumber ty)
 		{
@@ -46,12 +66,17 @@ namespace Lib4D
 
 		public void Translate(TNumber tx, TNumber ty)
 		{
-			TNumber[,] translateMatrix = new TNumber[3, 3]
-			{
-				{ TNumber.One , TNumber.Zero, TNumber.Zero },
-				{ TNumber.Zero, TNumber.One , TNumber.One  },
-				{ tx          , ty          , TNumber.One  }
-			};
+			TNumber[,] translateMatrix = CreateIdentity();
+			translateMatrix[2, 0] = tx;
+			translateMatrix[2, 1] = ty;
+			_matrix = MatrixMath.Mul(_matrix, translateMatrix);
+		}
+
+		public void Translate(double tx, double ty)
+		{
+			TNumber[,] translateMatrix = CreateIdentity();
+			translateMatrix[2, 0] = Math<TNumber>.Double2Number!(tx);
+			translateMatrix[2, 1] = Math<TNumber>.Double2Number!(ty);
 			_matrix = MatrixMath.Mul(_matrix, translateMatrix);
 		}
 
@@ -71,14 +96,17 @@ namespace Lib4D
 		}
 
 
+		public void Scale(double kx, double ky)
+		{
+			Scale(Math<TNumber>.Double2Number!(kx), Math<TNumber>.Double2Number!(ky));
+		}
+
 		// TODO: It can be optimized, because it's only diagonal matrix
 		public void Scale(TNumber kx, TNumber ky)
 		{
-			TNumber[,] scaleMatrix = new TNumber[3, 3] {
-				{           kx, TNumber.Zero, TNumber.Zero },
-				{ TNumber.Zero,           ky, TNumber.Zero },
-				{ TNumber.Zero, TNumber.Zero, TNumber.One  }
-			};
+			TNumber[,] scaleMatrix = CreateIdentity();
+			scaleMatrix[0, 0] = kx;
+			scaleMatrix[1, 1] = ky;
 			_matrix = MatrixMath.Mul(_matrix, scaleMatrix);
 		}
 
@@ -101,6 +129,16 @@ namespace Lib4D
 			{
 				_matrix = MatrixMath.Mul(a._matrix, b._matrix)
 			};
+		}
+
+
+		private static TNumber[,] CreateIdentity()
+		{
+			var res = new TNumber[3, 3];
+			res[0, 0] = TNumber.One;
+			res[1, 1] = TNumber.One;
+			res[2, 2] = TNumber.One;
+			return res;
 		}
 	}
 }

@@ -4,7 +4,7 @@ using System.Numerics;
 namespace Lib4D_Tests.Helpers
 {
 	internal class VectorTestHelper<TNumber>
-		: FloatTestHelper<TNumber>
+		: TNumTestHelper<TNumber>
 		where TNumber : INumber<TNumber>
 	{
 		public void AssertApproximatelyEqual(Vector2D<TNumber> a, Vector2D<TNumber> b)
@@ -63,7 +63,7 @@ namespace Lib4D_Tests.Helpers
 
 		public void ForEachVector4D(Action<Vector4D<TNumber>> action)
 		{
-			ForEachFourFloats((x, y, z, q) => {
+			ForEachFourTNums((x, y, z, q) => {
 				action(new(x, y, z, q));
 			});
 		}
