@@ -202,7 +202,7 @@ namespace Lib4D_Tests.Complexes
 				}
 
 				var res = a / b;
-				_cth.AssertApproximatelyEqual(a, res * b);
+				_cth.AssertApproximatelyEqualC(a, res * b);
 			});
 
 			_cth.ForEachComplex(complex =>
@@ -229,7 +229,7 @@ namespace Lib4D_Tests.Complexes
 				var root = complex.Sqrt();
 				try
 				{
-					_cth.AssertApproximatelyEqual(complex, root * root);
+					_cth.AssertApproximatelyEqualC(complex, root * root);
 				}
 				catch (AssertFailedException e)
 				{
@@ -256,7 +256,7 @@ namespace Lib4D_Tests.Complexes
 			_cth.ForEachComplex(complex => {
 				TNumber expected = complex.Abs();
 				expected *= expected;
-				_cth.AssertApproximatelyEqual(expected, complex.AbsQuad());
+				_cth.AssertApproximatelyEqualC(expected, complex.AbsQuad());
 			});
 		}
 
@@ -264,17 +264,17 @@ namespace Lib4D_Tests.Complexes
 		[TestMethod]
 		public void Exp()
 		{
-			_cth.AssertApproximatelyEqual(
+			_cth.AssertApproximatelyEqualC(
 				new Complex<TNumber>(c1, c0),
 				Complex<TNumber>.Exp(new())
 			);
-			_cth.AssertApproximatelyEqual(
+			_cth.AssertApproximatelyEqualC(
 				new Complex<TNumber>(Math<TNumber>.E, c0),
 				Complex<TNumber>.Exp(new Complex<TNumber>(c1, c0))
 			);
 
 			// e^(i * pi) + 1 = 0   =>   e^(i * pi) = -1
-			_cth.AssertApproximatelyEqual(
+			_cth.AssertApproximatelyEqualC(
 				new Complex<TNumber>(-c1, c0),
 				Complex<TNumber>.Exp(new Complex<TNumber>(c0, Math<TNumber>.PI))
 			);

@@ -16,12 +16,26 @@ namespace Lib4D_Tests.Helpers
 		}
 
 
-		public void AssertApproximatelyEqual(TNumber a, TNumber b)
+		public void AssertApproximatelyEqualF(TNumber a, TNumber b)
+		{
+			AssertApproximatelyEqualF(a, b, EPSILON);
+		}
+
+
+		public void AssertApproximatelyEqualF(TNumber a, TNumber b, double epsilon)
+		{
+			AssertApproximatelyEqualF(a, b, Math<TNumber>.Double2Number!(epsilon));
+		}
+
+
+		public static void AssertApproximatelyEqualF(TNumber a, TNumber b, TNumber epsilon)
 		{
 			var delta = Math<TNumber>.Abs!(a - b);
-			if (delta > EPSILON)
+			if (delta > epsilon)
 			{
-				throw new AssertFailedException();
+				throw new AssertFailedException(
+					$"{typeof(TNumber).Name}: approximate equality falls. Epsilon={epsilon}, delta={delta}"
+				);
 			}
 		}
 

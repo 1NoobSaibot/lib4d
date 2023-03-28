@@ -16,12 +16,12 @@ namespace Lib4D_Tests.Helpers
 		}
 
 
-		public void AssertApproximatelyEqual(Complex<TNumber> a, Complex<TNumber> b)
+		public void AssertApproximatelyEqualC(Complex<TNumber> a, Complex<TNumber> b)
 		{
 			try
 			{
-				AssertApproximatelyEqual(a.R, b.R);
-				AssertApproximatelyEqual(a.I, b.I);
+				AssertApproximatelyEqualF(a.R, b.R);
+				AssertApproximatelyEqualF(a.I, b.I);
 			}
 			catch (AssertFailedException ex)
 			{

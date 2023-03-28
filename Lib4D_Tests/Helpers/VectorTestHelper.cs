@@ -11,8 +11,8 @@ namespace Lib4D_Tests.Helpers
 		{
 			try
 			{
-				AssertApproximatelyEqual(a.X, b.X);
-				AssertApproximatelyEqual(a.Y, b.Y);
+				AssertApproximatelyEqualF(a.X, b.X);
+				AssertApproximatelyEqualF(a.Y, b.Y);
 			}
 			catch (AssertFailedException ex)
 			{

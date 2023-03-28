@@ -15,8 +15,8 @@ namespace Lib4D_Tests.Helpers
 		{
 			try
 			{
-				base.AssertApproximatelyEqual(a.ri, b.ri);
-				base.AssertApproximatelyEqual(a.jk, b.jk);
+				base.AssertApproximatelyEqualC(a.ri, b.ri);
+				base.AssertApproximatelyEqualC(a.jk, b.jk);
 			}
 			catch (AssertFailedException ex)
 			{
