@@ -224,16 +224,12 @@ namespace Lib4D
 		#region Operators
 		public static Vector4D<TNumber> operator *(Transform4D<TNumber> t, Vector4D<TNumber> v)
 		{
-			TNumber[,] column = new TNumber[1, 5];
-			column[0, 0] = v.X;
-			column[0, 1] = v.Y;
-			column[0, 2] = v.Z;
-			column[0, 3] = v.Q;
-			column[0, 4] = TNumber.One;
-
-			column = MatrixMath.Mul(t._matrix, column);
-
-			return new Vector4D<TNumber>(column[0, 0], column[0, 1], column[0, 2], column[0, 3]);
+			return new Vector4D<TNumber>(
+				t._matrix[0, 0] * v.X + t._matrix[1, 0] * v.Y + t._matrix[2, 0] * v.Z + t._matrix[3, 0] * v.Q + t._matrix[4, 0],
+				t._matrix[0, 1] * v.X + t._matrix[1, 1] * v.Y + t._matrix[2, 1] * v.Z + t._matrix[3, 1] * v.Q + t._matrix[4, 1],
+				t._matrix[0, 2] * v.X + t._matrix[1, 2] * v.Y + t._matrix[2, 2] * v.Z + t._matrix[3, 2] * v.Q + t._matrix[4, 2],
+				t._matrix[0, 3] * v.X + t._matrix[1, 3] * v.Y + t._matrix[2, 3] * v.Z + t._matrix[3, 3] * v.Q + t._matrix[4, 3]
+			);
 		}
 
 
