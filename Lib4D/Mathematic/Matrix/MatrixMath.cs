@@ -145,6 +145,34 @@ namespace Lib4D.Mathematic.Matrix
 		}
 
 
+		public static void Mul<TNumber>(this TNumber[,] a, TNumber[,] b, TNumber[,] c)
+			where TNumber : INumber<TNumber>
+		{
+			// Ширина матрицы A равна высоте B
+			if (a.GetWidth() != b.GetHeight())
+			{
+				throw new Exception($"Cannot execute multiplication of matrixes, because their sizes are not suitable: a.Width={a.GetWidth()}, b.Height={b.GetHeight()}");
+			}
+
+			int commonWidth = a.GetWidth();
+			int width = b.GetWidth();
+			int height = a.GetHeight();
+
+			for (int x = 0; x < width; x++)
+			{
+				for (int y = 0; y < height; y++)
+				{
+					TNumber sum = TNumber.Zero;
+					for (int i = 0; i < commonWidth; i++)
+					{
+						sum += a[i, y] * b[x, i];
+					}
+					c[x, y] = sum;
+				}
+			}
+		}
+
+
 		public static TNumber[,] Extend<TNumber>(TNumber[,] sourceMatrix, int newWidth, int newHeight)
 			where TNumber : INumber<TNumber>
 		{

@@ -11,6 +11,7 @@ namespace Lib4D_Tests.Transforms._4D
 		where TNumber : INumber<TNumber>
 	{
 		private readonly Random _rnd = new();
+		private readonly VectorTestHelper<TNumber> _vth = new();
 
 
 		public Transform4DTest()
@@ -62,7 +63,7 @@ namespace Lib4D_Tests.Transforms._4D
 
 
 		[TestMethod]
-		public void Rotate()
+		public void RotateOriginal()
 		{
 			Vector4D<TNumber> z = new(0, 0, 1, 0);
 			Vector4D<TNumber> q = new(0, 0, 0, 1);
@@ -70,55 +71,96 @@ namespace Lib4D_Tests.Transforms._4D
 			Vector4D<TNumber> y = new(0, 1, 0, 0);
 
 			// Axis ZQ, X => Y
-			Bivector4D<TNumber> surface = new(z, q);
 			Transform4D<TNumber> t = new();
-			t.Rotate(surface, Math.PI / 2);
+			t.Rotate(z, q, Math.PI / 2);
 			AreApproximatelyEqual(y, t * x);
 
 			// Axis YQ, Z => X
-			surface = new(y, q);
 			t = new();
-			t.Rotate(surface, Math.PI / 2);
+			t.Rotate(y, q, Math.PI / 2);
 			AreApproximatelyEqual(x, t * z);
 
 			// Axis YZ, Q => X
-			surface = new(y, z);
 			t = new();
-			t.Rotate(surface, Math.PI / 2);
+			t.Rotate(y, z, Math.PI / 2);
 			AreApproximatelyEqual(x, t * q);
 
 			// Axis XQ, Y => Z
-			surface = new(x, q);
 			t = new();
-			t.Rotate(surface, Math.PI / 2);
+			t.Rotate(x, q, Math.PI / 2);
 			AreApproximatelyEqual(z, t * y);
 
 			// Axis XZ, Q => Y
-			surface = new(x, z);
 			t = new();
-			t.Rotate(surface, Math.PI / 2);
+			t.Rotate(x, z, Math.PI / 2);
 			AreApproximatelyEqual(y, t * q);
 
 			// Axis XY, Z => Q
-			surface = new(x, y);
 			t = new();
-			t.Rotate(surface, Math.PI / 2);
+			t.Rotate(x, y, Math.PI / 2);
 			AreApproximatelyEqual(q, t * z);
 
 
 			// Axis ZQ 180, X => -X
 			t = new();
-			surface = new(z, q);
-			t.Rotate(surface, Math<TNumber>.PI);
+			t.Rotate(z, q, Math<TNumber>.PI);
 			AreApproximatelyEqual(x * -TNumber.One, t * x);
 			AreApproximatelyEqual(y * -TNumber.One, t * y);
 
 			t = new();
-			surface = new(new Vector4D<TNumber>(1, 1, 1).GetNormalized(), q);
-			t.Rotate(surface, Math.PI / 3 * 2);
+			t.Rotate(new Vector4D<TNumber>(1, 1, 1).GetNormalized(), q, Math.PI / 3 * 2);
 			AreApproximatelyEqual(y, t * x);
 			AreApproximatelyEqual(z, t * y);
 			AreApproximatelyEqual(x, t * z);
+		}
+
+
+		[TestMethod]
+		public void RotateOptimized()
+		{
+			const double angle = Math.PI * 2 / 3;
+			TNumber angleAsTNum = Math<TNumber>.Double2Number!(angle);
+			Vector4D<TNumber> randPoint = new(3, 7, 2, 5);
+
+			_vth.ForEachPairOfVectors4D((axis1, axis2) => {
+				Transform4D<TNumber> tStandart = new();
+				tStandart.Rotate(axis1, axis2, angle);
+
+				Transform4D<TNumber> tOptimized = new();
+				tOptimized.RotateOriginal(axis1, axis2, angleAsTNum);
+
+				Assert.AreEqual(tStandart * randPoint, tOptimized * randPoint); 
+			});
+		}
+
+
+		[TestMethod]
+		public void RotateOptimizedIsFaster()
+		{
+			const int rotationNumber = 100000;
+			var t = new Transform4D<TNumber>();
+
+			TimeSpan originTime = TimeSpan.Zero;
+			TimeSpan optimizedTime = TimeSpan.Zero;
+
+			for (int i = 0; i < 10; i++)
+			{
+				DateTime start = DateTime.Now;
+				for (int j = 0; j < rotationNumber; j++)
+				{
+					t.RotateOriginal(new(), new(), TNumber.One);
+				}
+				originTime += DateTime.Now - start;
+
+				start = DateTime.Now;
+				for (int j = 0; j < rotationNumber; j++)
+				{
+					t.Rotate(new(), new(), TNumber.One);
+				}
+				optimizedTime += DateTime.Now - start;
+			}
+
+			Assert.IsTrue(optimizedTime < originTime);
 		}
 
 

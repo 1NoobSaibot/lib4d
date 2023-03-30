@@ -7,6 +7,8 @@ namespace Lib4D
 	public class Transform4D<TNumber> where TNumber : INumber<TNumber>
 	{
 		private TNumber[,] _matrix;
+		private readonly TNumber[,] _buffer = CreateIdentityMatrix();
+		private TNumber[,] _bufferRes = CreateIdentityMatrix();
 
 		public Transform4D (TNumber[,] matrix)
 		{
@@ -76,13 +78,14 @@ namespace Lib4D
 		}
 
 
-		public void Rotate(Bivector4D<TNumber> b, double angle)
+		public void Rotate(Vector4D<TNumber> a1, Vector4D<TNumber> a2, double angle)
 		{
-			Rotate(b, Math<TNumber>.Double2Number!(angle));
+			Rotate(a1, a2, Math<TNumber>.Double2Number!(angle));
 		}
 
-		public void Rotate(Bivector4D<TNumber> b, TNumber angle)
+		public void RotateOriginal(Vector4D<TNumber> a1, Vector4D<TNumber> a2, TNumber angle)
 		{
+			Bivector4D<TNumber> b = new(a1, a2);
 			TNumber c = Math<TNumber>.Cos!(angle);
 			TNumber s = Math<TNumber>.Sin!(angle);
 			TNumber xy = b.XY;
@@ -110,7 +113,72 @@ namespace Lib4D
 			_matrix = _matrix.Mul(R);
 		}
 
-		
+
+		public void Rotate(Vector4D<TNumber> axis1, Vector4D<TNumber> axis2, TNumber angle)
+		{
+			TNumber c = Math<TNumber>.Cos!(angle);
+			TNumber s = Math<TNumber>.Sin!(angle);
+			TNumber a = TNumber.One - c;
+
+			TNumber xy = axis1[0] * axis2[1] - axis1[1] * axis2[0];
+			TNumber xz = axis1[0] * axis2[2] - axis1[2] * axis2[0];
+			TNumber xq = axis1[0] * axis2[3] - axis1[3] * axis2[0];
+			TNumber yz = axis1[1] * axis2[2] - axis1[2] * axis2[1];
+			TNumber yq = axis1[1] * axis2[3] - axis1[3] * axis2[1];
+			TNumber zq = axis1[2] * axis2[3] - axis1[3] * axis2[2];
+
+			TNumber xy2 = xy * xy;
+			TNumber xz2 = xz * xz;
+			TNumber xq2 = xq * xq;
+			TNumber yz2 = yz * yz;
+			TNumber yq2 = yq * yq;
+			TNumber zq2 = zq * zq;
+
+			TNumber p01 = a * (xz * yz + xq * yq);
+			TNumber p02 = a * (xq * zq - xy * yz);
+			TNumber p03 = a * (xy * yq + xz * zq);
+			TNumber p12 = a * (xy * xz + yq * zq);
+			TNumber p13 = a * (xy * xq - yz * zq);
+			TNumber p23 = a * (xz * xq + yz * yq);
+
+			TNumber s01 = s * zq;
+			TNumber s02 = s * yq;
+			TNumber s03 = s * yz;
+			TNumber s12 = s * xq;
+			TNumber s13 = s * xz;
+			TNumber s23 = s * xy;
+
+			_buffer[0, 0] = c + a * (xy2 + xz2 + xq2);
+			_buffer[1, 1] = c + a * (xy2 + yz2 + yq2);
+			_buffer[2, 2] = c + a * (xz2 + yz2 + zq2);
+			_buffer[3, 3] = c + a * (xq2 + yq2 + zq2);
+
+			_buffer[0, 1] = s01 + p01;
+			_buffer[1, 0] = p01 - s01;
+			_buffer[0, 2] = p02 - s02;
+			_buffer[2, 0] = s02 + p02;
+			_buffer[0, 3] = -s03 - p03;
+			_buffer[3, 0] = s03 - p03;
+			_buffer[1, 2] = s12 + p12;
+			_buffer[2, 1] = p12 - s12;
+			_buffer[1, 3] = p13 - s13;
+			_buffer[3, 1] = s13 + p13;
+			_buffer[2, 3] = s23 + p23;
+			_buffer[3, 2] = p23 - s23;
+
+			_buffer[4, 0] = TNumber.Zero;
+			_buffer[4, 1] = TNumber.Zero;
+			_buffer[4, 2] = TNumber.Zero;
+			_buffer[4, 3] = TNumber.Zero;
+
+
+			_matrix.Mul(_buffer, _bufferRes);
+			var temp = _matrix;
+			_matrix = _bufferRes;
+			_bufferRes = temp;
+		}
+
+
 		#region Static Constructors
 		public static Transform4D<TNumber> GetTranslate(Vector4D<TNumber> t)
 		{

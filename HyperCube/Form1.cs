@@ -45,13 +45,13 @@ namespace HyperCube
 			graphics.DrawLine(_penZ, zero, _axisZ);
 			graphics.DrawLine(_penQ, zero, _axisQ);
 
-			Bivector4D<float> b = axisPicker.GetAxis();
+			(var a1, var a2) = axisPicker.GetAxis();
 			DateTime currentTime = DateTime.Now;
 			float angle = (float)((currentTime - _prevTime).TotalMilliseconds * 0.0001);
 			angle *= axisPicker.GetAngle();
 			_prevTime = currentTime;
-			
-			graphics.Transform.Rotate(b, angle);
+
+			graphics.Transform.Rotate(a1, a2, angle);
 
 			animation.Shape = (ShapeIndex)shapePicker.SelectedItem!;
 			animation.Draw(graphics);

@@ -28,58 +28,62 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			this.canvas = new System.Windows.Forms.PictureBox();
-			this.looper = new System.Windows.Forms.Timer(this.components);
-			this.shapePicker = new System.Windows.Forms.ListBox();
-			this.axisPicker = new HyperCube.AxisPicker();
-			((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
-			this.SuspendLayout();
+			components = new System.ComponentModel.Container();
+			canvas = new PictureBox();
+			looper = new System.Windows.Forms.Timer(components);
+			shapePicker = new ListBox();
+			axisPicker = new AxisPicker();
+			((System.ComponentModel.ISupportInitialize)canvas).BeginInit();
+			SuspendLayout();
 			// 
 			// canvas
 			// 
-			this.canvas.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.canvas.Location = new System.Drawing.Point(0, 0);
-			this.canvas.Name = "canvas";
-			this.canvas.Size = new System.Drawing.Size(977, 450);
-			this.canvas.TabIndex = 0;
-			this.canvas.TabStop = false;
+			canvas.Dock = DockStyle.Fill;
+			canvas.Location = new Point(0, 0);
+			canvas.Margin = new Padding(4, 3, 4, 3);
+			canvas.Name = "canvas";
+			canvas.Size = new Size(1140, 519);
+			canvas.TabIndex = 0;
+			canvas.TabStop = false;
 			// 
 			// looper
 			// 
-			this.looper.Interval = 5;
-			this.looper.Tick += new System.EventHandler(this.Looper_Tick);
+			looper.Interval = 1;
+			looper.Tick += Looper_Tick;
 			// 
 			// shapePicker
 			// 
-			this.shapePicker.FormattingEnabled = true;
-			this.shapePicker.Location = new System.Drawing.Point(0, 285);
-			this.shapePicker.Name = "shapePicker";
-			this.shapePicker.Size = new System.Drawing.Size(120, 82);
-			this.shapePicker.TabIndex = 2;
+			shapePicker.FormattingEnabled = true;
+			shapePicker.ItemHeight = 15;
+			shapePicker.Location = new Point(0, 329);
+			shapePicker.Margin = new Padding(4, 3, 4, 3);
+			shapePicker.Name = "shapePicker";
+			shapePicker.Size = new Size(139, 94);
+			shapePicker.TabIndex = 2;
 			// 
 			// axisPicker
 			// 
-			this.axisPicker.Location = new System.Drawing.Point(0, 0);
-			this.axisPicker.Name = "axisPicker";
-			this.axisPicker.Size = new System.Drawing.Size(274, 279);
-			this.axisPicker.TabIndex = 1;
+			axisPicker.Location = new Point(0, 0);
+			axisPicker.Margin = new Padding(5, 3, 5, 3);
+			axisPicker.Name = "axisPicker";
+			axisPicker.Size = new Size(320, 322);
+			axisPicker.TabIndex = 1;
 			// 
 			// Form1
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(977, 450);
-			this.Controls.Add(this.shapePicker);
-			this.Controls.Add(this.axisPicker);
-			this.Controls.Add(this.canvas);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-			this.Name = "Form1";
-			this.Text = "Form1";
-			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-			((System.ComponentModel.ISupportInitialize)(this.canvas)).EndInit();
-			this.ResumeLayout(false);
-
+			AutoScaleDimensions = new SizeF(7F, 15F);
+			AutoScaleMode = AutoScaleMode.Font;
+			ClientSize = new Size(1140, 519);
+			Controls.Add(shapePicker);
+			Controls.Add(axisPicker);
+			Controls.Add(canvas);
+			FormBorderStyle = FormBorderStyle.None;
+			Margin = new Padding(4, 3, 4, 3);
+			Name = "Form1";
+			Text = "Form1";
+			WindowState = FormWindowState.Maximized;
+			((System.ComponentModel.ISupportInitialize)canvas).EndInit();
+			ResumeLayout(false);
 		}
 
 		#endregion
