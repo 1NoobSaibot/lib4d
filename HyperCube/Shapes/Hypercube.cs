@@ -1,4 +1,4 @@
-﻿using Lib4D;
+﻿using Lib4D.Vectors;
 
 namespace HyperCube.Shapes
 {
@@ -23,9 +23,9 @@ namespace HyperCube.Shapes
 					}
 				}
 			}
-			_vertecies = verticies.ToArray();
+			_vertecies = [.. verticies];
 
-			List<(Vector4D<float> a, Vector4D<float> b)> lines = new();
+			List<(Vector4D<float> a, Vector4D<float> b)> lines = [];
 			for (int x = -1; x < 2; x += 2)
 			{
 				for (int y = -1; y < 2; y += 2)

@@ -1,8 +1,9 @@
 ﻿using Lib4D.Mathematic;
 using Lib4D.Mathematic.Matrix;
+using Lib4D.Vectors;
 using System.Numerics;
 
-namespace Lib4D
+namespace Lib4D.Transforms
 {
 	public class Transform4D<TNumber> where TNumber : INumber<TNumber>
 	{
@@ -10,7 +11,7 @@ namespace Lib4D
 		private readonly TNumber[,] _buffer = CreateIdentityMatrix();
 		private TNumber[,] _bufferRes = CreateIdentityMatrix();
 
-		public Transform4D (TNumber[,] matrix)
+		public Transform4D(TNumber[,] matrix)
 		{
 			if (matrix.GetWidth() != 5 || matrix.GetHeight() != 5)
 			{
@@ -20,12 +21,12 @@ namespace Lib4D
 			_matrix = matrix;
 		}
 
-		public Transform4D ()
+		public Transform4D()
 		{
 			_matrix = CreateIdentityMatrix();
 		}
 
-		public void Translate (Vector4D<TNumber> t)
+		public void Translate(Vector4D<TNumber> t)
 		{
 			Translate(t.X, t.Y, t.Z, t.Q);
 		}
@@ -37,7 +38,7 @@ namespace Lib4D
 			transformMatrix[4, 1] = ty;
 			transformMatrix[4, 2] = tz;
 			transformMatrix[4, 3] = tq;
-			_matrix = MatrixMath.Mul(_matrix, transformMatrix);
+			_matrix = _matrix.Mul(transformMatrix);
 		}
 
 		public void Translate(double tx, double ty, double tz, double tq)
@@ -47,7 +48,7 @@ namespace Lib4D
 			transformMatrix[4, 1] = Math<TNumber>.Double2Number!(ty);
 			transformMatrix[4, 2] = Math<TNumber>.Double2Number!(tz);
 			transformMatrix[4, 3] = Math<TNumber>.Double2Number!(tq);
-			_matrix = MatrixMath.Mul(_matrix, transformMatrix);
+			_matrix = _matrix.Mul(transformMatrix);
 		}
 
 
@@ -74,7 +75,7 @@ namespace Lib4D
 			scaleMatrix[2, 2] = kz;
 			scaleMatrix[3, 3] = kq;
 			scaleMatrix[4, 4] = TNumber.One;
-			_matrix = MatrixMath.Mul(_matrix, scaleMatrix);
+			_matrix = _matrix.Mul(scaleMatrix);
 		}
 
 
@@ -95,15 +96,15 @@ namespace Lib4D
 			TNumber yq = b.YQ;
 			TNumber zq = b.ZQ;
 
-			TNumber[,] uut = MatrixMath.Mul(b.Matrix, MatrixMath.Transpose(b.Matrix));
+			TNumber[,] uut = b.Matrix.Mul(b.Matrix.Transpose());
 			uut = uut.Mul(TNumber.One - c);
-			
+
 			TNumber[,] sinAndCos = new TNumber[4, 4]
 			{
-				{	 c			,  s * zq	, -s * yq	, -s * yz },
-				{ -s * zq	,	 c			,	 s * xq	, -s * xz },
-				{	 s * yq	,	-s * xq	,	 c			,  s * xy },
-				{  s * yz	,	 s * xz	,	-s * xy	,  c			},
+				{  c      ,  s * zq , -s * yq , -s * yz },
+				{ -s * zq ,  c      ,  s * xq , -s * xz },
+				{  s * yq , -s * xq ,  c      ,  s * xy },
+				{  s * yz ,  s * xz , -s * xy ,  c      },
 			};
 
 			TNumber[,] R = MatrixMath.Add(sinAndCos, uut);
@@ -173,9 +174,7 @@ namespace Lib4D
 
 
 			_matrix.Mul(_buffer, _bufferRes);
-			var temp = _matrix;
-			_matrix = _bufferRes;
-			_bufferRes = temp;
+			(_matrix, _bufferRes) = (_bufferRes, _matrix);
 		}
 
 
@@ -237,7 +236,7 @@ namespace Lib4D
 		{
 			return new()
 			{
-				_matrix = MatrixMath.Mul(a._matrix, b._matrix)
+				_matrix = a._matrix.Mul(b._matrix)
 			};
 		}
 		#endregion

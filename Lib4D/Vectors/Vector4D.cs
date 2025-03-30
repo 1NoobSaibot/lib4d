@@ -2,20 +2,20 @@
 using Lib4D.Mathematic.Matrix;
 using System.Numerics;
 
-namespace Lib4D
+namespace Lib4D.Vectors
 {
 	public struct Vector4D<TNumber> where TNumber : INumber<TNumber>
 	{
 		public TNumber X, Y, Z, Q;
 
 
-		public TNumber AbsQuad
+		public readonly TNumber AbsQuad
 		{
 			get => X * X + Y * Y + Z * Z + Q * Q;
 		}
 
 
-		public TNumber Abs => Math<TNumber>.Sqrt!(AbsQuad);
+		public readonly TNumber Abs => Math<TNumber>.Sqrt!(AbsQuad);
 
 
 		#region Constructors
@@ -51,7 +51,7 @@ namespace Lib4D
 			Q = TNumber.Zero;
 		}
 
-		public Vector4D (TNumber x, TNumber y, TNumber z, TNumber q)
+		public Vector4D(TNumber x, TNumber y, TNumber z, TNumber q)
 		{
 			X = x;
 			Y = y;
@@ -102,14 +102,14 @@ namespace Lib4D
 			Q *= k;
 		}
 
-		public Vector4D<TNumber> GetNormalized()
+		public readonly Vector4D<TNumber> GetNormalized()
 		{
 			TNumber k = TNumber.One / Abs;
 			return k * this;
 		}
 
 
-		public TNumber[,] ToMatrixRow()
+		public readonly TNumber[,] ToMatrixRow()
 		{
 			return new TNumber[4, 1]
 			{
@@ -165,7 +165,7 @@ namespace Lib4D
 		public static Vector4D<TNumber> operator *(Vector4D<TNumber> v, TNumber[,] m)
 		{
 			TNumber[,] row = v.ToMatrixRow();
-			row = MatrixMath.Mul(row, m);
+			row = row.Mul(m);
 			return new(row[0, 0], row[1, 0], row[2, 0], row[3, 0]);
 		}
 
@@ -193,7 +193,8 @@ namespace Lib4D
 		}
 
 
-		public unsafe TNumber this[int i] {
+		public unsafe TNumber this[int i]
+		{
 #pragma warning disable CS8500 // Это принимает адрес, получает размер или объявляет указатель на управляемый тип
 			get
 			{
@@ -222,7 +223,7 @@ namespace Lib4D
 		}
 
 
-		public override string ToString()
+		public readonly override string ToString()
 		{
 			string sX = string.Format("{0:f2}", X);
 			string sY = string.Format("{0:f2}", Y);
@@ -232,12 +233,12 @@ namespace Lib4D
 		}
 
 
-		public override bool Equals(object? obj)
+		public readonly override bool Equals(object? obj)
 		{
 			return obj is Vector4D<TNumber> v && this == v;
 		}
 
-		public override int GetHashCode()
+		public readonly override int GetHashCode()
 		{
 			return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode() ^ Q.GetHashCode();
 		}

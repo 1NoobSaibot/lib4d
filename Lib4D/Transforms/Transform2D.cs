@@ -1,8 +1,9 @@
 ﻿using Lib4D.Mathematic;
 using Lib4D.Mathematic.Matrix;
+using Lib4D.Vectors;
 using System.Numerics;
 
-namespace Lib4D
+namespace Lib4D.Transforms
 {
 	public class Transform2D<TNumber> where TNumber : INumber<TNumber>
 	{
@@ -69,7 +70,7 @@ namespace Lib4D
 			TNumber[,] translateMatrix = CreateIdentity();
 			translateMatrix[2, 0] = tx;
 			translateMatrix[2, 1] = ty;
-			_matrix = MatrixMath.Mul(_matrix, translateMatrix);
+			_matrix = _matrix.Mul(translateMatrix);
 		}
 
 		public void Translate(double tx, double ty)
@@ -77,7 +78,7 @@ namespace Lib4D
 			TNumber[,] translateMatrix = CreateIdentity();
 			translateMatrix[2, 0] = Math<TNumber>.Double2Number!(tx);
 			translateMatrix[2, 1] = Math<TNumber>.Double2Number!(ty);
-			_matrix = MatrixMath.Mul(_matrix, translateMatrix);
+			_matrix = _matrix.Mul(translateMatrix);
 		}
 
 
@@ -92,7 +93,7 @@ namespace Lib4D
 				{ TNumber.Zero, TNumber.Zero, TNumber.One  }
 			};
 
-			_matrix = MatrixMath.Mul(_matrix, rotateMatrix);
+			_matrix = _matrix.Mul(rotateMatrix);
 		}
 
 
@@ -107,17 +108,18 @@ namespace Lib4D
 			TNumber[,] scaleMatrix = CreateIdentity();
 			scaleMatrix[0, 0] = kx;
 			scaleMatrix[1, 1] = ky;
-			_matrix = MatrixMath.Mul(_matrix, scaleMatrix);
+			_matrix = _matrix.Mul(scaleMatrix);
 		}
 
 
-		public static Vector2D<TNumber> operator *(Transform2D<TNumber> t, Vector2D<TNumber> v) {
+		public static Vector2D<TNumber> operator *(Transform2D<TNumber> t, Vector2D<TNumber> v)
+		{
 			TNumber[,] column = new TNumber[1, 3];
 			column[0, 0] = v.X;
 			column[0, 1] = v.Y;
 			column[0, 2] = TNumber.One;
 
-			column = MatrixMath.Mul(t._matrix, column);
+			column = t._matrix.Mul(column);
 
 			return new Vector2D<TNumber>(column[0, 0], column[0, 1]);
 		}
@@ -127,7 +129,7 @@ namespace Lib4D
 		{
 			return new()
 			{
-				_matrix = MatrixMath.Mul(a._matrix, b._matrix)
+				_matrix = a._matrix.Mul(b._matrix)
 			};
 		}
 

@@ -1,5 +1,5 @@
-﻿using Lib4D;
-using Lib4D.Mathematic.Matrix;
+﻿using Lib4D.Mathematic.Matrix;
+using Lib4D.Vectors;
 
 namespace HyperCube
 {

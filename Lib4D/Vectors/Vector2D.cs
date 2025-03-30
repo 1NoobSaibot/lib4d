@@ -1,7 +1,7 @@
 ﻿using Lib4D.Mathematic;
 using System.Numerics;
 
-namespace Lib4D
+namespace Lib4D.Vectors
 {
 	public struct Vector2D<TNumber> where TNumber : INumber<TNumber>
 	{
@@ -16,7 +16,7 @@ namespace Lib4D
 			Y = TNumber.Zero;
 		}
 
-		public Vector2D (double x, double y)
+		public Vector2D(double x, double y)
 		{
 			X = Math<TNumber>.Double2Number!(x);
 			Y = Math<TNumber>.Double2Number!(y);
@@ -62,19 +62,19 @@ namespace Lib4D
 		}
 
 
-		public override string ToString()
+		public readonly override string ToString()
 		{
 			return $"({X}; {Y})";
 		}
 
 
-		public override bool Equals(object? obj)
+		public readonly override bool Equals(object? obj)
 		{
 			return obj is Vector2D<TNumber> v && this == v;
 		}
 
 
-		public override int GetHashCode()
+		public readonly override int GetHashCode()
 		{
 			return X.GetHashCode() ^ Y.GetHashCode();
 		}

@@ -1,4 +1,5 @@
-﻿using Lib4D;
+﻿using Lib4D.Transforms;
+using Lib4D.Vectors;
 
 namespace HyperCube
 {

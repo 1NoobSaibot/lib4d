@@ -13,7 +13,8 @@ namespace Lib4D_Tests.Complexes
 		private readonly ComplexTestHelper<TNumber> _cth;
 
 
-		public ComplexTest() {
+		public ComplexTest()
+		{
 			Math<TNumber>.InitInstance(GetMath());
 			_cth = new ComplexTestHelper<TNumber>();
 		}
@@ -23,7 +24,7 @@ namespace Lib4D_Tests.Complexes
 		public void Equals()
 		{
 			(Complex<TNumber>, Complex<TNumber>, bool)[] samples =
-			{
+			[
 				(new(), new(), true),
 				(new(1), new(1), true),
 				(new(0, 2), new(0, 2), true),
@@ -32,7 +33,7 @@ namespace Lib4D_Tests.Complexes
 				(new(0, 2), new(-7, 2), false),
 				(new(-7), new(-7, 2), false),
 				(new(0), new(-7, 2), false),
-			};
+			];
 
 			EqualityTestHelper<Complex<TNumber>>.TestEquality(samples);
 		}
@@ -102,12 +103,12 @@ namespace Lib4D_Tests.Complexes
 		public void Add()
 		{
 			(Complex<TNumber>, Complex<TNumber>, Complex<TNumber>)[] samples =
-			{
+			[
 				(new(), new(), new()),
 				(new(1), new(2), new(3)),
 				(new(0, 1), new(0, 2), new(0, 3)),
 				(new(1, 5), new(2, 7), new(3, 12))
-			};
+			];
 
 			for (int i = 0; i < samples.Length; i++)
 			{
@@ -236,7 +237,8 @@ namespace Lib4D_Tests.Complexes
 
 			_cth.ForEachComplex(complex =>
 			{
-				_cth.ForEachTNum(i => {
+				_cth.ForEachTNum(i =>
+				{
 					if (i != TNumber.Zero)
 					{
 						Assert.AreEqual(complex / (Complex<TNumber>)i, complex / i);
@@ -282,7 +284,8 @@ namespace Lib4D_Tests.Complexes
 		[TestMethod]
 		public void AbsQuad()
 		{
-			_cth.ForEachComplex(complex => {
+			_cth.ForEachComplex(complex =>
+			{
 				TNumber expected = complex.Abs();
 				expected *= expected;
 				_cth.AssertApproximatelyEqualC(expected, complex.AbsQuad());

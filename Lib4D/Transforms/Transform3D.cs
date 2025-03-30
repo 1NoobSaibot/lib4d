@@ -1,17 +1,18 @@
 ﻿using Lib4D.Mathematic;
 using Lib4D.Mathematic.Matrix;
+using Lib4D.Vectors;
 using System.Numerics;
 
-namespace Lib4D
+namespace Lib4D.Transforms
 {
 	public class Transform3D<TNumber> where TNumber : INumber<TNumber>
 	{
 		private TNumber[,] _matrix = CreateIdentityMatrix();
 
 
-		public void Translate (Vector3D<TNumber> t)
+		public void Translate(Vector3D<TNumber> t)
 		{
-			Translate (t.X, t.Y, t.Z);
+			Translate(t.X, t.Y, t.Z);
 		}
 
 
@@ -21,7 +22,7 @@ namespace Lib4D
 			transformMatrix[3, 0] = tx;
 			transformMatrix[3, 1] = ty;
 			transformMatrix[3, 2] = tz;
-			_matrix = MatrixMath.Mul(_matrix, transformMatrix);
+			_matrix = _matrix.Mul(transformMatrix);
 		}
 
 
@@ -49,7 +50,7 @@ namespace Lib4D
 				{ TNumber.Zero               , TNumber.Zero               , TNumber.Zero               , TNumber.One  }
 			};
 
-			_matrix = MatrixMath.Mul(_matrix, rotateMatrix);
+			_matrix = _matrix.Mul(rotateMatrix);
 		}
 
 
@@ -68,7 +69,7 @@ namespace Lib4D
 				{ TNumber.Zero, TNumber.Zero, kz          , TNumber.Zero },
 				{ TNumber.Zero, TNumber.Zero, TNumber.Zero, TNumber.One  },
 			};
-			_matrix = MatrixMath.Mul(_matrix, scaleMatrix);
+			_matrix = _matrix.Mul(scaleMatrix);
 		}
 
 		#region Static Constructors
@@ -138,7 +139,7 @@ namespace Lib4D
 			column[0, 2] = v.Z;
 			column[0, 3] = TNumber.One;
 
-			column = MatrixMath.Mul(t._matrix, column);
+			column = t._matrix.Mul(column);
 
 			return new(column[0, 0], column[0, 1], column[0, 2]);
 		}
@@ -148,7 +149,7 @@ namespace Lib4D
 		{
 			return new Transform3D<TNumber>()
 			{
-				_matrix = MatrixMath.Mul(a._matrix, b._matrix)
+				_matrix = a._matrix.Mul(b._matrix)
 			};
 		}
 		#endregion
@@ -184,7 +185,7 @@ namespace Lib4D
 				{ TNumber.Zero             , TNumber.Zero             , TNumber.Zero             , TNumber.One  }
 			};
 
-			_matrix = MatrixMath.Mul(_matrix, rotateMatrix);
+			_matrix = _matrix.Mul(rotateMatrix);
 		}
 	}
 }

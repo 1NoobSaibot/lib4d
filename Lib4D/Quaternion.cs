@@ -1,4 +1,5 @@
 ﻿using Lib4D.Mathematic;
+using Lib4D.Vectors;
 using System.Numerics;
 
 namespace Lib4D
@@ -18,30 +19,30 @@ namespace Lib4D
 		#region Getters
 		public TNumber R
 		{
-			get => RI.R;
+			readonly get => RI.R;
 			set => RI.R = value;
 		}
 		public TNumber I
 		{
-			get => RI.I;
+			readonly get => RI.I;
 			set => RI.I = value;
 		}
 		public TNumber J
 		{
-			get => JK.R;
+			readonly get => JK.R;
 			set => JK.R = value;
 		}
 		public TNumber K
 		{
-			get => JK.I;
+			readonly get => JK.I;
 			set => JK.I = value;
 		}
 
-		public TNumber AbsQuad => R*R + I*I + J*J + K*K;
-		public TNumber Abs => Math<TNumber>.Sqrt!(AbsQuad);
+		public readonly TNumber AbsQuad => R * R + I * I + J * J + K * K;
+		public readonly TNumber Abs => Math<TNumber>.Sqrt!(AbsQuad);
 
 
-		public Quaternion<TNumber> ConjugateQuaternion => new(R, -I, -J, -K);
+		public readonly Quaternion<TNumber> ConjugateQuaternion => new(R, -I, -J, -K);
 		#endregion
 
 
@@ -253,7 +254,7 @@ namespace Lib4D
 		{
 			return new(-v.R, -v.I, -v.J, -v.K);
 		}
-		
+
 
 		public static implicit operator Quaternion<TNumber>(Complex<TNumber> value)
 		{
@@ -267,22 +268,22 @@ namespace Lib4D
 		}
 
 
-		public override string ToString()
+		public readonly override string ToString()
 		{
 			return $"({R} + i{I} + j{J} + k{K})";
 		}
 
-		public bool Equals(Quaternion<TNumber> other)
+		public readonly bool Equals(Quaternion<TNumber> other)
 		{
 			return this == other;
 		}
 
-		public override bool Equals(object? obj)
+		public readonly override bool Equals(object? obj)
 		{
 			return obj is Quaternion<TNumber> q && Equals(q);
 		}
 
-		public override int GetHashCode()
+		public readonly override int GetHashCode()
 		{
 			return RI.GetHashCode() ^ JK.GetHashCode();
 		}

@@ -1,5 +1,6 @@
-﻿using Lib4D;
-using Lib4D.Mathematic;
+﻿using Lib4D.Mathematic;
+using Lib4D.Transforms;
+using Lib4D.Vectors;
 using Lib4D_Tests.Helpers;
 using System.Numerics;
 

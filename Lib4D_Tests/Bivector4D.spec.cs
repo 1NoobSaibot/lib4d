@@ -1,5 +1,6 @@
 ﻿using Lib4D;
 using Lib4D.Mathematic;
+using Lib4D.Vectors;
 
 namespace Lib4D_Tests
 {

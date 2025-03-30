@@ -1,4 +1,4 @@
-﻿using Lib4D;
+﻿using Lib4D.Vectors;
 
 namespace HyperCube.Shapes
 {
@@ -9,7 +9,7 @@ namespace HyperCube.Shapes
 
 		public Hexdecahedroid(float scale)
 		{
-			List<(Vector4D<float> a, Vector4D<float> b)> lines = new();
+			List<(Vector4D<float> a, Vector4D<float> b)> lines = [];
 			List<Vector4D<float>> verteces = new(8);
 
 			for (int x = -1; x < 2; x += 2)
@@ -62,8 +62,8 @@ namespace HyperCube.Shapes
 				_lines[i, 1] = lines[i].b * scale;
 			}
 
-			_verteces = verteces.ToArray();
-			for(int i = 0; i < _verteces.Length; i++)
+			_verteces = [.. verteces];
+			for (int i = 0; i < _verteces.Length; i++)
 			{
 				_verteces[i] *= scale;
 			}

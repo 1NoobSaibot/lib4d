@@ -1,9 +1,9 @@
-﻿using Lib4D;
-using Lib4D.Mathematic;
+﻿using Lib4D.Mathematic;
+using Lib4D.Vectors;
 using Lib4D_Tests.Helpers;
 using System.Numerics;
 
-namespace Lib4D_Tests.Vectors
+namespace Lib4D_Tests.Vectors._3D
 {
 	public abstract class Vector3DTest<TNumber>
 		: MathDependentTest<TNumber>
@@ -16,7 +16,7 @@ namespace Lib4D_Tests.Vectors
 		public void Equals()
 		{
 			(Vector3D<TNumber>, Vector3D<TNumber>, bool)[] samples =
-			{
+			[
 				(new(), new(), true),
 				(new(1), new(1), true),
 				(new(0, 1), new(0, 1), true),
@@ -43,7 +43,7 @@ namespace Lib4D_Tests.Vectors
 				(new(0, 1), new(1, 1, 1), false),
 				(new(0, 0, 1), new(1, 1, 0), false),
 				(new(0, 0, 1), new(1, 1, 1), false),
-			};
+			];
 
 			EqualityTestHelper<Vector3D<TNumber>>.TestEquality(samples);
 		}
@@ -88,7 +88,8 @@ namespace Lib4D_Tests.Vectors
 		[TestMethod]
 		public void Add()
 		{
-			_vth.ForEachPairOfVectors3D((v1, v2) => {
+			_vth.ForEachPairOfVectors3D((v1, v2) =>
+			{
 				var sum = v1 + v2;
 				Assert.AreEqual(sum, v2 + v1);
 				Assert.AreEqual(sum.X, v1.X + v2.X);
@@ -115,7 +116,7 @@ namespace Lib4D_Tests.Vectors
 		{
 			var r3 = Math.Sqrt(3);
 			(Vector3D<TNumber>, double)[] samples =
-			{
+			[
 				(new(), 0),
 				(new(3), 3),
 				(new(-3), 3),
@@ -130,7 +131,7 @@ namespace Lib4D_Tests.Vectors
 				(new(0, 3, 4), 5),
 				(new(0, 4, 3), 5),
 				(new(r3, r3, r3), 3)
-			};
+			];
 
 			foreach (var sample in samples)
 			{
@@ -147,7 +148,7 @@ namespace Lib4D_Tests.Vectors
 			_vth.ForEachVector3D(v =>
 			{
 				var expectedAbsQuad = v.Abs * v.Abs;
-				_vth.AssertApproximatelyEqualF(expectedAbsQuad, v.AbsQuad, 0.00001526);
+				VectorTestHelper<TNumber>.AssertApproximatelyEqualF(expectedAbsQuad, v.AbsQuad, 0.00001526);
 			});
 		}
 

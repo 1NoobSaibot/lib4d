@@ -4,7 +4,7 @@ namespace HyperCube
 {
 	internal class Animation
 	{
-		private Shape4D[] _shapes = new Shape4D[4];
+		private readonly Shape4D[] _shapes = new Shape4D[4];
 		public ShapeIndex Shape = ShapeIndex.HyperCube;
 
 		public Animation()

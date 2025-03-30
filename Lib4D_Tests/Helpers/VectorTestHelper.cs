@@ -1,4 +1,4 @@
-﻿using Lib4D;
+﻿using Lib4D.Vectors;
 using System.Numerics;
 
 namespace Lib4D_Tests.Helpers

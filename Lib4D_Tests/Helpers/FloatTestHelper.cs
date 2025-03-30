@@ -6,7 +6,7 @@ namespace Lib4D_Tests.Helpers
 		: NumberSet<TNumber>
 		where TNumber : INumber<TNumber>
 	{
-		private readonly IReadOnlyList<double> _values = new double[] { -7, -1, 0, 1, 7 };
+		private readonly IReadOnlyList<double> _values = [-7, -1, 0, 1, 7];
 
 
 		public void ForEachFloat(Action<double> action)

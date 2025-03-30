@@ -1,4 +1,4 @@
-﻿using Lib4D;
+﻿using Lib4D.Vectors;
 
 namespace HyperCube.Shapes
 {
@@ -277,15 +277,15 @@ namespace HyperCube.Shapes
 				}
 			}
 
-			
+
 			for (int i = 0; i < verteces.Count; i++)
 			{
 				verteces[i] *= scale;
 			}
-			_vertecies = verteces.ToArray();
+			_vertecies = [.. verteces];
 			float lineLengthQuad = FindSmallestDistanceQuadBetween(verteces);
 			List<(Vector4D<float> a, Vector4D<float> b)> lines = new(1200);
-			
+
 			for (int i = 0; i < verteces.Count - 1; i++)
 			{
 				int foundPairs = 0;

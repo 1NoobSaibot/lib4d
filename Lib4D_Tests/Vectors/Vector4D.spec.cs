@@ -1,4 +1,4 @@
-﻿using Lib4D;
+﻿using Lib4D.Vectors;
 
 namespace Lib4D_Tests.Vectors
 {

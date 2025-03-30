@@ -1,5 +1,7 @@
 ﻿using Lib4D;
 using Lib4D.Mathematic;
+using Lib4D.Transforms;
+using Lib4D.Vectors;
 using Lib4D_Tests.Helpers;
 using System.Numerics;
 
@@ -118,15 +120,16 @@ namespace Lib4D_Tests.Transforms._3D
 			TNumber c0 = Math<TNumber>.Double2Number!(0);
 			TNumber c2 = Math<TNumber>.Double2Number!(2);
 			TNumber c3 = Math<TNumber>.Double2Number!(3);
-			TNumber[] angles = {
+			TNumber[] angles = [
 				-c3 * PI,
 				-c2 * PI,
 				-PI, c0,
 				PI, c2 * PI,
 				c3 * PI
-			};
+			];
 
-			ForEachVector(axis => {
+			ForEachVector(axis =>
+			{
 				axis = axis.GetNormalized();
 				foreach (var angle in angles)
 				{
@@ -144,7 +147,7 @@ namespace Lib4D_Tests.Transforms._3D
 					});
 				}
 			});
-					
+
 		}
 
 

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib4D", "Lib4D\Lib4D.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib4D_Tests", "Lib4D_Tests\Lib4D_Tests.csproj", "{7C254E34-64A2-4558-B160-2A36EED1132F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperCube", "HyperCube\HyperCube.csproj", "{3D3C2A66-CDAF-4723-BCD0-E6FDE48D8132}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HyperCube", "HyperCube\HyperCube.csproj", "{3D3C2A66-CDAF-4723-BCD0-E6FDE48D8132}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -12,9 +12,10 @@ namespace Lib4D_Tests.Helpers
 		/// It uses as a maximum absolute error in comparing two numbers approximately
 		/// </summary>
 		public TNumber EPSILON { get; private set; } = TNumber.Zero;
-		
 
-		public NumberSet() {
+
+		public NumberSet()
+		{
 			if (typeof(TNumber) == typeof(float))
 			{
 				var _this = (this as NumberSet<float>)!;
@@ -27,20 +28,20 @@ namespace Lib4D_Tests.Helpers
 			}
 			else
 			{
-				throw new Exception("Exponent and PI cannot be defined when type is " +  typeof(TNumber));
+				throw new Exception("Exponent and PI cannot be defined when type is " + typeof(TNumber));
 			}
 		}
 
 
 		public TNumber[] GetNums()
 		{
-			return new TNumber[] {
+			return [
 				Math<TNumber>.Int2Number!(-7),
 				Math<TNumber>.Int2Number!(-1),
 				Math<TNumber>.Int2Number!(0),
 				Math<TNumber>.Int2Number!(+1),
 				Math<TNumber>.Int2Number!(+7)
-			};
+			];
 		}
 	}
 }

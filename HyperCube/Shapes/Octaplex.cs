@@ -1,4 +1,4 @@
-﻿using Lib4D;
+﻿using Lib4D.Vectors;
 
 namespace HyperCube.Shapes
 {
@@ -10,7 +10,7 @@ namespace HyperCube.Shapes
 		public Octaplex(float scale)
 		{
 			List<Vector4D<float>> verteces = new(24);
-			
+
 			for (int x = -1; x < 2; x += 2)
 			{
 				for (int y = -1; y < 2; y += 2)
@@ -50,14 +50,14 @@ namespace HyperCube.Shapes
 				}
 			}
 
-			
-			_verteces = verteces.ToArray();
+
+			_verteces = [.. verteces];
 			for (int i = 0; i < _verteces.Length; i++)
 			{
 				_verteces[i] *= scale;
 			}
 
-			List<(Vector4D<float> a, Vector4D<float> b)> lines = new();
+			List<(Vector4D<float> a, Vector4D<float> b)> lines = [];
 			for (int i = 0; i < verteces.Count - 1; i++)
 			{
 				for (int j = i + 1; j < verteces.Count; j++)
@@ -66,7 +66,7 @@ namespace HyperCube.Shapes
 					int equals = 0;
 					Vector4D<float> a = verteces[i], b = verteces[j];
 
-					for (int coord = 0; coord < 4; coord ++)
+					for (int coord = 0; coord < 4; coord++)
 					{
 						float diff = Math.Abs(a[coord] - b[coord]);
 

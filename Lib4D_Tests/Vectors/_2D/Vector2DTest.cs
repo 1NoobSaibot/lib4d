@@ -1,4 +1,4 @@
-﻿using Lib4D;
+﻿using Lib4D.Vectors;
 using Lib4D_Tests.Helpers;
 using System.Numerics;
 
@@ -14,7 +14,7 @@ namespace Lib4D_Tests.Vectors._2D
 		public void Equals()
 		{
 			(Vector2D<TNum>, Vector2D<TNum>, bool)[] samples =
-			{
+			[
 				(new(), new(), true),
 				(new(1), new(1), true),
 				(new(-1), new(-1), true),
@@ -31,7 +31,7 @@ namespace Lib4D_Tests.Vectors._2D
 				(new(0, 0), new(0, 1), false),
 				(new(0, 0), new(0, -1), false),
 				(new(0, 1), new(0, -1), false),
-			};
+			];
 
 			// TODO: This code is common between a lot of tests here
 			foreach (var sample in samples)
@@ -79,7 +79,7 @@ namespace Lib4D_Tests.Vectors._2D
 		public void Add()
 		{
 			(Vector2D<TNum>, Vector2D<TNum>, Vector2D<TNum>)[] samples =
-			{
+			[
 				(new(), new(), new()),
 
 				(new(1), new(1), new(2)),
@@ -92,7 +92,7 @@ namespace Lib4D_Tests.Vectors._2D
 
 				(new(1, -1), new(1, -1), new(2, -2)),
 				(new(1, -1), new(-1, 1), new())
-			};
+			];
 
 			foreach (var sample in samples)
 			{

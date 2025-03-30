@@ -13,7 +13,7 @@ namespace Lib4D_Tests.Helpers
 		}
 
 
-		public void AssertApproximatelyEqualF(TNumber a, TNumber b, double epsilon)
+		public static void AssertApproximatelyEqualF(TNumber a, TNumber b, double epsilon)
 		{
 			AssertApproximatelyEqualF(a, b, Math<TNumber>.Double2Number!(epsilon));
 		}

@@ -1,9 +1,8 @@
 ﻿using Lib4D.Mathematic;
 using Lib4D.Mathematic.Matrix;
-using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
-namespace Lib4D
+namespace Lib4D.Vectors
 {
 	public struct Vector3D<TNumber>
 		: IEquatable<Vector3D<TNumber>>,
@@ -15,12 +14,12 @@ namespace Lib4D
 		public TNumber Z = TNumber.Zero;
 
 
-		public TNumber AbsQuad
+		public readonly TNumber AbsQuad
 		{
 			get => X * X + Y * Y + Z * Z;
 		}
 
-		public TNumber Abs => Math<TNumber>.Sqrt!(AbsQuad);
+		public readonly TNumber Abs => Math<TNumber>.Sqrt!(AbsQuad);
 
 
 		#region Constructors
@@ -36,7 +35,7 @@ namespace Lib4D
 			Y = y;
 			Z = TNumber.Zero;
 		}
-		public Vector3D (TNumber x, TNumber y, TNumber z)
+		public Vector3D(TNumber x, TNumber y, TNumber z)
 		{
 			X = x;
 			Y = y;
@@ -79,7 +78,7 @@ namespace Lib4D
 		}
 
 
-		public Vector3D<TNumber> GetNormalized()
+		public readonly Vector3D<TNumber> GetNormalized()
 		{
 			var absQuad = AbsQuad;
 			if (absQuad == TNumber.Zero)
@@ -141,7 +140,7 @@ namespace Lib4D
 			{
 				{ v.X, v.Y, v.Z },
 			};
-			TNumber[,] r = MatrixMath.Mul(m, column);
+			TNumber[,] r = m.Mul(column);
 			return new Vector3D<TNumber>(r[0, 0], r[0, 1], r[0, 3]);
 		}
 
@@ -151,7 +150,7 @@ namespace Lib4D
 			{
 				{ a.X }, { a.Y }, { a.Z }
 			};
-			TNumber[,] r = MatrixMath.Mul(row, b);
+			TNumber[,] r = row.Mul(b);
 			return new Vector3D<TNumber>(r[0, 0], r[1, 0], r[2, 0]);
 		}
 		#endregion
@@ -174,7 +173,7 @@ namespace Lib4D
 				a.Z != b.Z;
 		}
 
-		public bool Equals(Vector3D<TNumber> b)
+		public readonly bool Equals(Vector3D<TNumber> b)
 		{
 			return
 				X == b.X &&
@@ -182,7 +181,7 @@ namespace Lib4D
 				Z == b.Z;
 		}
 
-		public override bool Equals(object? obj)
+		public readonly override bool Equals(object? obj)
 		{
 			return obj is Vector3D<TNumber> v
 				&& Equals(v);
@@ -190,12 +189,12 @@ namespace Lib4D
 		#endregion
 
 
-		public override string ToString()
+		public readonly override string ToString()
 		{
 			return $"({X}; {Y}; {Z})";
 		}
 
-		public override int GetHashCode()
+		public readonly override int GetHashCode()
 		{
 			return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
 		}
