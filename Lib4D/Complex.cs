@@ -31,37 +31,42 @@ namespace Lib4D
 		/// <summary>
 		/// Imaginary number
 		/// </summary>
-		public TNumber I;
+		public ImaginaryI<TNumber> I;
 
 
 		#region Constructors
 		public Complex(TNumber real)
 		{
 			R = real;
-			I = TNumber.Zero;
+			I = ImaginaryI<TNumber>.Zero;
 		}
 		public Complex(TNumber real, TNumber imaginary)
+		{
+			R = real;
+			I = new(imaginary);
+		}
+		public Complex(TNumber real, ImaginaryI<TNumber> imaginary)
 		{
 			R = real;
 			I = imaginary;
 		}
 		public Complex(double real)
-		{
-			R = Math<TNumber>.Double2Number!(real);
-			I = TNumber.Zero;
-		}
+			: this(real: Math<TNumber>.Double2Number!(real))
+		{ }
 		public Complex(double real, double imaginary)
-		{
-			R = Math<TNumber>.Double2Number!(real);
-			I = Math<TNumber>.Double2Number!(imaginary);
-		}
+			: this
+		(
+			real: Math<TNumber>.Double2Number!(real),
+			imaginary: Math<TNumber>.Double2Number!(imaginary)
+		)
+		{ }
 		#endregion
 
 
 
 		public readonly TNumber AbsQuad()
 		{
-			return R * R + I * I;
+			return R * R + I.Value * I.Value;
 		}
 
 
@@ -111,8 +116,8 @@ namespace Lib4D
 
 		public static Complex<TNumber> operator *(Complex<TNumber> a, Complex<TNumber> b)
 		{
-			TNumber real = a.R * b.R - a.I * b.I;
-			TNumber imaginary = a.R * b.I + a.I * b.R;
+			TNumber real = a.R * b.R + a.I * b.I;
+			ImaginaryI<TNumber> imaginary = a.R * b.I + a.I * b.R;
 			return new Complex<TNumber>(real, imaginary);
 		}
 		public static Complex<TNumber> operator *(Complex<TNumber> a, TNumber b)
@@ -128,8 +133,8 @@ namespace Lib4D
 		public static Complex<TNumber> operator /(Complex<TNumber> a, Complex<TNumber> b)
 		{
 			TNumber denominator = b.AbsQuad();
-			TNumber realNumerator = (a.R * b.R) + (a.I * b.I);
-			TNumber imaginaryNumerator = (a.I * b.R) - (a.R * b.I);
+			TNumber realNumerator = (a.R * b.R) + (a.I.Value * b.I.Value);
+			ImaginaryI<TNumber> imaginaryNumerator = (a.I * b.R) - (a.R * b.I);
 			return new Complex<TNumber>(realNumerator / denominator, imaginaryNumerator / denominator);
 		}
 		public static Complex<TNumber> operator /(Complex<TNumber> a, TNumber b)
@@ -140,7 +145,7 @@ namespace Lib4D
 		{
 			TNumber denominator = b.AbsQuad();
 			TNumber realNumerator = a * b.R;
-			TNumber imaginaryNumerator = -(a * b.I);
+			ImaginaryI<TNumber> imaginaryNumerator = -(a * b.I);
 			return new(realNumerator / denominator, imaginaryNumerator / denominator);
 		}
 
@@ -167,7 +172,7 @@ namespace Lib4D
 			var magnitude = Abs();
 			var real = Math<TNumber>.Sqrt!((magnitude + R) / c2);
 			var imaginary = Math<TNumber>.Sqrt!((magnitude - R) / c2)
-				* (I < TNumber.Zero ? -TNumber.One : TNumber.One);
+				* (I.Value < TNumber.Zero ? -TNumber.One : TNumber.One);
 
 			return new(real, imaginary);
 		}
@@ -176,7 +181,7 @@ namespace Lib4D
 		public static Complex<TNumber> Exp(Complex<TNumber> number)
 		{
 			var realExp = Math<TNumber>.Exp!(number.R);
-			Complex<TNumber> c = new(Math<TNumber>.Cos!(number.I), Math<TNumber>.Sin!(number.I));
+			Complex<TNumber> c = new(Math<TNumber>.Cos!(number.I.Value), Math<TNumber>.Sin!(number.I.Value));
 			return realExp * c;
 		}
 

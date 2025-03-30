@@ -44,7 +44,7 @@ namespace Lib4D_Tests.Complexes
 		{
 			Complex<TNumber> zero = new();
 			Assert.AreEqual(TNumber.Zero, zero.R!);
-			Assert.AreEqual(TNumber.Zero, zero.I!);
+			Assert.AreEqual(ImaginaryI<TNumber>.Zero, zero.I!);
 			Assert.AreEqual(zero, new Complex<TNumber>(0));
 			Assert.AreEqual(zero, new Complex<TNumber>(0, 0));
 			TNumber z = TNumber.Zero;
@@ -56,7 +56,7 @@ namespace Lib4D_Tests.Complexes
 				var c1 = new Complex<TNumber>(r);
 				TNumber nR = Math<TNumber>.Double2Number!(r);
 				Assert.AreEqual(nR, c1.R);
-				Assert.AreEqual(z, c1.I);
+				Assert.AreEqual(ImaginaryI<TNumber>.Zero, c1.I);
 
 				Assert.AreEqual(c1, new Complex<TNumber>(nR));
 
@@ -66,7 +66,7 @@ namespace Lib4D_Tests.Complexes
 					TNumber nI = Math<TNumber>.Double2Number!(i);
 
 					Assert.AreEqual(nR, c1.R);
-					Assert.AreEqual(nI, c1.I);
+					Assert.AreEqual(nI, c1.I.Value);
 
 					Assert.AreEqual(c1, new Complex<TNumber>(nR, nI));
 				}
@@ -81,7 +81,7 @@ namespace Lib4D_Tests.Complexes
 			{
 				Complex<TNumber> c = (Complex<TNumber>)f;
 				Assert.AreEqual(c.R, f);
-				Assert.AreEqual(c.I, TNumber.Zero);
+				Assert.AreEqual(c.I.Value, TNumber.Zero);
 			});
 		}
 
@@ -94,7 +94,7 @@ namespace Lib4D_Tests.Complexes
 				Complex<TNumber> c = (Complex<TNumber>)d;
 				TNumber nD = Math<TNumber>.Double2Number!(d);
 				Assert.AreEqual(c.R, nD);
-				Assert.AreEqual(c.I, TNumber.Zero);
+				Assert.AreEqual(c.I.Value, TNumber.Zero);
 			});
 		}
 

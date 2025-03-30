@@ -142,7 +142,7 @@ namespace Lib4D_Tests.Quaternions
 				Assert.AreEqual(q.RI, c);
 				Assert.AreEqual(q.JK, new Complex<TNumber>());
 				Assert.AreEqual(q.R, c.R);
-				Assert.AreEqual(q.I, c.I);
+				Assert.AreEqual(q.I, c.I.Value);
 				Assert.AreEqual(q.J, TNumber.Zero);
 				Assert.AreEqual(q.K, TNumber.Zero);
 			});

@@ -1,4 +1,5 @@
-﻿using Lib4D.Mathematic;
+﻿using Lib4D;
+using Lib4D.Mathematic;
 using System.Numerics;
 
 namespace Lib4D_Tests.Helpers
@@ -36,6 +37,12 @@ namespace Lib4D_Tests.Helpers
 			ForEachFloat(f => action(
 				Math<TNumber>.Double2Number!(f)
 			));
+		}
+
+
+		public void ForEachImaginary(Action<ImaginaryI<TNumber>> action)
+		{
+			ForEachTNum(tNum => action(new(tNum)));
 		}
 
 

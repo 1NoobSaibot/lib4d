@@ -12,7 +12,7 @@ namespace Lib4D_Tests.Helpers
 			try
 			{
 				AssertApproximatelyEqualF(a.R, b.R);
-				AssertApproximatelyEqualF(a.I, b.I);
+				AssertApproximatelyEqualF(a.I.Value, b.I.Value);
 			}
 			catch (AssertFailedException ex)
 			{

@@ -24,8 +24,8 @@ namespace Lib4D
 		}
 		public TNumber I
 		{
-			readonly get => RI.I;
-			set => RI.I = value;
+			readonly get => RI.I.Value;
+			set => RI.I = new(value);
 		}
 		public TNumber J
 		{
@@ -34,8 +34,8 @@ namespace Lib4D
 		}
 		public TNumber K
 		{
-			readonly get => JK.I;
-			set => JK.I = value;
+			readonly get => JK.I.Value;
+			set => JK.I = new(value);
 		}
 
 		public readonly TNumber AbsQuad => R * R + I * I + J * J + K * K;
@@ -186,19 +186,19 @@ namespace Lib4D
 		}
 		public static Quaternion<TNumber> operator *(Quaternion<TNumber> a, Complex<TNumber> b)
 		{
-			TNumber r = a.R * b.R - a.I * b.I;
-			TNumber i = a.R * b.I + a.I * b.R;
-			TNumber j = a.J * b.R + a.K * b.I;
-			TNumber k = a.K * b.R - a.J * b.I;
+			TNumber r = a.R * b.R - a.I * b.I.Value;
+			TNumber i = a.R * b.I.Value + a.I * b.R;
+			TNumber j = a.J * b.R + a.K * b.I.Value;
+			TNumber k = a.K * b.R - a.J * b.I.Value;
 
 			return new Quaternion<TNumber>(r, i, j, k);
 		}
 		public static Quaternion<TNumber> operator *(Complex<TNumber> a, Quaternion<TNumber> b)
 		{
-			TNumber r = a.R * b.R - a.I * b.I;
-			TNumber i = a.R * b.I + a.I * b.R;
-			TNumber j = a.R * b.J - a.I * b.K;
-			TNumber k = a.R * b.K + a.I * b.J;
+			TNumber r = a.R * b.R - a.I.Value * b.I;
+			TNumber i = a.R * b.I + a.I.Value * b.R;
+			TNumber j = a.R * b.J - a.I.Value * b.K;
+			TNumber k = a.R * b.K + a.I.Value * b.J;
 
 			return new Quaternion<TNumber>(r, i, j, k);
 		}
